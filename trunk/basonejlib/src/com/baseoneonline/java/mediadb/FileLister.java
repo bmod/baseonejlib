@@ -32,7 +32,7 @@ public class FileLister extends JFrame {
 	private final File logFile;
 
 	private final JList imageList;
-	private final DatabaseListModel<ImageRecord> imageListModel;
+	private final DatabaseListModel imageListModel;
 
 	private final String[] imageExtensions = { "jpg", "jpeg", "gif", "tif",
 			"tiff" };
@@ -58,14 +58,15 @@ public class FileLister extends JFrame {
 		lbStatus = new JTextArea();
 		tabPane.addTab("Status", lbStatus);
 
-		imageListModel = new DatabaseListModel<ImageRecord>();
+		imageListModel = new DatabaseListModel(database);
 		imageList = new JList(imageListModel);
 		JScrollPane spImageList = new JScrollPane(imageList);
 		tabPane.addTab("Images", spImageList);
 
 		add(tabPane);
+		imageListModel.refresh();
 
-		indexFolder(new File("F:/"));
+		//indexFolder(new File("/home/bmod"));
 	}
 
 	private void indexFolder(final File root) {
@@ -100,7 +101,11 @@ public class FileLister extends JFrame {
 				+ musicCounter + "\n" + "\n");
 		// Runtime.getRuntime().gc();
 		// }
-
+		imageListModel.refresh();
+	}
+	
+	private void addImage(ImageRecord imr) {
+		
 	}
 
 	private void listFiles(File dir) throws IOException {
