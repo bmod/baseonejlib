@@ -8,11 +8,15 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+
+
 public class Configuration {
 	Logger log = Logger.getLogger(getClass().getName());
 	private static Configuration instance;
 
 	private final Properties props = new Properties();
+	
+	private final String arrayDelimiter = ",";
 
 	private final String prefix;
 
@@ -51,6 +55,14 @@ public class Configuration {
 			log.warning("Exception while writing to file: " + file.getName());
 		}
 	}
+	
+	public void set(String key, String[] v) {
+		set(key, StringUtils.join(v, arrayDelimiter));
+	}
+	
+	public String[] get(String key, String[] defaultArray) {
+		return get(key, StringUtils.join(defaultArray, arrayDelimiter)).split(arrayDelimiter);
+	}
 
 	/**
 	 * Put a property in the configuration
@@ -60,7 +72,7 @@ public class Configuration {
 	 * @param n
 	 *            The value to set.
 	 */
-	public void setInt(String key, int n) {
+	public void set(String key, int n) {
 		set(key, "" + n);
 	}
 
@@ -73,7 +85,7 @@ public class Configuration {
 	 * @param n
 	 *            The default value if no value was defined.
 	 */
-	public int getInt(String key, int n) {
+	public int get(String key, int n) {
 		return Integer.parseInt(get(key, "" + n));
 	}
 
@@ -85,7 +97,7 @@ public class Configuration {
 	 * @param n
 	 *            The value to set.
 	 */
-	public void setFloat(String key, float n) {
+	public void set(String key, float n) {
 		set(key, "" + n);
 	}
 
@@ -98,7 +110,7 @@ public class Configuration {
 	 * @param n
 	 *            The default value if no value was defined.
 	 */
-	public Float getFloat(String key, float n) {
+	public Float get(String key, float n) {
 		return Float.parseFloat(get(key, "" + n));
 	}
 
@@ -116,7 +128,8 @@ public class Configuration {
 			write();
 		}
 	}
-
+	
+	
 	/**
 	 * Retrieve a property from the configuration. If the key was not found,
 	 * return the supplied default value and store that in the configuration.
