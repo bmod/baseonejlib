@@ -1,11 +1,16 @@
 package com.baseoneonline.java.mediadb;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -13,26 +18,27 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import com.baseoneonline.java.jlib.utils.Configuration;
-import com.baseoneonline.java.mediadb.db.DatabaseListModel;
-import com.baseoneonline.java.mediadb.db.ImageRecord;
-import com.baseoneonline.java.mediadb.db.MovieRecord;
-import com.baseoneonline.java.mediadb.db.MusicRecord;
+import com.baseoneonline.java.mediadb.db.DatabaseRecord;
+import com.baseoneonline.java.mediadb.ui.FilteredList;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Query;
 
 
 
 public class FileLister extends JFrame {
 	
+	private final Logger log = Logger.getLogger(getClass().getName());
+	
 	private final Configuration config = Configuration.getConfiguration(new File("mediaDB.cfg"));
 
-	private final JTextArea lbStatus;
+	private JTextArea taStatus;
 	private final String databaseFile;
 	private final ObjectContainer database;
 	private final File logFile;
 
-	private final JList imageList;
-	private final DatabaseListModel imageListModel;
+	private FilteredList list;
 
 	private final String[] imageExtensions = { "jpg", "jpeg", "gif", "tif",
 			"tiff" };
@@ -42,36 +48,51 @@ public class FileLister extends JFrame {
 
 	public FileLister() {
 		logFile = new File(config.get("logFile", "mediaDB.log"));
-		/*
-		imageExtensions = config.get("imageExtensions", imageExtensions);
-		musicExtensions = config.get("musicExtensions", musicExtensions);
-		movieExtensions = config.get("movieExtensions", movieExtensions);
-		*/
-		databaseFile = config.get("databaseFile", "mediaDB.db");
+
+		databaseFile = "mediaDB.db";
 		if (logFile.exists())
 			logFile.delete();
 
 		database = Db4o.openFile(databaseFile);
 
+		createUI();
+		
+		list.setDatabase(database);
+
+		//indexFolder(new File("F:/"));
+	}
+	
+	private void createUI() {
+		setLayout(new BorderLayout());
+		
 		JTabbedPane tabPane = new JTabbedPane();
+		
+		list = new FilteredList();
+		tabPane.addTab("List",list);
 
-		lbStatus = new JTextArea();
-		tabPane.addTab("Status", lbStatus);
-
-		imageListModel = new DatabaseListModel(database);
-		imageList = new JList(imageListModel);
-		JScrollPane spImageList = new JScrollPane(imageList);
-		tabPane.addTab("Images", spImageList);
-
+		JPanel updatePanel = new JPanel(new BorderLayout());
+		taStatus = new JTextArea();
+		updatePanel.add(taStatus, BorderLayout.CENTER);
+		JPanel updatePanelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		updatePanel.add(updatePanelTop, BorderLayout.NORTH);
+		JButton btUpdate = new JButton("Update");
+		btUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				indexFolder(new File("F:/"));
+			}
+		});
+		updatePanelTop.add(btUpdate);
+		tabPane.addTab("Update", updatePanel);
+		
 		add(tabPane);
-		imageListModel.refresh();
-
-		//indexFolder(new File("/home/bmod"));
+		
 	}
 
 	private void indexFolder(final File root) {
-		if (!root.isDirectory())
+		if (!root.isDirectory()) {
+			log.warning("Invalid directory: "+root.getAbsolutePath());
 			return;
+		}
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
@@ -88,25 +109,31 @@ public class FileLister extends JFrame {
 	}
 
 	private int fileCounter = 0;
-	private int imageCounter = 0;
-	private int movieCounter = 0;
-	private int musicCounter = 0;
+	private final int imageCounter = 0;
+	private final int movieCounter = 0;
+	private final int musicCounter = 0;
 
 	private synchronized void updateStatus(String msg) {
 		fileCounter++;
 
-		lbStatus.setText("Files checked\t" + fileCounter + "\n" + "checking:\n"
+		taStatus.setText("Files checked\t" + fileCounter + "\n" + "checking:\n"
 				+ msg + "\n" + "\n" + "images found\t" + imageCounter + "\n"
 				+ "movies found\t" + movieCounter + "\n" + "music found\t"
 				+ musicCounter + "\n" + "\n");
 		// Runtime.getRuntime().gc();
 		// }
-		imageListModel.refresh();
 	}
 	
-	private void addImage(ImageRecord imr) {
-		
+	@SuppressWarnings("unchecked")
+	private void addRecord(String filename, int type) {
+		Query q = database.query();
+		q.constrain(DatabaseRecord.class);
+		q.descend("filename").constrain(filename);
+		ObjectSet<DatabaseRecord> re =	q.execute();
+		if (re.size() > 0) return;
+		database.set(new DatabaseRecord(filename, type));
 	}
+	
 
 	private void listFiles(File dir) throws IOException {
 		for (File f : dir.listFiles()) {
@@ -120,20 +147,17 @@ public class FileLister extends JFrame {
 						String fname = f.getName();
 
 						if (fname.endsWith("jpeg") || fname.endsWith("jpg")) {
-							database.set(new ImageRecord(f.getAbsolutePath()));
-							imageCounter++;
+							addRecord(f.getAbsolutePath(), DatabaseRecord.TYPE_IMAGE);
 						} else if (fname.endsWith("mp3")
 								|| fname.endsWith("mpa")
 								|| fname.endsWith("ogg")) {
-							database.set(new MusicRecord(f.getAbsolutePath()));
-							musicCounter++;
+							addRecord(f.getAbsolutePath(), DatabaseRecord.TYPE_MUSIC);
 						} else if (fname.endsWith("mpg")
 								|| fname.endsWith("avi")
 								|| fname.endsWith("flv")
 								|| fname.endsWith("wmv")
 								|| fname.endsWith("mov")) {
-							database.set(new MovieRecord(f.getAbsolutePath()));
-							movieCounter++;
+							addRecord(f.getAbsolutePath(), DatabaseRecord.TYPE_MOVIE);
 						}
 
 						/*
