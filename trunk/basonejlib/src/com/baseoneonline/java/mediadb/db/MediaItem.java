@@ -1,6 +1,6 @@
 package com.baseoneonline.java.mediadb.db;
 
-public class DatabaseRecord {
+public class MediaItem {
 	
 	public static final int TYPE_MUSIC = 0;
 	public static final int TYPE_MOVIE = 1;
@@ -11,7 +11,7 @@ public class DatabaseRecord {
 	
 	public int type;
 	
-	public DatabaseRecord(String filename, int type) {
+	public MediaItem(String filename, int type) {
 		this.filename = filename;
 		this.type = type;
 	}

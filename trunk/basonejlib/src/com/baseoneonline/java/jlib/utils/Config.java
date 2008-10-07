@@ -10,23 +10,23 @@ import java.util.logging.Logger;
 
 
 
-public class Configuration {
+public class Config {
 	Logger log = Logger.getLogger(getClass().getName());
-	private static Configuration instance;
+	private static Config instance;
 
 	private final Properties props = new Properties();
 	
 	private final String arrayDelimiter = ",";
 
-	private final String prefix;
-
-	private final File file;
+	private File file;
 
 	private final boolean autoWrite = true;
 
-	private Configuration(File f, String pfx) {
-		file = f;
-		prefix = pfx;
+	private Config() {
+	}
+	
+	public void setFile(String filename) {
+		file = new File(filename);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Configuration {
 	 */
 	public void write() {
 		try {
-			props.store(new FileOutputStream(file), prefix + " Configuration");
+			props.store(new FileOutputStream(file), "Configuration");
 		} catch (FileNotFoundException e) {
 			log.warning("Configuration file not found: " + file.getName());
 		} catch (IOException e) {
@@ -62,6 +62,10 @@ public class Configuration {
 	
 	public String[] get(String key, String[] defaultArray) {
 		return get(key, StringUtils.join(defaultArray, arrayDelimiter)).split(arrayDelimiter);
+	}
+	
+	public String get(String key) {
+		return get(key, "");
 	}
 
 	/**
@@ -150,13 +154,11 @@ public class Configuration {
 		return re;
 	}
 
-	public static Configuration getConfiguration(File f, String prefix) {
+	public static Config getConfig() {
 		if (null == instance)
-			instance = new Configuration(f, prefix);
+			instance = new Config();
 		return instance;
 	}
 
-	public static Configuration getConfiguration(File f) {
-		return getConfiguration(f, "");
-	}
+
 }
