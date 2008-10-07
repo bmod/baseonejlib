@@ -9,7 +9,7 @@ import com.db4o.query.Query;
 public class DatabaseListModel extends AbstractListModel {
 
 	private final ObjectContainer db;
-	private ObjectSet<DatabaseRecord> result;
+	private ObjectSet<MediaItem> result;
 
 	public boolean showImages = false;
 	public boolean showMusic = false;
@@ -24,22 +24,22 @@ public class DatabaseListModel extends AbstractListModel {
 		fireContentsChanged(this, 0,0);
 	}
 
+
+
 	@SuppressWarnings("unchecked")
 	public void refresh() {
-
+		
+		result = null;
 		Query q = db.query();
-		q.constrain(DatabaseRecord.class);
+		q.constrain(MediaItem.class);
 		if (showImages)
-			q.descend("type").constrain(new Integer(DatabaseRecord.TYPE_IMAGE));
+			q.descend("type").constrain(new Integer(MediaItem.TYPE_IMAGE));
 
 		result = q.execute();
+		fireContentsChanged(this, 0, result.size() - 1);
 
 	}
 	
-	public void fireChange() {
-		fireContentsChanged(this, 0, result.size() - 1);
-	}
-
 	public Object getElementAt(int arg0) {
 		return result.get(arg0);
 	}

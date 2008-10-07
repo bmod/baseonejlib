@@ -29,7 +29,7 @@ import com.db4o.ObjectContainer;
 * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
 * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
 */
-public class FilteredList extends JPanel {
+public class FilteredListPanel extends JPanel {
 	
 	private DatabaseListModel listModel;
 	private JList list;
@@ -37,7 +37,7 @@ public class FilteredList extends JPanel {
 	
 	private SwingWorker<Void, Void> worker;
 	
-	public FilteredList() {
+	public FilteredListPanel() {
 		initGUI();
 	}
 	
@@ -54,10 +54,6 @@ public class FilteredList extends JPanel {
 				listModel.refresh();
 				lbStatus.setText(listModel.getSize()+" items.");
 				return null;
-			}
-			@Override
-			protected void done() {
-				listModel.fireChange();
 			}
 		};
 		worker.execute();
