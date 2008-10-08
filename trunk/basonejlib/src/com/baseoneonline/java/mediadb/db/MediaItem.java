@@ -7,7 +7,7 @@ public class MediaItem {
 	public static final int TYPE_IMAGE = 2;
 	
 	
-	public String filename;
+	protected String filename;
 	
 	public int type;
 	
@@ -15,6 +15,7 @@ public class MediaItem {
 		this.filename = filename;
 		this.type = type;
 	}
+	
 	
 	@Override
 	public String toString(){

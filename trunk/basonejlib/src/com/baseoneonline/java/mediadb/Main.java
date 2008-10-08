@@ -23,7 +23,6 @@ public class Main extends JFrame {
 	private final Config config = Config.getConfig();
 
 	private SettingsPanel updatePanel;
-	private final String databaseFile = "mediaDB.db";
 
 	private FilteredListPanel list;
 
