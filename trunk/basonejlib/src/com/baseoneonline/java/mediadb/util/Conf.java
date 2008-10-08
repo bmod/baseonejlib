@@ -3,7 +3,7 @@ package com.baseoneonline.java.mediadb.util;
 import java.util.Properties;
 
 
-public class Config {
+public class Conf {
 
 	private static final String SPLIT_CHAR = ";";
 	
@@ -29,7 +29,7 @@ public class Config {
 		return re;
 	}
 	
-	
+	public static 
 	
 
 }
