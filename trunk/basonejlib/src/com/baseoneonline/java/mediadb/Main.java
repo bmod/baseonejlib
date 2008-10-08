@@ -13,6 +13,7 @@ import com.baseoneonline.java.mediadb.db.AbstractDatabase;
 import com.baseoneonline.java.mediadb.db.MemoryDatabase;
 import com.baseoneonline.java.mediadb.ui.FilteredListPanel;
 import com.baseoneonline.java.mediadb.ui.SettingsPanel;
+import com.baseoneonline.java.mediadb.util.Conf;
 
 
 
@@ -29,6 +30,8 @@ public class Main extends JFrame {
 
 	public Main() {
 		config.setFile("mediaDB.cfg");
+		
+		Conf.setDefaults();
 
 		createUI();
 		
