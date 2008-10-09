@@ -6,25 +6,19 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import javax.swing.SwingWorker;
-
-import com.baseoneonline.java.jlib.utils.Config;
 import com.baseoneonline.java.mediadb.db.AbstractDatabase;
-import com.baseoneonline.java.mediadb.db.DatabaseListModel;
 import com.baseoneonline.java.mediadb.db.MediaItem;
 import com.baseoneonline.java.mediadb.events.DefaultEventSource;
 import com.baseoneonline.java.mediadb.events.Event;
 import com.baseoneonline.java.mediadb.events.EventListener;
 import com.baseoneonline.java.mediadb.events.EventSource;
 import com.baseoneonline.java.mediadb.events.EventType;
-import com.baseoneonline.java.mediadb.ui.Constants;
 
 public class Application implements EventSource {
 	private final Logger log = Logger.getLogger(getClass().getName());
 
 	private static Application instance;
 
-	private DatabaseListModel listModel;
 	private AbstractDatabase database;
 	final String[][] exts = { 
 			{ "jpg", "jpeg", "png", "tif", "tiff", "gif" },
@@ -44,27 +38,6 @@ public class Application implements EventSource {
 		database = db;
 	}
 
-	public void scanCollection() {
-		final File root = new File(Config.getConfig().get(
-				Constants.CFG_MEDIA_PATH));
-		if (!root.isDirectory()) {
-			log.warning("Invalid directory: " + root.getAbsolutePath());
-			return;
-		}
-		new SwingWorker<String, Void>() {
-			@Override
-			protected String doInBackground() throws Exception {
-				listFiles(root);
-				return "Done";
-			}
-
-			@Override
-			protected void done() {
-				updateStatus("Done");
-				super.done();
-			}
-		}.execute();
-	}
 
 	@SuppressWarnings("unchecked")
 	public void addItem(String filename, int type) {

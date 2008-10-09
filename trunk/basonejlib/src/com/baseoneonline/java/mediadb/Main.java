@@ -8,7 +8,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.baseoneonline.java.jlib.utils.Config;
 import com.baseoneonline.java.mediadb.db.AbstractDatabase;
 import com.baseoneonline.java.mediadb.db.MemoryDatabase;
 import com.baseoneonline.java.mediadb.ui.FilteredListPanel;
@@ -21,17 +20,14 @@ public class Main extends JFrame {
 	
 	private final Logger log = Logger.getLogger(getClass().getName());
 	
-	private final Config config = Config.getConfig();
-
 	private SettingsPanel updatePanel;
 
 	private FilteredListPanel list;
 
 
 	public Main() {
-		config.setFile("mediaDB.cfg");
 		
-		Conf.setDefaults();
+		Conf.read("mediaDB.cfg");
 
 		createUI();
 		
