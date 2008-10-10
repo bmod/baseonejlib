@@ -1,19 +1,20 @@
 package com.baseoneonline.java.mediadb.util;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.FileFilter;
 
-public class SupportedFilenameFilter implements FilenameFilter{
+public class SupportedFilenameFilter implements FileFilter{
 
 	private final String[] supportedTypes = SupportedTypes.getAllSupportedExtensions();
 	
-	public boolean accept(File dir, String name) {
+	public boolean accept(File dir) {
 		for (String t : supportedTypes) {
-			if (name.endsWith(t)) {
+			if (dir.getName().endsWith(t)) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 
 }

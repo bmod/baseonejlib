@@ -1,5 +1,6 @@
 package com.baseoneonline.java.mediadb.util;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SupportedTypes {
@@ -29,6 +30,27 @@ public class SupportedTypes {
 		MOVIE_TYPES
 	};
 		
+	public static boolean isMovieType(File f) {
+		for (String ext : MOVIE_TYPES) {
+			if (f.getName().endsWith(ext)) return true;
+		}
+		return false;
+	}
+	
+	public static boolean isMusicType(File f) {
+		for (String ext : MUSIC_TYPES) {
+			if (f.getName().endsWith(ext)) return true;
+		}
+		return false;
+	}
+	
+	public static boolean isImageType(File f) {
+		for (String ext : IMAGE_TYPES) {
+			if (f.getName().endsWith(ext)) return true;
+		}
+		return false;
+	}
+
 		
 	public static String[] getAllSupportedExtensions() {
 		ArrayList<String> out = new ArrayList<String>();

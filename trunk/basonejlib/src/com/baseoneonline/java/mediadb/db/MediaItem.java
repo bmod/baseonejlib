@@ -1,25 +1,23 @@
 package com.baseoneonline.java.mediadb.db;
 
+import java.io.File;
+
 public class MediaItem {
 	
-	public static final int TYPE_MUSIC = 0;
-	public static final int TYPE_MOVIE = 1;
-	public static final int TYPE_IMAGE = 2;
+	protected File file;
 	
 	
-	protected String filename;
-	
-	public int type;
-	
-	public MediaItem(String filename, int type) {
-		this.filename = filename;
-		this.type = type;
+	public MediaItem(File file) {
+		this.file = file;
 	}
 	
+	public File getFile() {
+		return file;
+	}
 	
 	@Override
 	public String toString(){
-		return filename;
+		return file.toString();
 	}
 	
 }
