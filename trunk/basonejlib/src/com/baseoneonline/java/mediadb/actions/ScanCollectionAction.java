@@ -15,7 +15,7 @@ public class ScanCollectionAction extends AbstractAction {
 	
 	public void actionPerformed(ActionEvent arg0) {
 
-		CollectionManager.getManager().scanCollection();
+		CollectionManager.getManager().scanCollection(true);
 
 	}
 

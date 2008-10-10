@@ -2,12 +2,10 @@ package com.baseoneonline.java.mediadb;
 
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.mediadb.db.AbstractDatabase;
-import com.baseoneonline.java.mediadb.db.MediaItem;
 import com.baseoneonline.java.mediadb.events.DefaultEventSource;
 import com.baseoneonline.java.mediadb.events.Event;
 import com.baseoneonline.java.mediadb.events.EventListener;
@@ -38,20 +36,6 @@ public class Application implements EventSource {
 		database = db;
 	}
 
-
-	@SuppressWarnings("unchecked")
-	public void addItem(String filename, int type) {
-		MediaItem item = new MediaItem(filename, type);
-		if (!database.contains(item)) {
-			database.addItem(item);
-		}
-		/*
-		 * Query q = database.query(); q.constrain(MediaItem.class);
-		 * q.descend("filename").constrain(filename); ObjectSet<MediaItem> re =
-		 * q.execute(); if (re.size() > 0) return; database.set(new
-		 * MediaItem(filename, type));
-		 */
-	}
 
 	private synchronized void updateStatus(String msg) {
 
@@ -84,45 +68,7 @@ public class Application implements EventSource {
 		return -1;
 	}
 
-	private void listFiles(File dir) throws IOException {
-		for (File f : dir.listFiles()) {
-			if (f.isDirectory() && f.getCanonicalPath().equals(f.getPath())) {
-				listFiles(f);
-			} else {
-				try {
 
-					if (f.length() >= 4) {
-
-						int type = getMediaType(f);
-						if (-1 != type) {
-							addItem(f.getName(), type);
-						} else {
-							// type not found
-						}
-						
-						
-						/*
-						 * // Set up file reading FileInputStream fin = new
-						 * FileInputStream(f); FileChannel ch =
-						 * fin.getChannel(); // Allocate 4 bytes of memory
-						 * MappedByteBuffer mb = ch.map(MapMode.READ_ONLY, 0L,
-						 * 4); // Read header data int fileMarker = mb.getInt();
-						 * ch.close();
-						 * 
-						 * if (isJPEG(fileMarker)) { }
-						 */
-
-					}
-
-				} catch (Exception e) {
-					System.out.println(e.getCause() + "\n" + e.getMessage());
-				}
-
-				updateStatus(f.getAbsolutePath());
-
-			}
-		}
-	}
 
 	public static Application getInstance() {
 		if (instance == null)

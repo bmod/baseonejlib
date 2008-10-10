@@ -17,7 +17,7 @@ public class Collection {
 	
 	public void add(MediaItem record) {
 		for (MediaItem r : data) {
-			if (r.filename == record.filename) {
+			if (r.getFile().equals(record.getFile())) {
 				return;
 			}
 		}

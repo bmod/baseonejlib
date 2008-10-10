@@ -4,7 +4,6 @@ import javax.swing.AbstractListModel;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.query.Query;
 
 public class DatabaseListModel extends AbstractListModel {
 
@@ -28,7 +27,7 @@ public class DatabaseListModel extends AbstractListModel {
 
 	@SuppressWarnings("unchecked")
 	public void refresh() {
-		
+		/*
 		result = null;
 		Query q = db.query();
 		q.constrain(MediaItem.class);
@@ -37,7 +36,7 @@ public class DatabaseListModel extends AbstractListModel {
 
 		result = q.execute();
 		fireContentsChanged(this, 0, result.size() - 1);
-
+*/
 	}
 	
 	public Object getElementAt(int arg0) {
