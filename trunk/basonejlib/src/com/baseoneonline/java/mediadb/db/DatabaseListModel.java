@@ -7,17 +7,20 @@ import com.db4o.ObjectSet;
 
 public class DatabaseListModel extends AbstractListModel {
 
-	private final ObjectContainer db;
-	private ObjectSet<MediaItem> result;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4287794057450110812L;
+
+	private ObjectSet<Item> result;
 
 	public boolean showImages = false;
 	public boolean showMusic = false;
 	public boolean showMovies = false;
 
-	public DatabaseListModel(ObjectContainer db) {
-		this.db = db;
+	public DatabaseListModel(final ObjectContainer db) {
 	}
-	
+
 	public void clear() {
 		result = null;
 		fireContentsChanged(this, 0,0);
@@ -25,7 +28,6 @@ public class DatabaseListModel extends AbstractListModel {
 
 
 
-	@SuppressWarnings("unchecked")
 	public void refresh() {
 		/*
 		result = null;
@@ -36,16 +38,17 @@ public class DatabaseListModel extends AbstractListModel {
 
 		result = q.execute();
 		fireContentsChanged(this, 0, result.size() - 1);
-*/
+		 */
 	}
-	
-	public Object getElementAt(int arg0) {
+
+	public Object getElementAt(final int arg0) {
 		return result.get(arg0);
 	}
 
 	public int getSize() {
-		if (null == result)
+		if (null == result) {
 			return 0;
+		}
 		return result.size();
 
 	}

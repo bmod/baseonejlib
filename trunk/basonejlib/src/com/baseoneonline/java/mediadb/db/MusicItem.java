@@ -4,7 +4,7 @@ import java.io.File;
 
 import entagged.audioformats.Tag;
 
-public class MusicItem extends MediaItem {
+public class MusicItem extends Item {
 	
 	private Tag tag;
 	
