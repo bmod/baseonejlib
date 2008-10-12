@@ -1,5 +1,6 @@
 package com.baseoneonline.java.mediadb.events;
 
 public enum EventType {
-	COLLECTION_UPDATED
+	COLLECTION_SCANNING,
+	COLLECTION_SCANNING_DONE
 }

@@ -2,12 +2,12 @@ package com.baseoneonline.java.mediadb.db;
 
 import java.io.File;
 
-public class MediaItem {
+public class Item {
 	
 	protected File file;
 	
 	
-	public MediaItem(File file) {
+	public Item(File file) {
 		this.file = file;
 	}
 	

@@ -2,7 +2,7 @@ package com.baseoneonline.java.mediadb.events;
 
 
 public interface EventSource {
-	public void addListener(EventType type, EventListener lst);
-	public void removeListener(EventType type, EventListener lst);
+	public void addEventListener(EventType type, EventListener lst);
+	public void removeEventListener(EventType type, EventListener lst);
 	public void fireEvent(Event evt);
 }

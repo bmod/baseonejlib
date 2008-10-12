@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MemoryDatabase extends AbstractDatabase {
 
-	private final List<MediaItem> data = new ArrayList<MediaItem>();
+	private final List<Item> data = new ArrayList<Item>();
 	
 	public MemoryDatabase() {
 		
@@ -13,17 +13,17 @@ public class MemoryDatabase extends AbstractDatabase {
 	
 	
 	@Override
-	public void addItem(MediaItem item) {
+	public void addItem(Item item) {
 		data.add(item);
 	}
 
 	@Override
-	public boolean contains(MediaItem item) {
+	public boolean contains(Item item) {
 		return data.contains(item); 
 	}
 
 	@Override
-	public MediaItem getItem(int index) {
+	public Item getItem(int index) {
 		return data.get(index);
 	}
 
@@ -33,7 +33,7 @@ public class MemoryDatabase extends AbstractDatabase {
 	}
 
 	@Override
-	public void removeItem(MediaItem item) {
+	public void removeItem(Item item) {
 		data.remove(item);
 	}
 

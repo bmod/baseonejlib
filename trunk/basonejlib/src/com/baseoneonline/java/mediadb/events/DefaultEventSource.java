@@ -12,7 +12,7 @@ public class DefaultEventSource implements EventSource {
 	 * @param type
 	 * @param lst
 	 */
-	public void addListener(EventType type, EventListener lst) {
+	public void addEventListener(EventType type, EventListener lst) {
 		ArrayList<EventListener> lstArray = listeners.get(type);
 		if (null == lstArray) {
 			lstArray = new ArrayList<EventListener>();
@@ -26,7 +26,7 @@ public class DefaultEventSource implements EventSource {
 	 * @param type
 	 * @param lst
 	 */
-	public void removeListener(EventType type, EventListener lst) {
+	public void removeEventListener(EventType type, EventListener lst) {
 		ArrayList<EventListener> lstArray = listeners.get(type);
 		if (null == lstArray) return;
 		if (lstArray.contains(lst)) lstArray.remove(lst);
@@ -39,7 +39,7 @@ public class DefaultEventSource implements EventSource {
 		ArrayList<EventListener> lstArray = listeners.get(evt.getType());
 		if (lstArray == null) return;
 		for (EventListener l : lstArray) {
-			l.eventReceived(evt);
+			l.onEvent(evt);
 		}
 	}
 	

@@ -2,7 +2,6 @@ package com.baseoneonline.java.mediadb.db;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 
 public class DB40Database extends AbstractDatabase {
 
@@ -15,18 +14,18 @@ public class DB40Database extends AbstractDatabase {
 	
 	
 	@Override
-	public void addItem(MediaItem item) {
+	public void addItem(Item item) {
 		db.set(item);
 	}
 
 	@Override
-	public boolean contains(MediaItem item) {
-		ObjectSet<MediaItem> result = db.get(item);
+	public boolean contains(Item item) {
+		db.get(item);
 		return false;
 	}
 
 	@Override
-	public MediaItem getItem(int index) {
+	public Item getItem(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -37,7 +36,7 @@ public class DB40Database extends AbstractDatabase {
 	}
 
 	@Override
-	public void removeItem(MediaItem item) {
+	public void removeItem(Item item) {
 		// TODO Auto-generated method stub
 
 	}
