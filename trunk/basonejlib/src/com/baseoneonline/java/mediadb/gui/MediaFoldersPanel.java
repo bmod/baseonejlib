@@ -50,24 +50,20 @@ public class MediaFoldersPanel extends JPanel {
 	public MediaFoldersPanel() {
 
 		tfEditDirectory.addKeyListener(new KeyListener() {
-			@Override
 			public void keyTyped(final KeyEvent e) {
 				if (KeyEvent.VK_ENTER == e.getKeyCode()) {
 
 				}
 			}
 
-			@Override
 			public void keyPressed(final KeyEvent e) {}
 
-			@Override
 			public void keyReleased(final KeyEvent e) {}
 		});
 
 		// BUTTONS
 
 		btAdd.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent e) {
 				final File f = Utils.promptUserForDirectory();
 				if (null != f) {
@@ -80,7 +76,6 @@ public class MediaFoldersPanel extends JPanel {
 		});
 
 		btRemove.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent e) {
 				directoryModel.remove(selectedIndex);
 				storeDirectories();
@@ -88,7 +83,6 @@ public class MediaFoldersPanel extends JPanel {
 		});
 
 		btBrowse.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(final ActionEvent e) {
 
 				final File f = Utils.promptUserForDirectory();
@@ -105,7 +99,6 @@ public class MediaFoldersPanel extends JPanel {
 		lsDirectory.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsDirectory.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
-					@Override
 					public void valueChanged(final ListSelectionEvent e) {
 						selectedIndex = lsDirectory.getSelectedIndex();
 						updateMediaFolderSelection(lsDirectory
