@@ -75,13 +75,10 @@ public class FilteredListPanel extends JPanel {
 		final JTextField tfFilter = new JTextField();
 		tfFilter.setPreferredSize(new Dimension(200, 22));
 		tfFilter.addKeyListener(new KeyListener() {
-			@Override
 			public void keyPressed(final KeyEvent e) {}
 
-			@Override
 			public void keyReleased(final KeyEvent e) {}
 
-			@Override
 			public void keyTyped(final KeyEvent e) {
 				// if (KeyEvent.VK_ENTER == e.getKeyCode()) {
 				searchFilter.setSearchString(tfFilter.getText().trim());
@@ -95,7 +92,6 @@ public class FilteredListPanel extends JPanel {
 
 		CollectionManager.getManager().addEventListener(
 				EventType.COLLECTION_SCANNING, new EventListener() {
-					@Override
 					public void onEvent(final Event e) {
 						gridModel.fireTableDataChanged();
 						updateStatusLabel();
@@ -130,52 +126,54 @@ public class FilteredListPanel extends JPanel {
 
 		@Override
 		public Object getValueAt(final int row, final int column) {
+			String re = null;
 			final Item item = Collection.getInstance().get(row);
 			if (item instanceof MusicItem) {
 				final MusicItem music = (MusicItem) item;
 				switch (column) {
 					case FILE_NAME:
-						return music.getFile().getName();
+						re = music.getFile().getName();
 					case COL_TITLE:
-						return music.getTag().getTitle();
+						re = music.getTag().getTitle().toString();
 					case COL_ARTIST:
-						return music.getTag().getArtist();
+						re = music.getTag().getArtist().toString();
 					case COL_ALBUM:
-						return music.getTag().getAlbum();
+						re = music.getTag().getAlbum().toString();
 					case COL_TYPE:
 						return "music";
 					default:
-						return "";
+						re = "";
 				}
 			}
-			if (item instanceof MovieItem) {
+			else if (item instanceof MovieItem) {
 				final MovieItem movie = (MovieItem) item;
 				switch (column) {
 					case FILE_NAME:
-						return movie.getFile().getName();
+						re = movie.getFile().getName();
 					case COL_TITLE:
-						return movie.getFile().getName();
+						re = movie.getFile().getName();
 					case COL_TYPE:
-						return "movie";
+						re = "movie";
 					default:
-						return "";
+						re = "";
 				}
 			}
-			if (item instanceof ImageItem) {
+			else if (item instanceof ImageItem) {
 				final ImageItem image = (ImageItem) item;
 				switch (column) {
 					case FILE_NAME:
-						return image.getFile().getName();
+						re = image.getFile().getName();
 					case COL_TITLE:
-						return image.getFile().getName();
+						re = image.getFile().getName();
 					case COL_TYPE:
-						return "image";
+						re = "image";
 					default:
-						return "";
+						re = "";
 				}
 
 			}
-			return item.getFile().getName();
+			if (null == re) return "N/A";
+			return re;
 		}
 
 		@Override

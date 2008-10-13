@@ -33,14 +33,12 @@ public class ScanPanel extends JPanel{
 		taOutput.setEditable(false);
 
 		colManager.addEventListener(EventType.COLLECTION_SCANNING, new EventListener() {
-			@Override
 			public void onEvent(final Event e) {
 				taOutput.setText("Scanning collection: "+collection.get(collection.size()-1).getFile().getName()
 						+"\nItems found: "+collection.size());
 			}
 		});
 		colManager.addEventListener(EventType.COLLECTION_SCANNING_DONE, new EventListener() {
-			@Override
 			public void onEvent(final Event e) {
 				taOutput.setText("Scanning collection: Done!"
 						+"\nItems found: "+collection.size());

@@ -25,7 +25,6 @@ public class CollectionManager extends AbstractEventSource implements Const {
 	final Logger log = Logger.getLogger(getClass().getName());
 
 	static CollectionManager instance;
-	private volatile boolean isScanning = false;
 
 	private final ScanFolderWorker scanWorker = null;
 
@@ -78,6 +77,14 @@ public class CollectionManager extends AbstractEventSource implements Const {
 			fireEvent(EventType.COLLECTION_SCANNING_DONE);
 			return null;
 		}
+		
+		
+		private void notifyScanning() {
+			//if (--notifyCounter <= 0) {
+				fireEvent(EventType.COLLECTION_SCANNING);
+			//	notifyCounter = notifyInterval;
+			//}
+		}
 
 		/**
 		 * Recursively scan this folder
@@ -97,7 +104,7 @@ public class CollectionManager extends AbstractEventSource implements Const {
 						final MovieItem movie = new MovieItem(f);
 						if (!collection.contains(movie)) {
 							collection.add(movie);
-							fireEvent(EventType.COLLECTION_SCANNING);
+							notifyScanning();
 						}
 
 					} else if (SupportedTypes.isMusicType(f)) {
@@ -109,7 +116,7 @@ public class CollectionManager extends AbstractEventSource implements Const {
 						}
 						if (!collection.contains(music)) {
 							collection.add(music);
-							fireEvent(EventType.COLLECTION_SCANNING);
+							notifyScanning();
 						}
 
 					} else if (SupportedTypes.isImageType(f)) {
@@ -117,7 +124,7 @@ public class CollectionManager extends AbstractEventSource implements Const {
 						final ImageItem image = new ImageItem(f);
 						if (!collection.contains(image)) {
 							collection.add(image);
-							fireEvent(EventType.COLLECTION_SCANNING);
+							notifyScanning();
 						}
 
 					}

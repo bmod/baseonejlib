@@ -20,7 +20,7 @@ public class ScanCollectionAction extends AbstractAction {
 
 	public void actionPerformed(final ActionEvent arg0) {
 
-		CollectionManager.getManager().scanCollection(false);
+		CollectionManager.getManager().scanCollection(true);
 
 	}
 
