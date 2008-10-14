@@ -126,11 +126,11 @@ public class SlickTest implements Game {
 	public void update(final GameContainer gc, final int t)
 			throws SlickException {}
 
-	@Override
 	public String getTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "Title";
 	}
+
 }
 
 enum ItemType {
