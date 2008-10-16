@@ -3,6 +3,10 @@ package com.baseoneonline.java.jmeTest.text;
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
+import com.jme.scene.state.BlendState;
+import com.jme.scene.state.BlendState.DestinationFunction;
+import com.jme.scene.state.BlendState.SourceFunction;
+import com.jme.system.DisplaySystem;
 
 public class TextNode extends Node {
 
@@ -12,11 +16,24 @@ public class TextNode extends Node {
 
 	public TextNode(TTFont ttFont) {
 		this.ttFont = ttFont;
+
+		// Enable alpha blend
+		BlendState bs = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
+		bs.setBlendEnabled(true);
+		bs.setSourceFunction(SourceFunction.SourceAlpha);
+		bs.setDestinationFunction(DestinationFunction.One);
+		//bs.setTestEnabled(true);
+		//bs.setTestFunction(TestFunction.GreaterThan);
+		//bs.setReference(.5f);
+		setRenderState(bs);
+		
+		// Disable light (set pure color)
+		setLightCombineMode(LightCombineMode.Off);
+		updateRenderState();
 	}
 
 	public void setColor(ColorRGBA col) {
-		for (FontQuad q : quads) {
-		}
+		
 	}
 
 	public void setText(String text) {
@@ -41,6 +58,8 @@ public class TextNode extends Node {
 			x += q.getWidth();
 			attachChild(q);
 		}
+		
+
 	}
 
 }

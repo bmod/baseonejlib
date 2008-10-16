@@ -10,12 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import com.jme.image.Texture;
-import com.jme.scene.Spatial.LightCombineMode;
-import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.BlendState.DestinationFunction;
-import com.jme.scene.state.BlendState.SourceFunction;
-import com.jme.scene.state.BlendState.TestFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
@@ -50,17 +45,6 @@ public class TTFont {
 		ts.setTexture(t1);
 		q.setRenderState(ts);
 		
-		// Enable alpha blend
-		BlendState bs = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
-		bs.setBlendEnabled(true);
-		bs.setSourceFunction(SourceFunction.SourceAlpha);
-		bs.setDestinationFunction(DestinationFunction.OneMinusSourceAlpha);
-		bs.setTestEnabled(true);
-		bs.setTestFunction(TestFunction.GreaterThan);
-		q.setRenderState(bs);
-		
-		// Disable light (set pure color)
-		q.setLightCombineMode(LightCombineMode.Off);
 
 		return q;
 	}
