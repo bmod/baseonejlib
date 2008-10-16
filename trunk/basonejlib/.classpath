@@ -10,7 +10,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BaseOneJLib/lib/lwjgl_native/win32"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme2"/>
-	<classpathentry kind="lib" path="lib/trove-2.0.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
+	<classpathentry kind="lib" path="lib/trove-2.0.4.jar" sourcepath="lib/trove-src-2.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
