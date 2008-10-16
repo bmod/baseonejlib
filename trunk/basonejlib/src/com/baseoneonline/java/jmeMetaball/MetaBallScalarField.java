@@ -5,7 +5,7 @@ import com.jme.math.Vector3f;
 class MetaBallScalarField implements ScalarField {
  
     private final MetaBall[] balls;
-    private static Vector3f vec = new Vector3f();
+
     
     public MetaBallScalarField(MetaBall... balls) {
         this.balls = balls;

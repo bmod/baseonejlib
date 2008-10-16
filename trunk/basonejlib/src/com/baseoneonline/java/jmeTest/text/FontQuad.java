@@ -8,18 +8,25 @@ import com.jme.scene.TriMesh;
 import com.jme.util.geom.BufferUtils;
 
 public class FontQuad extends TriMesh {
-	private final float width;
-	private final float height;
+	private float width;
+	private float height;
 
 	public FontQuad(String name, float width, float height) {
 		super("FQuad");
 		this.width = width;
 		this.height = height;
 		initialize();
+
 	}
-	
+
 	public void setColor(ColorRGBA col) {
-		
+
+	}
+
+	public void resize(float width, float height) {
+		this.width = width;
+		this.height = height;
+		updateGeometry();
 	}
 
 	public float getWidth() {
@@ -28,6 +35,15 @@ public class FontQuad extends TriMesh {
 
 	public float getHeight() {
 		return height;
+	}
+
+	private void updateGeometry() {
+		getVertexBuffer().clear();
+		getVertexBuffer().put(0).put(0).put(0);
+		getVertexBuffer().put(0).put(-height).put(0);
+		getVertexBuffer().put(width).put(-height).put(0);
+		getVertexBuffer().put(width).put(0).put(0);
+
 	}
 
 	/**
@@ -49,10 +65,7 @@ public class FontQuad extends TriMesh {
 		setTriangleQuantity(2);
 		setIndexBuffer(BufferUtils.createIntBuffer(getTriangleCount() * 3));
 
-		getVertexBuffer().put(0).put(0).put(0);
-		getVertexBuffer().put(0).put(-height).put(0);
-		getVertexBuffer().put(width).put(-height).put(0);
-		getVertexBuffer().put(width).put(0).put(0);
+		updateGeometry();
 
 		getNormalBuffer().put(0).put(0).put(1);
 		getNormalBuffer().put(0).put(0).put(1);
@@ -70,8 +83,7 @@ public class FontQuad extends TriMesh {
 		getIndexBuffer().put(0);
 		getIndexBuffer().put(2);
 		getIndexBuffer().put(3);
-		
-		
+
 	}
 
 }
