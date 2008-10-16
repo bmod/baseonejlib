@@ -5,21 +5,21 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
-public class DirectoryModel {
+public class DirectoryModel implements MenuModel<File> {
 	private final Logger log = Logger.getLogger(getClass().getName());
-	
+
 	private File dir;
-	
+
 	private final ArrayList<File> files = new ArrayList<File>();
-	
+
 	private int selectedIndex;
-	
-	public DirectoryModel(File startDir) {
+
+	public DirectoryModel(final File startDir) {
 		setDirectory(startDir);
 	}
-	
-	
-	public void setDirectory(File d) {
+
+
+	public void setDirectory(final File d) {
 		if (!d.exists()) {
 			log.severe("Directory does not exist: "+d.getAbsolutePath());
 			return;
@@ -28,18 +28,18 @@ public class DirectoryModel {
 			log.severe("Is not a directory: "+d.getAbsolutePath());
 			return;
 		}
-		
+
 		dir = d;
 		files.clear();
-		File parent = dir.getParentFile();
+		final File parent = dir.getParentFile();
 		if (null != parent) {
 			files.add(parent);
 		}
-		for (File f : dir.listFiles()) {
+		for (final File f : dir.listFiles()) {
 			files.add(f);
 		}
 
-		
+
 		if (files.size() > 0) {
 			if (files.size() > 1) {
 				selectedIndex = 1;
@@ -49,30 +49,52 @@ public class DirectoryModel {
 		} else {
 			selectedIndex = -1;
 		}
-		
+
 	}
-	
+
 	public int getSelectedIndex() {
 		return selectedIndex;
 	}
-	
-	public void setSelectedIndex(int index) {
+
+	public void setSelectedIndex(final int index) {
 		selectedIndex = index;
 	}
-	
+
 	public File[] getFiles() {
 		return files.toArray(new File[files.size()]);
 	}
-	
+
 	public File getDirectory() {
 		return dir;
 	}
-	
+
 	public int size() {
 		if (null != files) {
 			return files.size();
 		}
 		return 0;
 	}
-	
+
+
+
+
+
+	@Override
+	public File get(final int index) {
+		return files.get(index);
+	}
+
+
+	@Override
+	public void add(final File element) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public String getLabel(final File element) {
+		return element.getName();
+	}
+
 }
