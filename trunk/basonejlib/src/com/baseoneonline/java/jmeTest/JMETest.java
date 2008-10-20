@@ -83,7 +83,10 @@ public class JMETest extends SimpleGame implements Const {
 					.getWorldTranslation().y;
 		}
 		if (key.isValidCommand(CMD_ENTER, true)) {
-
+			File dir = model.getSelectedItem();
+			if (null != dir && dir.isDirectory()) {
+				model.setDirectory(dir);
+			}
 		}
 
 		if (key.isValidCommand(CMD_ZOOM_IN, true)) {

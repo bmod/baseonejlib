@@ -9,13 +9,16 @@ public class DirectoryModel implements MenuModel<File> {
 	private final Logger log = Logger.getLogger(getClass().getName());
 
 	private File dir;
-
+	private final File root;
+	
+	
 	private final ArrayList<File> files = new ArrayList<File>();
 
 	private int selectedIndex;
 
-	public DirectoryModel(final File startDir) {
-		setDirectory(startDir);
+	public DirectoryModel(final File root) {
+		this.root = root;
+		setDirectory(root);
 	}
 
 
@@ -51,6 +54,13 @@ public class DirectoryModel implements MenuModel<File> {
 		}
 
 	}
+	
+	public void changeDirectory(File dir) {
+	}
+	
+	public File getSelectedItem() {
+		return files.get(selectedIndex);
+	}
 
 	public int getSelectedIndex() {
 		return selectedIndex;
@@ -79,20 +89,20 @@ public class DirectoryModel implements MenuModel<File> {
 
 
 
-	@Override
+
 	public File get(final int index) {
 		return files.get(index);
 	}
 
 
-	@Override
+
 	public void add(final File element) {
 		// TODO Auto-generated method stub
 
 	}
 
 
-	@Override
+
 	public String getLabel(final File element) {
 		return element.getName();
 	}
