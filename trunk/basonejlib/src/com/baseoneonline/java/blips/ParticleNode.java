@@ -6,7 +6,7 @@ import com.jme.scene.Node;
 public class ParticleNode extends Node {
 	
 	private Vector3f velocity = new Vector3f();
-	private float damp = .9f;
+	private float damp = .8f;
 	
 	public float getDamp() {
 		return damp;
@@ -28,8 +28,8 @@ public class ParticleNode extends Node {
 	}
 	
 	public void update() {
-		velocity.multLocal(damp);
 		Vector3f loc = getLocalTranslation();
+		velocity.multLocal(damp);
 		
 		setLocalTranslation(loc.add(velocity));
 	}
