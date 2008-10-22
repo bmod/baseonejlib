@@ -1,4 +1,4 @@
-package com.baseoneonline.java.blips;
+package com.baseoneonline.java.blips.core;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -59,6 +59,7 @@ public class PlayerNode extends Node implements Pulsable {
 	}
 
 	public void pulse() {
+
 		dot.setDefaultColor(pulseDotColor.clone());
 		dot.setLocalScale(1.5f);
 	}

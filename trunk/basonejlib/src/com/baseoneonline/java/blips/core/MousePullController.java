@@ -1,4 +1,4 @@
-package com.baseoneonline.java.blips;
+package com.baseoneonline.java.blips.core;
 
 
 
@@ -14,9 +14,10 @@ import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
-class MousePullController extends Controller {
+public class MousePullController extends Controller {
 
 	private final Vector3f vel = new Vector3f();
+	private final float maxVelocity = 10;
 	private final float damp = .9f;
 	private final float acc = .005f;
 	private final float slerpSpeed = .35f;
@@ -40,7 +41,10 @@ class MousePullController extends Controller {
 			vel.addLocal(dir.mult(acc));
 		}
 		
-
+		final float len = vel.length();
+		if (len > maxVelocity) {
+			vel.normalizeLocal().multLocal(len);
+		}
 		
 		
 		vel.multLocal(damp);

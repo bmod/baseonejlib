@@ -1,4 +1,4 @@
-package com.baseoneonline.java.blips;
+package com.baseoneonline.java.blips.core;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;

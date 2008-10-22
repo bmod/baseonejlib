@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.jmeMetaball.MetaBallSystem;
+import com.baseoneonline.java.jme.metaballs.MetaBallSystem;
 import com.jme.app.SimpleGame;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;

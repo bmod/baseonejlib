@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeMetaball;
+package com.baseoneonline.java.jme.metaballs;
 
 import static com.jme.math.FastMath.nextRandomFloat;
 

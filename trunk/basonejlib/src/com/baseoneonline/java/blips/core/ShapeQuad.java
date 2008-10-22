@@ -1,4 +1,4 @@
-package com.baseoneonline.java.blips;
+package com.baseoneonline.java.blips.core;
 
 import com.jme.scene.shape.Quad;
 
