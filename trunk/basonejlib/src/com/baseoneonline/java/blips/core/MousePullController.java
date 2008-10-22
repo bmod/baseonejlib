@@ -1,7 +1,5 @@
 package com.baseoneonline.java.blips.core;
 
-
-
 import com.jme.input.MouseInput;
 import com.jme.input.controls.binding.MouseButtonBinding;
 import com.jme.math.FastMath;
@@ -17,13 +15,13 @@ import com.jme.system.DisplaySystem;
 public class MousePullController extends Controller {
 
 	private final Vector3f vel = new Vector3f();
-	private final float maxVelocity = 10;
+	private final float maxVelocity = .1f;
 	private final float damp = .9f;
 	private final float acc = .005f;
 	private final float slerpSpeed = .35f;
 
 	private final Quaternion angle = new Quaternion();
-	
+
 	private final Node node;
 	private final Plane plane;
 
@@ -34,23 +32,22 @@ public class MousePullController extends Controller {
 
 	@Override
 	public void update(final float time) {
-		
+
 		if (MouseInput.get().isButtonDown(MouseButtonBinding.LEFT_BUTTON)) {
 			final Vector3f loc = getMousePosition3D(plane);
 			final Vector3f dir = loc.subtract(node.getWorldTranslation());
 			vel.addLocal(dir.mult(acc));
 		}
-		
+
+		vel.multLocal(damp);
+
 		final float len = vel.length();
 		if (len > maxVelocity) {
 			vel.normalizeLocal().multLocal(len);
 		}
-		
-		
-		vel.multLocal(damp);
 		node.getLocalTranslation().addLocal(vel);
 
-		angle.fromAngles(0,0, FastMath.atan2(vel.y, vel.x));
+		angle.fromAngles(0, 0, FastMath.atan2(vel.y, vel.x));
 		node.getLocalRotation().slerp(angle, slerpSpeed);
 	}
 
