@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeMetaball;
+package com.baseoneonline.java.jme.metaballs;
 
 import gnu.trove.TFloatArrayList;
 import gnu.trove.TIntArrayList;

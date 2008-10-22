@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeMetaball;
+package com.baseoneonline.java.jme.metaballs;
 
 import java.net.URL;
 

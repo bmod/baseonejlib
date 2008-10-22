@@ -83,7 +83,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 	
 	
-	
 	/**
 	 * Set preferred frame rate. The main loop will make every attempt to
 	 * maintain the given frame rate. This should not be called prior to the
