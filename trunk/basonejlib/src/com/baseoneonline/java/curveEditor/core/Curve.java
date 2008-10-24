@@ -1,17 +1,29 @@
 package com.baseoneonline.java.curveEditor.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Curve {
 
-	private final Point[] points;
+	private final List<Point> points = new ArrayList<Point>();
 
 	private final Bounds bounds = new Bounds();
 
-	public Curve(final Point[] pts) {
-		points = pts;
+	public Curve() {
+		
 	}
 
-	public Point[] getPoints() {
+	public List<Point> getPoints() {
 		return points;
+	}
+	
+	public void addPoint(final Point p) {
+		points.add(p);
+		updateBounds();
+	}
+	
+	public void removePoint(final int index) {
+		points.remove(index);
 	}
 
 	public void updateBounds() {

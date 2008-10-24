@@ -10,13 +10,15 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.Vector;
 
 import com.baseoneonline.java.curveEditor.core.Curve;
 import com.baseoneonline.java.curveEditor.core.Point;
@@ -25,28 +27,30 @@ class CVPanel extends Canvas {
 
 	private static final long serialVersionUID = 8259577516462336875L;
 
-	private final List<Curve> curves = new Vector<Curve>();
+	private final Curve curve;
 
 	private BufferedImage buffer;
 
 	private final float margin = 20;
 
-	private final Rectangle viewPort = new Rectangle(100, 100);
+	private final float dotPickSize = 10;
 
-	Curve curve;
+	private int selectedDot = -1;
+
+	private final Rectangle viewPort = new Rectangle(100, 100);
 
 	public CVPanel() {
 
 		final Point[] pts = { createPoint(), createPoint(), createPoint(),
 				createPoint(), createPoint(), createPoint(), createPoint() };
 
-		curve = new Curve(pts);
-		curves.add(curve);
+		curve = new Curve();
 
 		resize();
 		addComponentListener(componentListener);
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);
+		addKeyListener(keyListener);
 	}
 
 	private Point createPoint() {
@@ -66,30 +70,68 @@ class CVPanel extends Canvas {
 		g.setColor(Color.red);
 		g.setStroke(new BasicStroke(1));
 
-		for (final Curve c : curves) {
-			drawCurveLinear(g, c);
-		}
+		final float dotSize = 5;
 
+		final List<Point> pts = curve.getPoints();
+		if (pts.size() > 0) {
+			Point p1 = pts.get(0);
+
+			for (int i = 0; i < pts.size(); i++) {
+				final Point p = pts.get(i);
+
+				if (i == selectedDot) {
+					drawSelectedPoint(g, p.x, p.y);
+				} else {
+					drawPoint(g, p.x, p.y);
+				}
+
+				if (i > 0) {
+					g.setColor(Color.black);
+					final Shape s = new Line2D.Float(p.toPoint2D(), p1
+							.toPoint2D());
+					g.draw(s);
+				}
+				p1 = p;
+			}
+		}
 		g1.drawImage(buffer, 0, 0, null);
 	}
 
-	private void drawCurveLinear(final Graphics2D g, final Curve c) {
-		final Point[] pts = c.getPoints();
-		Point p1 = pts[0];
-		for (int i = 1; i < pts.length; i++) {
-			final Point p = pts[i];
-
-			final Shape s = new Line2D.Float(p.toPoint2D(), p1.toPoint2D());
-			g.draw(s);
-
-			p1 = p;
-		}
+	private void drawPoint(final Graphics2D g, final float x, final float y) {
+		g.setColor(Color.LIGHT_GRAY);
+		g.setStroke(new BasicStroke(1.5f));
+		final float dotSize = 4;
+		final Shape dot = new Rectangle2D.Float(x - (dotSize / 2), y
+				- (dotSize / 2), dotSize, dotSize);
+		g.draw(dot);
 	}
 
-	private Point transformPoint(final Point p) {
-		final Point p1 = new Point();
+	private void drawSelectedPoint(final Graphics2D g, final float x,
+			final float y) {
+		g.setColor(Color.RED);
+		g.setStroke(new BasicStroke(2));
+		final float dotSize = 6;
+		final Shape dot = new Rectangle2D.Float(x - (dotSize / 2), y
+				- (dotSize / 2), dotSize, dotSize);
+		g.draw(dot);
+	}
 
-		return p1;
+	private void addPoint(final java.awt.Point p) {
+		curve.addPoint(new Point(p.x, p.y));
+	}
+
+	private void trySelectPoint(final java.awt.Point p) {
+		final float ps = dotPickSize / 2;
+		for (int i = 0; i < curve.getPoints().size(); i++) {
+			final Point p1 = curve.getPoints().get(i);
+			if (p.x > p1.x - ps && p.x < p1.x + ps && p.y > p1.y - ps
+					&& p.y < p1.y + ps) {
+				selectedDot = i;
+				return;
+			}
+		}
+		selectedDot = -1;
+
 	}
 
 	@Override
@@ -110,6 +152,10 @@ class CVPanel extends Canvas {
 
 	}
 
+	public boolean hasSelection() {
+		return selectedDot != -1;
+	}
+
 	private final MouseListener mouseListener = new MouseListener() {
 
 		public void mouseClicked(final MouseEvent e) {}
@@ -117,11 +163,18 @@ class CVPanel extends Canvas {
 		public void mouseEntered(final MouseEvent arg0) {}
 
 		public void mouseExited(final MouseEvent arg0) {
-			System.out.println("Mouse Out");
+		// System.out.println("Mouse Out");
 		}
 
-		public void mousePressed(final MouseEvent arg0) {
-			System.out.println("Click");
+		public void mousePressed(final MouseEvent e) {
+			trySelectPoint(e.getPoint());
+			System.out.println(selectedDot);
+			if (hasSelection()) {
+
+			} else {
+				addPoint(e.getPoint());
+			}
+			repaint();
 		}
 
 		public void mouseReleased(final MouseEvent arg0) {}
@@ -130,7 +183,12 @@ class CVPanel extends Canvas {
 	private final MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 
 		public void mouseDragged(final MouseEvent e) {
-			System.out.println("Drag "+e.getButton());
+			if (hasSelection()) {
+				final Point p = curve.getPoints().get(selectedDot);
+				p.x = e.getX();
+				p.y = e.getY();
+				repaint();
+			}
 		}
 
 		public void mouseMoved(final MouseEvent e) {}
@@ -150,4 +208,21 @@ class CVPanel extends Canvas {
 
 		public void componentShown(final ComponentEvent e) {}
 	};
+
+	private final KeyListener keyListener = new KeyListener() {
+
+		public void keyPressed(final KeyEvent e) {}
+
+		public void keyReleased(final KeyEvent e) {}
+
+		public void keyTyped(final KeyEvent e) {
+			if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
+				System.out.println("DEL");
+				curve.removePoint(selectedDot);
+				repaint();
+			}
+		}
+
+	};
+
 }

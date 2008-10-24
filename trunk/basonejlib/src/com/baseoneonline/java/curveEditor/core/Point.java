@@ -14,7 +14,7 @@ public class Point {
 		this.x = x;
 		this.y = y;
 	}
-
+	
 	public Point2D toPoint2D() {
 		return new Point2D.Float(x, y);
 	}
