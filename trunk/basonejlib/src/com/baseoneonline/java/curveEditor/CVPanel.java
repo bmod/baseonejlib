@@ -5,18 +5,19 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Vector;
 
-import com.baseoneonline.java.curveEditor.core.Bounds;
 import com.baseoneonline.java.curveEditor.core.Curve;
 import com.baseoneonline.java.curveEditor.core.Point;
 
@@ -28,14 +29,30 @@ class CVPanel extends Canvas {
 
 	private BufferedImage buffer;
 
+	private final float margin = 20;
+
+	private final Rectangle viewPort = new Rectangle(100, 100);
+
+	Curve curve;
+
 	public CVPanel() {
-		resizeBuffer();
-		addComponentListener(componentAdapter);
-		addMouseListener(mouseAdapter);
+
+		final Point[] pts = { createPoint(), createPoint(), createPoint(),
+				createPoint(), createPoint(), createPoint(), createPoint() };
+
+		curve = new Curve(pts);
+		curves.add(curve);
+
+		resize();
+		addComponentListener(componentListener);
+		addMouseListener(mouseListener);
+		addMouseMotionListener(mouseMotionListener);
 	}
 
-	public void addCurve(final Curve c) {
-		curves.add(c);
+	private Point createPoint() {
+		final float scale = 100;
+		return new Point((float) Math.random() * scale, (float) Math.random()
+				* scale);
 	}
 
 	@Override
@@ -46,39 +63,39 @@ class CVPanel extends Canvas {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		final Bounds bounds = findBounds();
-		final float width = bounds.getWidth();
-		final float height = bounds.getHeight();
+		g.setColor(Color.red);
+		g.setStroke(new BasicStroke(1));
 
 		for (final Curve c : curves) {
-			for (int i = 0; i < c.size(); i++) {
-				final Point p = c.getPoint(i);
-				final float x = (p.x - bounds.left) * width;
-				final float y = (p.y - bounds.top) * height;
-
-				final float size = 2;
-				final float s = size / 2;
-
-				final Shape shape = new Ellipse2D.Float(x - s, y - s, x + s, y + s);
-				g.setColor(Color.red);
-				g.setStroke(new BasicStroke(1));
-				g.draw(shape);
-			}
+			drawCurveLinear(g, c);
 		}
 
-		g.setStroke(new BasicStroke(2));
-		g.setColor(Color.black);
-		g.drawLine(5, 10, 200, 300);
-
-
-
 		g1.drawImage(buffer, 0, 0, null);
+	}
+
+	private void drawCurveLinear(final Graphics2D g, final Curve c) {
+		final Point[] pts = c.getPoints();
+		Point p1 = pts[0];
+		for (int i = 1; i < pts.length; i++) {
+			final Point p = pts[i];
+
+			final Shape s = new Line2D.Float(p.toPoint2D(), p1.toPoint2D());
+			g.draw(s);
+
+			p1 = p;
+		}
+	}
+
+	private Point transformPoint(final Point p) {
+		final Point p1 = new Point();
+
+		return p1;
 	}
 
 	@Override
 	public void paint(final Graphics g) {}
 
-	private void resizeBuffer() {
+	private void resize() {
 		int w = getWidth();
 		int h = getHeight();
 		if (w <= 0) {
@@ -87,28 +104,50 @@ class CVPanel extends Canvas {
 		if (h <= 0) {
 			h = 1;
 		}
-		buffer = new BufferedImage(w, h,
-				BufferedImage.TYPE_INT_RGB);
+		buffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+
+		viewPort.setSize(getWidth(), getHeight());
+
 	}
 
-	private Bounds findBounds() {
-		final Bounds b = new Bounds();
-		for (final Curve c : curves) {
-			b.merge(c.getBounds());
-		}
-		return b;
-	}
+	private final MouseListener mouseListener = new MouseListener() {
 
-	MouseAdapter mouseAdapter = new MouseAdapter() {
-		@Override
 		public void mouseClicked(final MouseEvent e) {}
+
+		public void mouseEntered(final MouseEvent arg0) {}
+
+		public void mouseExited(final MouseEvent arg0) {
+			System.out.println("Mouse Out");
+		}
+
+		public void mousePressed(final MouseEvent arg0) {
+			System.out.println("Click");
+		}
+
+		public void mouseReleased(final MouseEvent arg0) {}
 	};
 
-	ComponentAdapter componentAdapter = new ComponentAdapter() {
-		@Override
+	private final MouseMotionListener mouseMotionListener = new MouseMotionListener() {
+
+		public void mouseDragged(final MouseEvent e) {
+			System.out.println("Drag "+e.getButton());
+		}
+
+		public void mouseMoved(final MouseEvent e) {}
+
+	};
+
+	private final ComponentListener componentListener = new ComponentListener() {
+
 		public void componentResized(final ComponentEvent e) {
-			resizeBuffer();
+			resize();
 			repaint();
 		}
+
+		public void componentHidden(final ComponentEvent e) {}
+
+		public void componentMoved(final ComponentEvent e) {}
+
+		public void componentShown(final ComponentEvent e) {}
 	};
 }

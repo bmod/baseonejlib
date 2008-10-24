@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeTest;
+package com.baseoneonline.java.jme.menuTest;
 
 public interface Const {
 	public final String CMD_ZOOM_IN = "zoomIn";
