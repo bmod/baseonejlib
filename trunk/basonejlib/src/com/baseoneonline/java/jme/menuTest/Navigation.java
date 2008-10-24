@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeTest;
+package com.baseoneonline.java.jme.menuTest;
 
 public enum Navigation {
 	UP,

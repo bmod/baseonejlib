@@ -5,9 +5,6 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import com.baseoneonline.java.curveEditor.core.Curve;
-import com.baseoneonline.java.curveEditor.core.Point;
-
 public class CVEditor extends JFrame {
 	/**
 	 *
@@ -32,13 +29,7 @@ public class CVEditor extends JFrame {
 	public CVEditor() {
 		createUI();
 
-		final Curve cv = new Curve();
-		cv.addPoint(new Point((float) Math.random(), (float) Math.random()));
-		cv.addPoint(new Point((float) Math.random(), (float) Math.random()));
-		cv.addPoint(new Point((float) Math.random(), (float) Math.random()));
-		cv.addPoint(new Point((float) Math.random(), (float) Math.random()));
-		cv.sortPoints();
-		cvPanel.addCurve(cv);
+
 	}
 
 	CVPanel cvPanel;

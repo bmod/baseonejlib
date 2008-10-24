@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeTest;
+package com.baseoneonline.java.jme.menuTest;
 
 public interface MenuModel<T> {
 	public T get(int index);
