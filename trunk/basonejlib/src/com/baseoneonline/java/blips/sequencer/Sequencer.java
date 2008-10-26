@@ -3,8 +3,6 @@ package com.baseoneonline.java.blips.sequencer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.baseoneonline.java.blips.sequencer.SequencerEvent.Type;
-
 public class Sequencer {
 
 	private final List<SequencerListener> listeners = new ArrayList<SequencerListener>();
@@ -12,6 +10,8 @@ public class Sequencer {
 	int MS_PER_MINUTE = 60000;
 
 	long delay = 50;
+	private int ticksPerBeat = 1;
+	private int currentTick = 1;
 
 	Thread timer = new Thread() {
 
@@ -22,16 +22,21 @@ public class Sequencer {
 
 				try {
 					final long startTime = System.currentTimeMillis();
-					fireEvent(Type.BEAT);
+
+					if (currentTick > ticksPerBeat) {
+						fireBeat();
+						currentTick = 0;
+					}
+					currentTick++;
+					fireTick();
 
 					final long timeTaken = System.currentTimeMillis()
 							- startTime;
-
 					if (timeTaken < delay) {
 						synchronized (this) {
 							wait(delay - timeTaken);
 						}
-					} 
+					}
 
 				} catch (final InterruptedException e) {}
 
@@ -41,15 +46,16 @@ public class Sequencer {
 	};
 
 	public Sequencer() {
-		setSpeed(80);
+		setSpeed(80,4);
 	}
 
 	public void start() {
 		timer.start();
 	}
 
-	public void setSpeed(final float bpm) {
-		delay = (long) (MS_PER_MINUTE / bpm);
+	public void setSpeed(final float bpm, final int ticksPerBeat) {
+		delay = (long) (MS_PER_MINUTE / (bpm*ticksPerBeat));
+		this.ticksPerBeat = ticksPerBeat;
 	}
 
 	public void addListener(final SequencerListener l) {
@@ -64,10 +70,15 @@ public class Sequencer {
 		}
 	}
 
-	public void fireEvent(final Type type) {
-	final SequencerEvent e = new SequencerEvent(Type.TICK);
+	public void fireTick() {
 		for (final SequencerListener l : listeners) {
-			l.onEvent(e);
+			l.onTick();
+		}
+	}
+
+	public void fireBeat() {
+		for (final SequencerListener l : listeners) {
+			l.onBeat();
 		}
 	}
 

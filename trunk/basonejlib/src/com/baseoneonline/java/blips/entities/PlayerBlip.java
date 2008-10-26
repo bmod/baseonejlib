@@ -1,4 +1,4 @@
-package com.baseoneonline.java.blips.core;
+package com.baseoneonline.java.blips.entities;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,19 +7,21 @@ import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 
+import com.baseoneonline.java.blips.core.ImagePaintable;
+import com.baseoneonline.java.blips.core.ShapeFactory;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class PlayerNode extends Node implements Pulsable {
+public class PlayerBlip extends Blip {
 
 	private final ColorRGBA dotColor = new ColorRGBA(1,0,0,.5f);
 	private final ColorRGBA pulseDotColor = new ColorRGBA(1,.5f,.5f,1);
-	
+
 	private final Quad dot;
-	
-	public PlayerNode() {
+
+	public PlayerBlip() {
+		setPulseDelay(2);
 
 		final Quad arc = ShapeFactory.getImageQuad(new ImagePaintable() {
 			public void paint(final Graphics2D g, final int width,
@@ -51,24 +53,30 @@ public class PlayerNode extends Node implements Pulsable {
 			}
 		}, 256, 1);
 		attachChild(dot);
-		
+
 		dot.setDefaultColor(dotColor);
 
 		updateRenderState();
 
 	}
 
+	@Override
 	public void pulse() {
 
 		dot.setDefaultColor(pulseDotColor.clone());
 		dot.setLocalScale(1.5f);
+
 	}
 
+
+
+	@Override
 	public void update() {
+
 		dot.getDefaultColor().interpolate(dotColor, .1f);
 		dot.getLocalScale().interpolate(new Vector3f(1,1,1), 0.1f);
 	}
-	
-	
+
+
 
 }
