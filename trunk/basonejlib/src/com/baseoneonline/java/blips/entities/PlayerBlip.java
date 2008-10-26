@@ -21,7 +21,7 @@ public class PlayerBlip extends Blip {
 	private final Quad dot;
 
 	public PlayerBlip() {
-		setPulseDelay(2);
+		setPulseDelay(1);
 
 		final Quad arc = ShapeFactory.getImageQuad(new ImagePaintable() {
 			public void paint(final Graphics2D g, final int width,

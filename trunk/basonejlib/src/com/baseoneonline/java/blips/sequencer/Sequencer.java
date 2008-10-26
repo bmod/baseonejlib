@@ -46,7 +46,7 @@ public class Sequencer {
 	};
 
 	public Sequencer() {
-		setSpeed(80,4);
+		setSpeed(80,8);
 	}
 
 	public void start() {
