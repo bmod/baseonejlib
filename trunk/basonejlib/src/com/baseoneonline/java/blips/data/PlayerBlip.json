@@ -1,0 +1,6 @@
+{
+	blip:{
+		name:"PlayerBlip",
+		pulseSustain:4
+	}
+}

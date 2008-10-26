@@ -1,27 +1,22 @@
 package com.baseoneonline.java.blips;
 
-
-
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.blips.core.BlipNode;
-import com.baseoneonline.java.blips.core.IKContraint;
-import com.baseoneonline.java.blips.core.IKSystem;
+import com.baseoneonline.java.blips.core.BlipSystem;
 import com.baseoneonline.java.blips.core.MousePullController;
-import com.baseoneonline.java.blips.core.PlayerNode;
+import com.baseoneonline.java.blips.entities.Blip;
+import com.baseoneonline.java.blips.entities.DefaultBlip;
+import com.baseoneonline.java.blips.entities.PlayerBlip;
 import com.baseoneonline.java.blips.sequencer.Sequencer;
-import com.baseoneonline.java.blips.sequencer.SequencerEvent;
 import com.baseoneonline.java.blips.sequencer.SequencerListener;
 import com.baseoneonline.java.jlib.utils.JMEMath;
 import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.jme.input.MouseInput;
-import com.jme.input.MouseInputListener;
 import com.jme.math.Plane;
 import com.jme.math.Vector3f;
 
-public class TestBlips extends BasicFixedRateGame {
+class TestBlips extends BasicFixedRateGame {
 
 	String basePath = "com/baseoneonline/java/blips/data/";
 
@@ -32,7 +27,7 @@ public class TestBlips extends BasicFixedRateGame {
 
 	}
 
-	private PlayerNode player;
+	private PlayerBlip player;
 
 	private Plane clickPlane;
 
@@ -40,59 +35,60 @@ public class TestBlips extends BasicFixedRateGame {
 
 	private MousePullController playerController;
 
-	private final IKSystem iksys = new IKSystem();
+	private final BlipSystem blipSystem = new BlipSystem();
 
 	@Override
 	protected void initFixedRateGame() {
 
-
-
 		MouseInput.get().setCursorVisible(true);
+		cam.setLocation(new Vector3f(0, -30, 30));
+		cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
 
-		MouseInput.get().addListener(new MouseInputListener() {
-			public void onButton(final int button, final boolean pressed,
-					final int x, final int y) {
-
-			}
-
-			public void onMove(final int delta, final int delta2, final int newX, final int newY) {}
-
-			public void onWheel(final int wheelDelta, final int x, final int y) {}
-		});
 		clickPlane = new Plane(Vector3f.UNIT_Z, 1);
-		player = new PlayerNode();
+		player = new PlayerBlip();
+
 		playerController = new MousePullController(player, clickPlane);
-		player.addController(playerController);
-		rootNode.attachChild(player);
 
+		blipSystem.addBlip(player, null);
 
-		final BlipNode b1 = getBlip();
-		rootNode.attachChild(b1);
+		Blip b1 = player;
 
+		for (int i=0; i<20; i++) {
+			final Blip b2 = getBlip();
+			blipSystem.addBlip(b2, b1);
+			b1 = b2;
+		}
 
-		iksys.addConstraint(new IKContraint(b1, player, 3));
+		rootNode.attachChild(blipSystem);
 
 		sequencer.addListener(new SequencerListener() {
-			public void onEvent(final SequencerEvent ev) {
-				player.pulse();
+			public void onBeat() {
+				player.queuePulse();
+			}
+			@Override
+			public void onTick() {
+				blipSystem.tick();
 			}
 		});
 		sequencer.start();
 
 	}
 
-	private BlipNode getBlip() {
-		final BlipNode blip = new BlipNode();
-		blip.setLocalTranslation(JMEMath.nextRandomVector3f(-4,4));
+	int blipCounter = 0;
+
+	private Blip getBlip() {
+		final DefaultBlip blip = new DefaultBlip();
+		blip.setName("Blip " + blipCounter++);
+		final Vector3f loc = JMEMath.nextRandomVector3f(-4, 4);
+		loc.z = 0;
+		blip.setLocalTranslation(loc);
 		return blip;
 	}
 
 	@Override
 	protected void update() {
-
-		player.update();
-
-		iksys.solveConstraints();
+		playerController.update(1);
+		blipSystem.update();
 
 	}
 
