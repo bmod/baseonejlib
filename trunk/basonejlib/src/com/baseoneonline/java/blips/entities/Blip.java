@@ -12,7 +12,9 @@ public abstract class Blip extends Node {
 	private Blip parent;
 
 	private int pulseDelay = 1;
-	private int pulseQueued = -1;
+	private int tickCountDown = -1;
+	private final boolean pulseQueued = false;
+
 
 	protected final List<Blip> children = new ArrayList<Blip>();
 
@@ -64,21 +66,27 @@ public abstract class Blip extends Node {
 
 	public abstract void update();
 
+	/**
+	 * Advances this blip one tick. If the blip was queued for a pulse, it will
+	 * start count down and pulse queue its children when done counting.
+	 */
 	public void tick() {
-		if (pulseQueued > 0) {
-			pulseQueued--;
-		} else if (pulseQueued == 0) {
-			pulseQueued--;
-
-			for (final Blip b : children) {
-				b.queuePulse();
+		if (tickCountDown > 0) {
+			tickCountDown--;
+		} else if (tickCountDown == 0) {
+			for (final Blip p : children) {
+				p.queuePulse();
 			}
-			pulse();
+			tickCountDown--;
 		}
 	}
 
+	/**
+	 * Queues this blip for a pulse on the next tick update.
+	 */
 	public void queuePulse() {
-		pulseQueued = pulseDelay;
+		pulse();
+		tickCountDown = pulseDelay;
 	}
 
 	public abstract void pulse();
@@ -95,7 +103,5 @@ public abstract class Blip extends Node {
 	public int getPulseDelay() {
 		return pulseDelay;
 	}
-
-
 
 }
