@@ -69,7 +69,6 @@ class TestBlips extends BasicFixedRateGame {
 			public void onBeat() {
 				player.queuePulse();
 			}
-			@Override
 			public void onTick() {
 				blipSystem.tick();
 			}
@@ -94,7 +93,6 @@ class TestBlips extends BasicFixedRateGame {
 		playerController.update(1);
 		blipSystem.update();
 
-		starField.setBounds()
 
 
 	}

@@ -1,6 +1,7 @@
 package com.baseoneonline.java.blips;
 
 import com.baseoneonline.java.jlib.utils.JMEMath;
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Camera;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
@@ -13,6 +14,8 @@ public class StarField extends Node {
 	private final Star[] stars = new Star[100];
 
 	private final float extent = 3;
+	
+	private BoundingBox bounds;
 
 	public StarField() {
 
@@ -23,6 +26,14 @@ public class StarField extends Node {
 			stars[i] = s;
 		}
 
+	}
+
+	public void setBounds(final BoundingBox bounds) {
+		this.bounds = bounds;
+	}
+
+	public BoundingBox getBounds() {
+		return bounds;
 	}
 
 	private class Star extends Node {
