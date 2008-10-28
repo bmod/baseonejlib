@@ -31,6 +31,8 @@ class TestBlips extends BasicFixedRateGame {
 
 	private Plane clickPlane;
 
+	private FollowCam camNode;
+
 	private final Sequencer sequencer = new Sequencer();
 
 	private MousePullController playerController;
@@ -42,8 +44,7 @@ class TestBlips extends BasicFixedRateGame {
 	protected void initFixedRateGame() {
 
 		MouseInput.get().setCursorVisible(true);
-		cam.setLocation(new Vector3f(0, -30, 30));
-		cam.lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
+
 
 		starField = new StarField();
 		rootNode.attachChild(starField);
@@ -75,6 +76,9 @@ class TestBlips extends BasicFixedRateGame {
 		});
 		sequencer.start();
 
+
+		camNode = new FollowCam(cam, player);
+
 	}
 
 	int blipCounter = 0;
@@ -90,8 +94,15 @@ class TestBlips extends BasicFixedRateGame {
 
 	@Override
 	protected void update() {
+
 		playerController.update(1);
+
+		camNode.update();
+
 		blipSystem.update();
+
+		starField.getBounds().setCenter(player.getWorldTranslation());
+		starField.update();
 
 
 
