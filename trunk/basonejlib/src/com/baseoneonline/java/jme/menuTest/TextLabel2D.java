@@ -10,7 +10,7 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.util.Arrays;
 
-import com.baseoneonline.java.jmeTest.text.FontQuad;
+import com.baseoneonline.java.jme.menuTest.text.FontQuad;
 import com.jme.image.Texture;
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
