@@ -2,7 +2,7 @@ package com.baseoneonline.java.jme.menuTest;
 
 import java.util.ArrayList;
 
-import com.baseoneonline.java.jmeTest.text.FontQuad;
+import com.baseoneonline.java.jme.menuTest.text.FontQuad;
 import com.jme.scene.Node;
 
 public class MenuNode<T> extends Node {

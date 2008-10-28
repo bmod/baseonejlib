@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jmeTest.text;
+package com.baseoneonline.java.jme.menuTest.text;
 
 import java.nio.FloatBuffer;
 
