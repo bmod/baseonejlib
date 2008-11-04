@@ -30,22 +30,22 @@ public class SupportedTypes {
 		MOVIE_TYPES
 	};
 		
-	public static boolean isMovieType(File f) {
-		for (String ext : MOVIE_TYPES) {
+	public static boolean isMovieType(final File f) {
+		for (final String ext : MOVIE_TYPES) {
 			if (f.getName().endsWith(ext)) return true;
 		}
 		return false;
 	}
 	
-	public static boolean isMusicType(File f) {
-		for (String ext : MUSIC_TYPES) {
+	public static boolean isMusicType(final File f) {
+		for (final String ext : MUSIC_TYPES) {
 			if (f.getName().endsWith(ext)) return true;
 		}
 		return false;
 	}
 	
-	public static boolean isImageType(File f) {
-		for (String ext : IMAGE_TYPES) {
+	public static boolean isImageType(final File f) {
+		for (final String ext : IMAGE_TYPES) {
 			if (f.getName().endsWith(ext)) return true;
 		}
 		return false;
@@ -53,9 +53,9 @@ public class SupportedTypes {
 
 		
 	public static String[] getAllSupportedExtensions() {
-		ArrayList<String> out = new ArrayList<String>();
-		for (String[] type : ALL_TYPES) {
-			for (String t : type) {
+		final ArrayList<String> out = new ArrayList<String>();
+		for (final String[] type : ALL_TYPES) {
+			for (final String t : type) {
 				out.add(t);
 			}
 		}
