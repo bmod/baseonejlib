@@ -12,7 +12,7 @@ public class FollowCam {
 	private final Vector3f camLoc = new Vector3f();
 	private Spatial target;
 
-	private final float cam_interpolation = .02f;
+	private final float cam_interpolation = .1f;
 	private final float look_interpolation = .1f;
 
 	private final Vector3f offset = new Vector3f(0,-30,30);

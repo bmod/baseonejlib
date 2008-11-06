@@ -31,7 +31,7 @@ public class ShapeFactory {
 		final TextureState ts = DisplaySystem.getDisplaySystem().getRenderer()
 				.createTextureState();
 		final Texture t = TextureManager.loadTexture(image,
-				Texture.MinificationFilter.BilinearNearestMipMap,
+				Texture.MinificationFilter.Trilinear,
 				Texture.MagnificationFilter.Bilinear, true);
 		ts.setTexture(t);
 		q.setRenderState(ts);
@@ -49,5 +49,6 @@ public class ShapeFactory {
 
 		return q;
 	}
+	
 
 }

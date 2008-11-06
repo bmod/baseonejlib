@@ -41,6 +41,7 @@ public class PlayerBlip extends Blip {
 		}, 256, 2.5f);
 		attachChild(arc);
 
+		
 		dot = ShapeFactory.getImageQuad(new ImagePaintable() {
 			public void paint(final Graphics2D g, final int width,
 					final int height) {
@@ -52,6 +53,7 @@ public class PlayerBlip extends Blip {
 
 			}
 		}, 256, 1);
+		
 		attachChild(dot);
 
 		dot.setDefaultColor(dotColor);

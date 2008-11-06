@@ -1,5 +1,6 @@
 package com.baseoneonline.java.blips;
 
+import java.io.BufferedInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +16,8 @@ import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.jme.input.MouseInput;
 import com.jme.math.Plane;
 import com.jme.math.Vector3f;
+import com.jme.scene.Node;
+import com.jmex.model.collada.ColladaImporter;
 
 class TestBlips extends BasicFixedRateGame {
 
@@ -79,6 +82,15 @@ class TestBlips extends BasicFixedRateGame {
 
 		camNode = new FollowCam(cam, player);
 
+		final BufferedInputStream is = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream("data/model1.dae"));
+		ColladaImporter.load(is, "pCube1");
+		final Node n = ColladaImporter.getModel();
+		
+		
+		
+		rootNode.attachChild(n);
+		
+		
 	}
 
 	int blipCounter = 0;
