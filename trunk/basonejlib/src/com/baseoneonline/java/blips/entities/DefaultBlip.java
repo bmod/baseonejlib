@@ -40,7 +40,7 @@ public class DefaultBlip extends Blip {
 			}
 		}, 256, 1);
 		attachChild(dot);
-
+		dot.getLocalTranslation().z = 0;
 		dot.setDefaultColor(dotColor);
 
 		updateRenderState();

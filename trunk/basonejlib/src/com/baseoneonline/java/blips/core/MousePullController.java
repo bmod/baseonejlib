@@ -15,7 +15,7 @@ import com.jme.system.DisplaySystem;
 public class MousePullController extends Controller {
 
 	private final Vector3f vel = new Vector3f();
-	private final float maxVelocity = .1f;
+	private final float maxVelocity = .4f;
 	private final float damp = .9f;
 	private final float acc = .005f;
 	private final float slerpSpeed = .35f;
@@ -42,10 +42,15 @@ public class MousePullController extends Controller {
 		vel.multLocal(damp);
 
 		final float len = vel.length();
+		
+		// Limit velocity
 		if (len > maxVelocity) {
-			vel.normalizeLocal().multLocal(len);
+			vel.normalizeLocal().multLocal(maxVelocity);
+			
 		}
-		node.getLocalTranslation().addLocal(vel);
+		node.getLocalTranslation().x += vel.x;
+		node.getLocalTranslation().y += vel.y;
+		node.getLocalTranslation().z = 0;
 
 		angle.fromAngles(0, 0, FastMath.atan2(vel.y, vel.x));
 		node.getLocalRotation().slerp(angle, slerpSpeed);

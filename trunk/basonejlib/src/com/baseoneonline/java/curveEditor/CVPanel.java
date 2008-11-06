@@ -40,14 +40,14 @@ class CVPanel extends Canvas {
 
 	private static final long serialVersionUID = 8259577516462336875L;
 
-	private float margin;
+	//private float margin;
 	private float pointPickSize;
 	private float pointHandleSize;
 	private float pointHandleSelectedSize;
-	private float curveStrokeWidth;
+
 	private Color pointHandleColor;
 	private Color pointHandleSelectedColor;
-	private Color curveStrokeColor;
+
 
 	private final Curve curve;
 	private BufferedImage buffer;
@@ -78,14 +78,14 @@ class CVPanel extends Canvas {
 		actionMap.put(KeyEvent.VK_BACK_SPACE, deleteSelectedPointsAction);
 
 
-		margin = conf.get("margin", 20f);
+		//margin = conf.get("margin", 20f);
 		pointPickSize = conf.get("pointPickSize", 8f);
 		pointHandleSize = conf.get("pointHandleSize", 5f);
 		pointHandleSelectedSize = conf.get("pointHandleSelectedSize", 5f);
 		pointHandleColor = new Color(conf.get("pointHandleColor", 0x000000));
 		pointHandleSelectedColor = new Color(conf.get("pointHandeSelectedColor", 0xFF0000));
-		curveStrokeColor = new Color(conf.get("curveStrokeColor", 0x000000));
-		curveStrokeWidth = conf.get("curveStrokeWidth", .7f);
+		//curveStrokeColor = new Color(conf.get("curveStrokeColor", 0x000000));
+		//curveStrokeWidth = conf.get("curveStrokeWidth", .7f);
 	}
 
 
@@ -207,12 +207,7 @@ class CVPanel extends Canvas {
 		}
 	};
 
-	private final Action addPointAction = new AbstractAction() {
-		public void actionPerformed(final ActionEvent e) {
-			// TODO Auto-generated method stub
 
-		}
-	};
 
 	private final MouseListener mouseListener = new MouseAdapter() {
 		@Override
@@ -252,7 +247,7 @@ class CVPanel extends Canvas {
 	private final KeyListener keyListener = new KeyAdapter() {
 		@Override
 		public void keyPressed(final KeyEvent e) {
-			final int key = e.getKeyCode();
+			//final int key = e.getKeyCode();
 
 		}
 	};

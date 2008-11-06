@@ -9,7 +9,7 @@ public class DirectoryModel implements MenuModel<File> {
 	private final Logger log = Logger.getLogger(getClass().getName());
 
 	private File dir;
-	private final File root;
+
 	
 	
 	private final ArrayList<File> files = new ArrayList<File>();
@@ -17,7 +17,7 @@ public class DirectoryModel implements MenuModel<File> {
 	private int selectedIndex;
 
 	public DirectoryModel(final File root) {
-		this.root = root;
+		
 		setDirectory(root);
 	}
 
@@ -55,7 +55,7 @@ public class DirectoryModel implements MenuModel<File> {
 
 	}
 	
-	public void changeDirectory(File dir) {
+	public void changeDirectory(final File dir) {
 	}
 	
 	public File getSelectedItem() {

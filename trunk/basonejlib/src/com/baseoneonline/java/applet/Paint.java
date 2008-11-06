@@ -2,7 +2,6 @@ package com.baseoneonline.java.applet;
 
 import java.applet.Applet;
 import java.awt.BasicStroke;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,12 +17,11 @@ import java.util.List;
 
 public class Paint extends Applet {
 
-	private boolean penIsDown = false;
 
 	private Point currPos;
 	private Point prevPos;
 
-	private Canvas canvas;
+
 
 	private int paintUpdates = 0;
 	private int mouseUpdates = 0;
@@ -82,7 +80,7 @@ public class Paint extends Applet {
 
 		@Override
 		public void mousePressed(final MouseEvent e) {
-			penIsDown = true;
+			
 			currPos = e.getPoint();
 		}
 
@@ -97,7 +95,7 @@ public class Paint extends Applet {
 
 		@Override
 		public void mouseReleased(final MouseEvent e) {
-			penIsDown = false;
+			
 		}
 	};
 
