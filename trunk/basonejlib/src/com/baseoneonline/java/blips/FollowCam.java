@@ -2,6 +2,7 @@ package com.baseoneonline.java.blips;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
 public class FollowCam {
@@ -15,10 +16,14 @@ public class FollowCam {
 	private final float look_interpolation = .1f;
 
 	private final Vector3f offset = new Vector3f(0,-30,30);
+	
+	private final Node camPosNode = new Node("camPosNode");
 
 	public FollowCam(final Camera cam, final Spatial target) {
 		this.cam = cam;
 		this.target = target;
+		
+		setDistance(30);
 	}
 
 	public void update() {
@@ -32,6 +37,14 @@ public class FollowCam {
 		camLoc.z += (targetCam.z - camLoc.z)*cam_interpolation;
 		cam.setLocation(camLoc);
 		cam.lookAt(lookAt, Vector3f.UNIT_Z);
+	}
+	
+	public void setDistance(final float dist) {
+		camPosNode.setLocalTranslation(0, 0, dist);
+	}
+	
+	public void setAngle(final float x, final float y, final float z) {
+		
 	}
 
 	public void setTarget(final Spatial target) {

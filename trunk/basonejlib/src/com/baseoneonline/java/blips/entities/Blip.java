@@ -13,7 +13,7 @@ public abstract class Blip extends Node {
 
 	private int pulseDelay = 1;
 	private int tickCountDown = -1;
-	private final boolean pulseQueued = false;
+
 
 
 	protected final List<Blip> children = new ArrayList<Blip>();
