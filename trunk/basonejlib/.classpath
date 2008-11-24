@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
 	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
+	<classpathentry kind="lib" path="lib/vldocking_2.1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

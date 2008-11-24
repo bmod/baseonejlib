@@ -7,25 +7,39 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
-
-
 public class Config {
-	Logger log = Logger.getLogger(getClass().getName());
-
+	private final Logger log = Logger.getLogger(getClass().getName());
 
 	private static HashMap<String, Config> instanceMap = new HashMap<String, Config>();
 
 	private static Config instance;
 
-	private final Properties props = new Properties();
+	private Properties props;
 
 	private final String arrayDelimiter = ",";
 
 	private File file;
 
 	private final boolean autoWrite = true;
+	
+	private final Timer timer = new Timer();
+	private final long timerDelay = 2000;
+	private boolean scheduledForWrite = false;
+	
+	private WriteTask timerTask;
+	
+	private final class WriteTask extends TimerTask {
+		@Override
+		public void run() {
+			scheduledForWrite = false;
+			write();
+		}
+		
+	}
 
 	private Config() {
 	}
@@ -38,7 +52,9 @@ public class Config {
 	 * Attempt to read the configuration file.
 	 */
 	public void read() {
+		props = new Properties();
 		try {
+			log.info("Reading config: "+file);
 			props.load(new FileInputStream(file));
 		} catch (final FileNotFoundException e) {
 			log.warning("Configuration file not found, creating new one.");
@@ -49,10 +65,30 @@ public class Config {
 	}
 
 	/**
+	 * Notify this configuration that it should write data soon.
+	 */
+	public void scheduleWrite() {
+		if (!scheduledForWrite) {
+			scheduledForWrite = true;
+			timerTask = new WriteTask();
+			timer.schedule(timerTask, timerDelay);
+		}
+	}
+	
+	public void cancelWriteSchedule() {
+		if (scheduledForWrite) {
+			timer.cancel();
+		}
+	}
+	
+	
+	/**
 	 * Attempt to write the configuration file.
 	 */
 	public void write() {
+		cancelWriteSchedule();
 		try {
+			log.info("Writing config: "+file);
 			props.store(new FileOutputStream(file), "Configuration");
 		} catch (final FileNotFoundException e) {
 			log.warning("Configuration file not found: " + file.getName());
@@ -66,7 +102,8 @@ public class Config {
 	}
 
 	public String[] get(final String key, final String[] defaultArray) {
-		return get(key, StringUtils.join(defaultArray, arrayDelimiter)).split(arrayDelimiter);
+		return get(key, StringUtils.join(defaultArray, arrayDelimiter)).split(
+				arrayDelimiter);
 	}
 
 	public String get(final String key) {
@@ -75,7 +112,7 @@ public class Config {
 
 	/**
 	 * Put a property in the configuration
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
@@ -88,7 +125,7 @@ public class Config {
 	/**
 	 * Retrieve a property from the configuration. If the key was not found,
 	 * return the supplied default value and store that in the configuration.
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
@@ -100,7 +137,7 @@ public class Config {
 
 	/**
 	 * Put a property in the configuration
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
@@ -113,7 +150,7 @@ public class Config {
 	/**
 	 * Retrieve a property from the configuration. If the key was not found,
 	 * return the supplied default value and store that in the configuration.
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
@@ -125,7 +162,7 @@ public class Config {
 
 	/**
 	 * Put a property in the configuration
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
@@ -134,21 +171,23 @@ public class Config {
 	public void set(final String key, final String n) {
 		props.setProperty(key, n);
 		if (autoWrite) {
-			write();
+			scheduleWrite();
 		}
 	}
-
 
 	/**
 	 * Retrieve a property from the configuration. If the key was not found,
 	 * return the supplied default value and store that in the configuration.
-	 *
+	 * 
 	 * @param key
 	 *            The key by which the value is retrieved.
 	 * @param n
 	 *            The default value if no value was defined.
 	 */
 	public String get(final String key, final String n) {
+		if (null == props)
+			read();
+		
 		final String re = props.getProperty(key);
 		if (null == re) {
 			log.warning("Property " + key
