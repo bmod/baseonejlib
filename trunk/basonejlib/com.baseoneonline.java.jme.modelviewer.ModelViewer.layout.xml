@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<VLDocking version="2.1">
+<DockingDesktop name="">
+<DockingPanel>
+<Split orientation="1" location="0.27247191011235955">
+<Split orientation="0" location="0.5040485829959515">
+<Dockable>
+<Key dockName="Tree"/>
+</Dockable>
+<Dockable>
+<Key dockName="Properties"/>
+</Dockable>
+</Split>
+<TabbedDockable>
+<Dockable>
+<Key dockName="View"/>
+</Dockable>
+<Dockable>
+<Key dockName="Log"/>
+</Dockable>
+</TabbedDockable>
+</Split>
+</DockingPanel>
+<TabGroups>
+<TabGroup>
+<Dockable>
+<Key dockName="View"/>
+</Dockable>
+<Dockable>
+<Key dockName="Log"/>
+</Dockable>
+</TabGroup>
+</TabGroups>
+</DockingDesktop>
+</VLDocking>
