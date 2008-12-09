@@ -24,6 +24,17 @@ public class TestAnimApplet extends Applet implements Runnable {
 	 * Initialize the applet and compute the delay between frames.
 	 */
 
+	@Override
+	public void init() {
+		setBackground(Color.black);
+		delay = (fps > 0) ? (1000 / fps) : 100;
+	
+	}
+
+	/**
+	 * Initialize the applet and compute the delay between frames.
+	 */
+	
 	/**
 	 * This method is called when the applet becomes visible on the screen.
 	 * Create a thread and start it.
@@ -49,13 +60,47 @@ public class TestAnimApplet extends Applet implements Runnable {
 			try {
 				tm += delay;
 				Thread.sleep(Math.max(0, tm - System.currentTimeMillis()));
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				break;
 			}
 
 			// Advance the frame
 			frame++;
 		}
+	}
+
+	private void createGraphics() {
+		// Create the offscreen graphics context
+		bufDimension = getSize();
+		bufImage = createImage(bufDimension.width, bufDimension.height);
+		bufGraphics = (Graphics2D) bufImage.getGraphics();
+		final RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		bufGraphics.addRenderingHints(rh);
+	
+	}
+
+	@Override
+	public void update(final Graphics g) {
+
+		final Dimension d = getSize();
+
+		if ((bufGraphics == null) || (d.width != bufDimension.width)
+				|| (d.height != bufDimension.height)) {
+			createGraphics();
+		}
+		// Erase the previous image
+		bufGraphics.setColor(getBackground());
+		bufGraphics.fillRect(0, 0, d.width, d.height);
+		bufGraphics.setColor(Color.red);
+
+		// Paint the frame into the image
+		paintFrame(bufGraphics);
+
+		// Paint the image onto the screen
+		g.drawImage(bufImage, 0, 0, null);
+		frame++;
+
 	}
 
 	/**
@@ -68,66 +113,25 @@ public class TestAnimApplet extends Applet implements Runnable {
 		animator = null;
 	}
 
+	/**
+	 * Paint a frame of animation.
+	 */
 	@Override
-	public void update(Graphics g) {
-
-		Dimension d = getSize();
-
-		if ((bufGraphics == null) || (d.width != bufDimension.width)
-				|| (d.height != bufDimension.height)) {
-			createGraphics();
-		}
-		// Erase the previous image
-		bufGraphics.setColor(getBackground());
-		bufGraphics.fillRect(0, 0, d.width, d.height);
-		bufGraphics.setColor(Color.black);
-
-		// Paint the frame into the image
-		paintFrame(bufGraphics);
-
-		// Paint the image onto the screen
-		g.drawImage(bufImage, 0, 0, null);
-		frame++;
-
-	}
-
-	private void createGraphics() {
-		// Create the offscreen graphics context
-		bufDimension = getSize();
-		bufImage = createImage(bufDimension.width, bufDimension.height);
-		bufGraphics = (Graphics2D) bufImage.getGraphics();
-		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		bufGraphics.addRenderingHints(rh);
-
-	}
-
-	@Override
-	public void init() {
-
-		delay = (fps > 0) ? (1000 / fps) : 100;
+	public void paint(final Graphics g) {
 
 	}
 
 	/**
 	 * Paint a frame of animation.
 	 */
-	@Override
-	public void paint(Graphics g) {
+	public void paintFrame(final Graphics2D g) {
 
-	}
-
-	/**
-	 * Paint a frame of animation.
-	 */
-	public void paintFrame(Graphics2D g) {
-
-		Dimension d = getSize();
-		float w2 = d.width / 2;
-		float h2 = d.height / 2;
+		final Dimension d = getSize();
+		final float w2 = d.width / 2;
+		final float h2 = d.height / 2;
 		g.setStroke(new BasicStroke(2));
-		Line2D line = new Line2D.Float(w2 + (float) Math.cos(frame * .01) * w2,
-				h2 + (float) Math.cos(frame * .013) * h2, w2 + (float) Math.cos(frame * .015) * w2, h2 + (float) Math.cos(frame * .009) * h2);
+		final Line2D line = new Line2D.Float(w2 + (float) Math.cos(frame * .001) * w2,
+				h2 + (float) Math.cos(frame * .003) * h2, w2 + (float) Math.cos(frame * .005) * w2, h2 + (float) Math.cos(frame * .009) * h2);
 		g.draw(line);
 	}
 

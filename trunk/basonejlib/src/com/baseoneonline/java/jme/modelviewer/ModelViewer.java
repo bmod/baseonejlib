@@ -1,92 +1,158 @@
 package com.baseoneonline.java.jme.modelviewer;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+import java.awt.Component;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.EventObject;
 import java.util.logging.Logger;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.JSeparator;
+import javax.xml.parsers.ParserConfigurationException;
 
-import com.baseoneonline.java.jlib.utils.DockAppBase;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.Task;
+import org.xml.sax.SAXException;
 
-public class ModelViewer extends DockAppBase {
-	
+import com.baseoneonline.java.jme.modelviewer.action.FileOpenAction;
+import com.baseoneonline.java.jme.modelviewer.action.FileOpenTask;
+import com.baseoneonline.java.jme.modelviewer.action.QuitAction;
+import com.baseoneonline.java.jme.modelviewer.gui.LogPanel;
+import com.baseoneonline.java.jme.modelviewer.gui.PropertiesPanel;
+import com.baseoneonline.java.jme.modelviewer.gui.TreePanel;
+import com.baseoneonline.java.jme.modelviewer.gui.ViewPanel;
+import com.baseoneonline.java.jme.modelviewer.util.Const;
+import com.vlsolutions.swing.docking.DockKey;
+import com.vlsolutions.swing.docking.Dockable;
+import com.vlsolutions.swing.docking.DockingDesktop;
+
+public class ModelViewer extends SingleFrameApplication implements Const {
+
+	private final Logger log = Logger.getLogger(getClass().getName());
+
+	private static ModelViewer instance;
+
+	private String layoutFilename;
+
+	private ResourceMap resource;
+
+	private final DockingDesktop desk = new DockingDesktop();
+
 	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new ModelViewer();
-			}
-		});
-	}
-	
-	public ModelViewer() {
-		super("Model Viewer", ModelViewer.class.getName() + ".cfg",
-				ModelViewer.class.getName() + ".layout.xml");
-		
-		final TreePanel treePanel = new TreePanel();
-		addDockable(treePanel, "Tree");
-	
-		final ViewPanel viewPanel = new ViewPanel();
-		addDockable(viewPanel,"View");
-		
-		final PropertiesPanel propsPanel = new PropertiesPanel();
-		addDockable(propsPanel, "Properties");
-		
-		final LogPanel logPanel = new LogPanel();
-		addDockable(logPanel, "Log");
-		
-		readLayout();
+		launch(ModelViewer.class, args);
 	}
 
 	@Override
-	protected boolean closeRequested() {
-		return true;
+	protected void initialize(final String[] args) {
+		final ApplicationContext ctx = getContext();
+		final org.jdesktop.application.ResourceManager mgr = ctx
+				.getResourceManager();
+		resource = mgr.getResourceMap(getClass());
 	}
-}
 
-class LogPanel extends JPanel {
-	public LogPanel() {
-		setLayout(new BorderLayout());
-		final JTextArea taLog = new JTextArea();
-		add(new JScrollPane(taLog));
+	@Override
+	protected void startup() {
+		final JPanel mainPanel = new JPanel(new BorderLayout());
+		final JMenu fileMenu = new JMenu("File");
+		fileMenu.add(new JMenuItem(new FileOpenAction()));
+		fileMenu.add(new JSeparator());
+		fileMenu.add(new JMenuItem(new QuitAction()));
+
+		final JMenuBar menuBar = new JMenuBar();
+		menuBar.add(fileMenu);
+
+		layoutFilename = resource.getString(LAYOUT_FILE, "layout.xml");
+		final TreePanel treePanel = new TreePanel();
+		addDockable(treePanel, "Tree");
+
+		final ViewPanel viewPanel = new ViewPanel();
+		addDockable(viewPanel, "View");
+
+		final PropertiesPanel propsPanel = new PropertiesPanel();
+		addDockable(propsPanel, "Properties");
+
+		final LogPanel logPanel = new LogPanel();
+		addDockable(logPanel, "Log");
+
+		readLayout();
+		mainPanel.add(menuBar, BorderLayout.NORTH);
+		mainPanel.add(desk);
+		show(mainPanel);
+	}
+
+	@Override
+	public void exit(final EventObject e) {
+		if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
+				"Quit?", "Quit?", JOptionPane.YES_NO_OPTION)) {
+			writeLayout();
+			super.exit(e);
+		}
+	}
+
+	private void addDockable(final JPanel comp, final String name) {
+		final DockKey key = new DockKey(name);
+		key.setCloseEnabled(false);
+		key.setFloatEnabled(false);
+		key.setAutoHideEnabled(false);
+		final Dockable dockable = new Dockable() {
+			@Override
+			public Component getComponent() {
+				return comp;
+			}
+
+			@Override
+			public DockKey getDockKey() {
+				return key;
+			}
+		};
+		desk.addDockable(dockable);
+	}
+
+	private void readLayout() {
+		try {
+			desk.readXML(new FileInputStream(new File(layoutFilename)));
+			log.info("Layout read: " + layoutFilename);
+		} catch (final FileNotFoundException e) {
+			log.warning("Layout file not found: " + layoutFilename);
+		} catch (final ParserConfigurationException e) {
+			log.warning("Layout parsing failed, removing file: "
+					+ layoutFilename);
+		} catch (final IOException e) {
+			log.warning("IO Error reading: " + layoutFilename);
+		} catch (final SAXException e) {
+			log.warning("Layout SAX parsing failed, removing file: "
+					+ layoutFilename);
+		}
+	}
+
+	private void writeLayout() {
+		try {
+			desk.writeXML(new FileOutputStream(new File(layoutFilename)));
+			log.info("Layout written: " + layoutFilename);
+		} catch (final FileNotFoundException e1) {
+			log.warning("File not found: " + layoutFilename);
+		} catch (final IOException e1) {
+			log.warning("IOError writing to file: " + layoutFilename);
+		}
+	}
+	
+	@Action Task<Void, Void> openFile() {
 		
-		Logger.getLogger("").addHandler(new Handler() {
-			@Override
-			public void close() throws SecurityException {
-			}
-			@Override
-			public void flush() {
-			}
-			@Override
-			public void publish(final LogRecord record) {
-				taLog.append(record.getMessage()+"\n");
-			}
-		});
+		return new FileOpenTask();
 	}
-}
 
-class PropertiesPanel extends JPanel {
-	public PropertiesPanel() {
-		
-	}
-}
-
-class ViewPanel extends JPanel {
-	public ViewPanel() {
-		setBackground(Color.BLACK);
-	}
-}
-
-class TreePanel extends JPanel {
-	public TreePanel() {
-		setLayout(new BorderLayout());
-		final JTree tree = new JTree();
-		add(new JScrollPane(tree));
+	public static ModelViewer getModelViewer() {
+		return (ModelViewer) getInstance();
 	}
 }
