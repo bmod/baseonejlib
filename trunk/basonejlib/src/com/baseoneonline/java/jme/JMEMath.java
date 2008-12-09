@@ -1,4 +1,4 @@
-package com.baseoneonline.java.jlib.utils;
+package com.baseoneonline.java.jme;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
