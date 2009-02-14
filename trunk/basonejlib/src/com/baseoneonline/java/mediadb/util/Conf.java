@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.jlib.utils.StringUtils;
+import com.baseoneonline.java.tools.StringUtils;
 
 
 public class Conf {
