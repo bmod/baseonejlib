@@ -53,17 +53,7 @@ public class LogView extends JPanel {
 		};
 	};
 
-	public static class DefaultLogRecordFormatter implements LogRecordFormatter {
-		@Override
-		public String format(final LogRecord r) {
-			return r.getLoggerName()
-					+ "\n"
-					+ r.getLevel().getName()
-					+ "\t"
-					+ r.getMessage()
-					+ "\n";
-		}
-	}
+	
 
 	public void setRecordFormatter(final LogRecordFormatter formatter) {
 		if (null == formatter) {
