@@ -17,7 +17,7 @@ public class LogView extends JPanel {
 	private LogRecordFormatter formatter;
 
 	private Level level;
-	
+
 	public LogView(String loggerName, final LogRecordFormatter formatter) {
 		if (null == loggerName)
 			loggerName = "";
@@ -28,11 +28,11 @@ public class LogView extends JPanel {
 		add(new JScrollPane(taLog));
 		setRecordFormatter(formatter);
 	}
-	
+
 	public void clear() {
 		taLog.setText("");
 	}
-	
+
 	public void setLevel(final Level level) {
 		this.level = level;
 	}
@@ -53,13 +53,10 @@ public class LogView extends JPanel {
 		};
 	};
 
-	
-
 	public void setRecordFormatter(final LogRecordFormatter formatter) {
 		if (null == formatter) {
 			this.formatter = new DefaultLogRecordFormatter();
-		}
-		else {
+		} else {
 			this.formatter = formatter;
 		}
 	}
