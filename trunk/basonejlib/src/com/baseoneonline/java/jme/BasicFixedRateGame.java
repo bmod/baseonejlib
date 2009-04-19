@@ -1,4 +1,4 @@
-package com.vectorcycle.blips.game.util;
+package com.baseoneonline.java.jme;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

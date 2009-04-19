@@ -17,6 +17,10 @@ public class LogView extends JPanel {
 	private LogRecordFormatter formatter;
 
 	private Level level;
+	
+	public LogView() {
+		this("", new DefaultLogRecordFormatter());
+	}
 
 	public LogView(String loggerName, final LogRecordFormatter formatter) {
 		if (null == loggerName)
