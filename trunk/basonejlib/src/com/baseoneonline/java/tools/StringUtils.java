@@ -76,4 +76,20 @@ public class StringUtils {
 		return null;
 	}
 
+	public static String padFront(String number, int length, String chr) {
+		while( number.length() < length) {
+			number = chr+number;
+		}
+		return number;
+	}
+	
+	
+	public static String stripExtension(final String filename) {
+		final int idx = filename.lastIndexOf(".");
+		if (-1 != idx) {
+			return filename.substring(0, idx);
+		}
+		return filename;
+	}
+
 }
