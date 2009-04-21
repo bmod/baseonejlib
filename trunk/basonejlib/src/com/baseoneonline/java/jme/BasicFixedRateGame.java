@@ -170,7 +170,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 			initGame();
 			initFixedRateGame();
-			initZBuffer();
 			
 
 			// main loop
@@ -339,15 +338,15 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	protected void initGame() {
 		rootNode = new Node("rootNode");
 
-		
-	}
-	
-	private void initZBuffer() {
+		/**
+		 * Create a ZBuffer to display pixels closest to the camera above
+		 * farther ones.
+		 */
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
 		buf.setWritable(true);
 		buf.setFunction(TestFunction.LessThanOrEqualTo);
-		rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+		//rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         //rootNode.updateGeometricState( 0.0f, true );
         rootNode.updateRenderState();
 
