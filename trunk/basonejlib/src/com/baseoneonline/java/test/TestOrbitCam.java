@@ -17,7 +17,7 @@ public class TestOrbitCam extends BasicFixedRateGame {
 	OrbitCamNode camNode;
 
 	@Override
-	protected void initFixedRateGame() {
+	protected void simpleInitGame() {
 
 		Box b = new Box("b", new Vector3f(), 1, 1, 1);
 		rootNode.attachChild(b);

@@ -169,7 +169,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 			setFrameRate(60); // default to 60 fps
 
 			initGame();
-			initFixedRateGame();
+			simpleInitGame();
 			
 
 			// main loop
@@ -352,7 +352,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 	}
 	
-	protected abstract void initFixedRateGame();
+	protected abstract void simpleInitGame();
 
 	@Override
 	protected void reinit() {

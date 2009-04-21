@@ -30,7 +30,7 @@ public class TestDrawOnTexture extends BasicFixedRateGame {
 	BufferedImage im;
 
 	@Override
-	protected void initFixedRateGame() {
+	protected void simpleInitGame() {
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
 		Box b = new Box("b", new Vector3f(), 1, 1, 1);
