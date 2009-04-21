@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.test;
+package com.baseoneonline.java.test.dirwalker;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -6,7 +6,7 @@ import java.io.FileFilter;
 public class DirectoryWalker {
 
 	private FileFilter filter;
-	private FileOperation op;
+	private final FileOperation op;
 	
 	public DirectoryWalker(FileOperation op) {
 		this.op = op;

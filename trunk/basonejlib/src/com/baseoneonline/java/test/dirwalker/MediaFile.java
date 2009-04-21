@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.test;
+package com.baseoneonline.java.test.dirwalker;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import org.jaudiotagger.tag.TagFieldKey;
 
 public class MediaFile {
 
-	private File file;
+	private final File file;
 
 	AudioFile audioFile;
 	Tag tag;

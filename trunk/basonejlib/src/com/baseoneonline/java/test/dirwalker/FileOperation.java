@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.test;
+package com.baseoneonline.java.test.dirwalker;
 
 import java.io.File;
 

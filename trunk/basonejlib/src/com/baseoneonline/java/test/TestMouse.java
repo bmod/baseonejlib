@@ -1,11 +1,12 @@
 package com.baseoneonline.java.test;
 
-import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.baseoneonline.java.jme.JMEUtil;
 import com.baseoneonline.java.jme.OrbitCamNode;
+import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
+import com.jme.math.Plane;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -13,7 +14,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.system.DisplaySystem;
 
-public class TestMouse extends BasicFixedRateGame {
+public class TestMouse extends SimpleGame {
 
 	public static void main(String[] args) {
 		new TestMouse().start();
@@ -22,54 +23,64 @@ public class TestMouse extends BasicFixedRateGame {
 	OrbitCamNode orbitCam;
 	Cursor cursor;
 	TileGrid grid;
+	Plane mousePlane;
 
 	@Override
-	protected void initFixedRateGame() {
+	protected void simpleInitGame() {
 		MouseInput.get().setCursorVisible(true);
 
 		grid = new TileGrid(16, 10, .5f);
-		
+
+		mousePlane = new Plane(Vector3f.UNIT_Y, 0);
+
 		rootNode.attachChild(grid);
 
-		cursor = new Cursor(grid.getTileSize()*3);
+		cursor = new Cursor(grid.getTileSize());
 		cursor.getLocalTranslation().y = .1f;
 		rootNode.attachChild(cursor);
 
 		orbitCam = new OrbitCamNode(cam);
 		orbitCam.setAzimuth(FastMath.HALF_PI * .6f);
 		rootNode.attachChild(orbitCam);
-		
-		
 
 		JMEUtil.letThereBeLight(rootNode);
 
 	}
 
 	@Override
-	protected void updateLoop(float t) {
-		updateCamera();
+	protected void simpleUpdate() {
+		updateCursor();
+		//updateCamera();
 	}
-	
+
+	private void updateCursor() {
+		Vector3f mpos = JMEUtil.getMousePosition3D(mousePlane);
+		mpos.y = 0.01f;
+		System.out.println(mpos);
+		cursor.setLocalTranslation(mpos);
+	}
+
 	private void updateCamera() {
 		// Mouse position, centered and normalized
-		float mx = (MouseInput.get().getXAbsolute() - (float) display
-				.getWidth() / 2)
-				/ display.getWidth()*2;
-		float my = (MouseInput.get().getYAbsolute() - (float) display
-				.getHeight() / 2)
-				/ display.getHeight()*2;
-		orbitCam.setAzimuth(FastMath.HALF_PI*(my+1)*.5f);
-		orbitCam.setHeading(mx*.3f);
+		float mx =
+			(MouseInput.get().getXAbsolute() - (float) display.getWidth() / 2)
+				/ display.getWidth() * 2;
+		float my =
+			(MouseInput.get().getYAbsolute() - (float) display.getHeight() / 2)
+				/ display.getHeight() * 2;
+		orbitCam.setAzimuth(FastMath.HALF_PI * (my + 1) * .5f);
+		orbitCam.setHeading(mx * .3f);
 	}
-	
+
 }
 
 class Cursor extends Node {
 	public Cursor(float size) {
 		Quad q = new Quad("cursor", size, size);
 		q.getLocalRotation().fromAngles(-FastMath.HALF_PI, 0, 0);
-		MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
-				.createMaterialState();
+		MaterialState ms =
+			DisplaySystem.getDisplaySystem().getRenderer()
+					.createMaterialState();
 		ms.setDiffuse(ColorRGBA.red);
 		q.setRenderState(ms);
 		q.updateRenderState();
@@ -102,18 +113,16 @@ class TileGrid extends Node {
 	}
 
 	public Vector3f realPosition(int x, int y) {
-		return realPosition(x, y, 0);
-	}
-
-	public Vector3f realPosition(int x, int y, float height) {
-		return new Vector3f(x * tileSize - hw, height, y * tileSize - hh);
+		return new Vector3f(x * tileSize - hw, 0, y * tileSize - hh);
 	}
 
 	private void createGrid() {
-		MaterialState mat1 = DisplaySystem.getDisplaySystem().getRenderer()
-				.createMaterialState();
-		MaterialState mat2 = DisplaySystem.getDisplaySystem().getRenderer()
-				.createMaterialState();
+		MaterialState mat1 =
+			DisplaySystem.getDisplaySystem().getRenderer()
+					.createMaterialState();
+		MaterialState mat2 =
+			DisplaySystem.getDisplaySystem().getRenderer()
+					.createMaterialState();
 
 		mat1.setDiffuse(new ColorRGBA(.6f, .65f, .7f, 1f));
 		mat2.setDiffuse(new ColorRGBA(.7f, .75f, .8f, 1f));
