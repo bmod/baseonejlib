@@ -26,8 +26,8 @@ import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 
 /**
- * <code>BasicFixedFramerateGame</code> attempts to run the game at a fixed frame
- * rate. The main loop makes every effort to render at the specified rate,
+ * <code>BasicFixedFramerateGame</code> attempts to run the game at a fixed
+ * frame rate. The main loop makes every effort to render at the specified rate,
  * however it is not guaranteed that the frame rate will not dip below the
  * desired value. Game logic is updated at the same rate as the rendering. For
  * example, if the rendering is running at 60 frames per second, the logic will
@@ -76,7 +76,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	 * Number of samples to use for the multisample buffer. Any changes must be
 	 * made prior to call of start().
 	 */
-	protected int samples = 0;
+	protected int samples = 3;
 
 	protected Camera cam;
 	protected KeyBindingManager key;
@@ -84,8 +84,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 	private long sleepTime = 19;
 
-	
-	
 	/**
 	 * Set preferred frame rate. The main loop will make every attempt to
 	 * maintain the given frame rate. This should not be called prior to the
@@ -140,7 +138,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		frameDurationTicks = timer.getTime() - frameStartTick;
 
 		while (frameDurationTicks < preferredTicksPerFrame) {
-			sleepTime  = ((preferredTicksPerFrame - frameDurationTicks) * 1000)
+			sleepTime = ((preferredTicksPerFrame - frameDurationTicks) * 1000)
 					/ timer.getResolution();
 
 			try {
@@ -169,8 +167,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 			setFrameRate(60); // default to 60 fps
 
 			initGame();
-			simpleInitGame();
-			
 
 			// main loop
 			while (!finished && !display.isClosing()) {
@@ -239,7 +235,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		if (key.isValidCommand("exit")) {
 			finished = true;
 		}
-        rootNode.updateGeometricState(t, true);
+		rootNode.updateGeometricState(t, true);
 	}
 
 	protected abstract void updateLoop(float t);
@@ -254,8 +250,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		final Renderer r = display.getRenderer();
 		/** Clears the previously rendered information. */
 		r.clearBuffers();
-        r.draw(rootNode);
-        
+		r.draw(rootNode);
+
 		// Execute renderQueue item
 		GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER)
 				.execute();
@@ -342,17 +338,22 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		 * Create a ZBuffer to display pixels closest to the camera above
 		 * farther ones.
 		 */
+		initFixedRateGame();
+
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
 		buf.setWritable(true);
+
 		buf.setFunction(TestFunction.LessThanOrEqualTo);
-		//rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        //rootNode.updateGeometricState( 0.0f, true );
-        rootNode.updateRenderState();
+		rootNode.setRenderState(buf);
+		// rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+		// rootNode.updateGeometricState( 0.0f, true );
+		rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+		rootNode.updateRenderState();
 
 	}
-	
-	protected abstract void simpleInitGame();
+
+	protected abstract void initFixedRateGame();
 
 	@Override
 	protected void reinit() {
@@ -363,7 +364,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	protected GameSettings getNewSettings() {
 		return new BaseGameSettings();
 	}
-
 
 	static class BaseGameSettings extends PropertiesGameSettings {
 		BaseGameSettings() {
