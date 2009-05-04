@@ -21,7 +21,7 @@ public class PickHandler {
 	private float pickDist;
 	private final boolean[] buttonsDown;
 
-	private final List<EntityListener> listeners = new ArrayList<EntityListener>();
+	private final List<MouseListener> listeners = new ArrayList<MouseListener>();
 
 	public PickHandler(final Node node, final Camera cam) {
 		this.node = node;
@@ -29,12 +29,12 @@ public class PickHandler {
 		buttonsDown = new boolean[MouseInput.get().getButtonCount()];
 	}
 
-	public void addListener(final EntityListener l) {
+	public void addListener(final MouseListener l) {
 		if (!listeners.contains(l))
 			listeners.add(l);
 	}
 
-	public void removeListener(final EntityListener l) {
+	public void removeListener(final MouseListener l) {
 		listeners.remove(l);
 	}
 
@@ -95,33 +95,29 @@ public class PickHandler {
 	}
 
 	private void fireRelease(final Entity e, final int button) {
-		System.out.println("Release: " + e);
-		final EntityEvent ev = new EntityEvent(e, button);
-		for (final EntityListener l : listeners) {
+		final MouseEvent ev = new MouseEvent(e, button);
+		for (final MouseListener l : listeners) {
 			l.onRelease(ev);
 		}
 	}
 
 	private void fireRollOver(final Entity e) {
-		System.out.println("RollOver: " + e);
-		final EntityEvent ev = new EntityEvent(e);
-		for (final EntityListener l : listeners) {
+		final MouseEvent ev = new MouseEvent(e);
+		for (final MouseListener l : listeners) {
 			l.onRollOver(ev);
 		}
 	}
 
 	private void fireRollOut(final Entity e) {
-		System.out.println("RollOut: " + e);
-		final EntityEvent ev = new EntityEvent(e);
-		for (final EntityListener l : listeners) {
+		final MouseEvent ev = new MouseEvent(e);
+		for (final MouseListener l : listeners) {
 			l.onRollOut(ev);
 		}
 	}
 
 	private void firePress(final Entity e, final int button) {
-		System.out.println("Press: " + e);
-		final EntityEvent ev = new EntityEvent(e, button);
-		for (final EntityListener l : listeners) {
+		final MouseEvent ev = new MouseEvent(e, button);
+		for (final MouseListener l : listeners) {
 			l.onPress(ev);
 		}
 	}

@@ -80,6 +80,10 @@ public class TileGridNode extends Node {
 		return tileSize;
 	}
 
+	public Vector3f realPosition(final Vector2f gridPos) {
+		return realPosition(gridPos, new Vector3f());
+	}
+
 	public Vector3f realPosition(final Vector2f gridPos, Vector3f store) {
 		if (null == store)
 			store = new Vector3f();
@@ -128,6 +132,11 @@ public class TileGridNode extends Node {
 
 	public Entity getEntity(final Vector2f gridPosition) {
 		return entities[(int) gridPosition.x][(int) gridPosition.y];
+	}
+
+	public void moveEntity(final Vector2f grabPos, final Vector2f gridPos) {
+		entities[(int) gridPos.x][(int) gridPos.y] = entities[(int) grabPos.x][(int) grabPos.y];
+		entities[(int) grabPos.x][(int) grabPos.y] = null;
 	}
 
 }
