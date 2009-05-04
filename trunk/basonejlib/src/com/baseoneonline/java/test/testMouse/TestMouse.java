@@ -60,36 +60,63 @@ public class TestMouse extends BasicFixedRateGame {
 		cursor = new Cursor();
 		cursor.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		rootNode.attachChild(cursor);
-
 	}
 
-	private final EntityListener entListener = new EntityListener() {
-		@Override
-		public void onRollOver(final EntityEvent ev) {
-			ev.getEntity().setState(EntityState.Hover);
-			cursor.setState(CursorState.Open);
-		}
+	private final MouseListener entListener = new MouseListener() {
+
+		private DragController ctrl;
+		private Vector2f grabPos;
+		private boolean isDragging = false;
 
 		@Override
-		public void onRollOut(final EntityEvent ev) {
-			ev.getEntity().setState(EntityState.Idle);
-			cursor.setState(CursorState.Default);
-		}
-
-		@Override
-		public void onPress(final EntityEvent ev) {
-			if (null != ev.getEntity()) {
-				cursor.setState(CursorState.Grab);
+		public void onRollOver(final MouseEvent ev) {
+			if (!isDragging) {
+				ev.getEntity().setState(EntityState.Hover);
+				cursor.setState(CursorState.Open);
 			}
 		}
 
 		@Override
-		public void onRelease(final EntityEvent ev) {
+		public void onRollOut(final MouseEvent ev) {
+			if (!isDragging) {
+				ev.getEntity().setState(EntityState.Idle);
+				cursor.setState(CursorState.Default);
+			}
+		}
+
+		@Override
+		public void onPress(final MouseEvent ev) {
+			if (null != ev.getEntity()) {
+				cursor.setState(CursorState.Grab);
+				ctrl = new DragController(ev.getEntity(), boardCursor
+						.mouseOnPlanePosition());
+				grabPos = boardCursor.getGridPosition();
+				ev.getEntity().addController(ctrl);
+				isDragging = true;
+			}
+		}
+
+		@Override
+		public void onRelease(final MouseEvent ev) {
 			if (null != ev.getEntity()) {
 				cursor.setState(CursorState.Open);
 			} else {
 				cursor.setState(CursorState.Default);
 			}
+			if (isDragging) {
+				final Vector2f gridPos = boardCursor.getGridPosition();
+				System.out.println(gridPos);
+				final Entity ent = tileGridNode.getEntity(gridPos);
+				if (ent != null) {
+					ctrl.drop(tileGridNode.realPosition(gridPos));
+					tileGridNode.moveEntity(grabPos, gridPos);
+				} else {
+					System.out.println("OCCUPIED");
+					ctrl.drop(tileGridNode.realPosition(grabPos));
+				}
+				isDragging = false;
+			}
+
 		}
 
 	};
