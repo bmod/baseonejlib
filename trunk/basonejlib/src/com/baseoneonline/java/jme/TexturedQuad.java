@@ -134,6 +134,7 @@ public class TexturedQuad extends Quad {
 				return null;
 			}
 		});
+		texture.updateMemoryReq();
 		// make sure render state updates are noticed.
 		updateRenderState();
 	}
