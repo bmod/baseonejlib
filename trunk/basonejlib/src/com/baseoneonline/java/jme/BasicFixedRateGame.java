@@ -15,7 +15,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.state.ZBufferState;
-import com.jme.scene.state.ZBufferState.TestFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
@@ -76,7 +75,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	 * Number of samples to use for the multisample buffer. Any changes must be
 	 * made prior to call of start().
 	 */
-	protected int samples = 3;
+	protected int samples = 0;
 
 	protected Camera cam;
 	protected KeyBindingManager key;
@@ -93,10 +92,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	 *            the desired frame rate in frames per second
 	 */
 	public void setFrameRate(final int fps) {
-		if (fps <= 0) {
-			throw new IllegalArgumentException(
-					"Frames per second cannot be less than one.");
-		}
+		if (fps <= 0) { throw new IllegalArgumentException(
+				"Frames per second cannot be less than one."); }
 
 		logger.info("Attempting to run at " + fps + " fps.");
 		preferredTicksPerFrame = timer.getResolution() / fps;
@@ -177,8 +174,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 				// game state
 				InputSystem.update();
 
-				// update game state, do not use interpolation parameter
-				update(-1.0f);
+				update(sleepTime);
 				updateLoop(preferredTicksPerFrame);
 
 				// render, do not use interpolation parameter
@@ -317,8 +313,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 		/** Sets the title of our display. */
 		String className = getClass().getName();
-		if (className.lastIndexOf('.') > 0)
-			className = className.substring(className.lastIndexOf('.') + 1);
+		if (className.lastIndexOf('.') > 0) className = className
+				.substring(className.lastIndexOf('.') + 1);
 		display.setTitle(className);
 
 		key = KeyBindingManager.getKeyBindingManager();
@@ -339,18 +335,19 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		 * farther ones.
 		 */
 		initFixedRateGame();
+		rootNode.updateRenderState();
+
+	}
+
+	protected void initZBuffer() {
 
 		final ZBufferState buf = display.getRenderer().createZBufferState();
 		buf.setEnabled(true);
 		buf.setWritable(true);
 
-		buf.setFunction(TestFunction.LessThanOrEqualTo);
+		// buf.setFunction(TestFunction.LessThanOrEqualTo);
 		rootNode.setRenderState(buf);
-		// rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-		// rootNode.updateGeometricState( 0.0f, true );
-		rootNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 		rootNode.updateRenderState();
-
 	}
 
 	protected abstract void initFixedRateGame();
@@ -380,8 +377,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		logger.info("Cleaning up resources.");
 
 		TextureManager.doTextureCleanup();
-		if (display != null && display.getRenderer() != null)
-			display.getRenderer().cleanup();
+		if (display != null && display.getRenderer() != null) display
+				.getRenderer().cleanup();
 		KeyInput.destroyIfInitalized();
 		MouseInput.destroyIfInitalized();
 		JoystickInput.destroyIfInitalized();
