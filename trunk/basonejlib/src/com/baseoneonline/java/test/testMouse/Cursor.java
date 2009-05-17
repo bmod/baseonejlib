@@ -5,7 +5,8 @@ import java.util.HashMap;
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
 import com.jme.input.MouseInput;
-import com.jme.math.Vector2f;
+import com.jme.math.Vector3f;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
@@ -17,7 +18,13 @@ public class Cursor extends Quad {
 	private final HashMap<CursorState, TextureState> texStates = new HashMap<CursorState, TextureState>();
 
 	private CursorState state;
-	Vector2f offset = new Vector2f(22, -12);
+	private Spatial trackObject = null;
+	Vector3f offset = new Vector3f(22, -12, 0);
+	Vector3f screenPos = new Vector3f();
+	float mix = 0;
+	float tmix = 0f;
+	Vector3f trackPos = new Vector3f();
+	Vector3f position = new Vector3f();
 
 	public static enum CursorState {
 		Default, Open, Grab
@@ -59,9 +66,24 @@ public class Cursor extends Quad {
 
 	@Override
 	public void updateGeometricState(final float time, final boolean initiator) {
-		getLocalTranslation().x = MouseInput.get().getXAbsolute() + offset.x;
-		getLocalTranslation().y = MouseInput.get().getYAbsolute() + offset.y;
+		screenPos.x = MouseInput.get().getXAbsolute();
+		screenPos.y = MouseInput.get().getYAbsolute();
+		if (null != trackObject) {
+			trackPos.set(DisplaySystem.getDisplaySystem().getRenderer()
+					.getCamera().getScreenCoordinates(
+							trackObject.getWorldTranslation()));
+		}
+		mix += (tmix - mix) * .3f;
+		final Vector3f dif = trackPos.subtract(screenPos);
+		position.set(screenPos.add(dif.multLocal(mix)));
+
+		setLocalTranslation(position.add(offset));
 		super.updateGeometricState(time, initiator);
+	}
+
+	public void trackObject(final Spatial entity) {
+		trackObject = entity;
+		tmix = (entity == null) ? 0 : 1;
 	}
 
 }

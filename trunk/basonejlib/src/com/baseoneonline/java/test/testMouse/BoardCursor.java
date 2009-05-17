@@ -31,7 +31,11 @@ public class BoardCursor extends Node {
 	}
 
 	public void setVisible(final boolean b) {
-
+		if (b) {
+			setCullHint(CullHint.Inherit);
+		} else {
+			setCullHint(CullHint.Always);
+		}
 	}
 
 	public void update(final Vector2f screenPos) {
@@ -45,9 +49,9 @@ public class BoardCursor extends Node {
 		if (gridPosition.x >= 0 && gridPosition.x < grid.getWidth()
 				&& gridPosition.y >= 0 && gridPosition.y < grid.getHeight()) {
 			grid.realPosition(gridPosition, getLocalTranslation());
-			setCullHint(CullHint.Inherit);
+			// setCullHint(CullHint.Inherit);
 		} else {
-			setCullHint(CullHint.Always);
+			// setCullHint(CullHint.Always);
 		}
 
 	}

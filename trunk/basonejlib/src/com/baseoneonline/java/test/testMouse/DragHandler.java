@@ -16,9 +16,6 @@ public class DragHandler extends InputHandler {
 	public DragHandler(final TileGridNode grid, final BoardCursor cursor) {
 		this.grid = grid;
 		this.cursor = cursor;
-		// addAction(liftAction, InputHandler.DEVICE_MOUSE, 0,
-		// InputHandler.AXIS_NONE, false);
-
 	}
 
 	private Entity entity;
