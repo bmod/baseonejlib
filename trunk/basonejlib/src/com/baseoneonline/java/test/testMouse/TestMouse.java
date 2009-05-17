@@ -40,7 +40,7 @@ public class TestMouse extends BasicFixedRateGame {
 
 		boardCursor = new BoardCursor(tileGridNode);
 		boardCursor.getLocalTranslation().y = .1f;
-		// rootNode.attachChild(boardCursor);
+		rootNode.attachChild(boardCursor);
 
 		orbitCam = new OrbitCamNode(cam);
 		orbitCam.setAzimuth(FastMath.HALF_PI * .6f);
@@ -60,6 +60,8 @@ public class TestMouse extends BasicFixedRateGame {
 		cursor = new Cursor();
 		cursor.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		rootNode.attachChild(cursor);
+
+		initZBuffer();
 	}
 
 	private final MouseListener entListener = new MouseListener() {
@@ -90,9 +92,12 @@ public class TestMouse extends BasicFixedRateGame {
 				cursor.setState(CursorState.Grab);
 				ctrl = new DragController(ev.getEntity(), boardCursor
 						.mouseOnPlanePosition());
-				grabPos = boardCursor.getGridPosition();
+				grabPos = boardCursor.getGridPosition().clone();
+				System.out.println("Grab: " + grabPos);
 				ev.getEntity().addController(ctrl);
 				isDragging = true;
+				boardCursor.setVisible(true);
+				cursor.trackObject(ev.getEntity());
 			}
 		}
 
@@ -105,16 +110,17 @@ public class TestMouse extends BasicFixedRateGame {
 			}
 			if (isDragging) {
 				final Vector2f gridPos = boardCursor.getGridPosition();
-				System.out.println(gridPos);
 				final Entity ent = tileGridNode.getEntity(gridPos);
-				if (ent != null) {
+				System.out.println("Drop: " + grabPos);
+				if (ent == null) {
 					ctrl.drop(tileGridNode.realPosition(gridPos));
 					tileGridNode.moveEntity(grabPos, gridPos);
 				} else {
-					System.out.println("OCCUPIED");
 					ctrl.drop(tileGridNode.realPosition(grabPos));
 				}
 				isDragging = false;
+				boardCursor.setVisible(false);
+				cursor.trackObject(null);
 			}
 
 		}
