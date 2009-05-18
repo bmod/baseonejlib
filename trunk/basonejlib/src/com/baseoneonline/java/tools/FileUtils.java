@@ -1,6 +1,7 @@
 package com.baseoneonline.java.tools;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -57,4 +58,19 @@ public class FileUtils {
 				"IO Exception while writing: " + f.getAbsolutePath());
 		}
 	}
+	
+	public static void scanDirectory(File dir, FileScanClient client, boolean recursive, FileFilter filter) {
+		File[] files = dir.listFiles(filter);
+		for (File f : files) {
+			client.operate(f);
+			if (recursive && f.isDirectory()) {
+				scanDirectory(f, client, recursive, filter);
+			}
+		}
+	}
+	
+	public static interface FileScanClient {
+		public void operate(File f);
+	}
+	
 }

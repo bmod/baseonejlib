@@ -1,10 +1,10 @@
-package com.baseoneonline.java.test.testMouse;
+package com.baseoneonline.java.test.testCedric;
 
 import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.baseoneonline.java.jme.JMEUtil;
 import com.baseoneonline.java.jme.OrbitCamNode;
-import com.baseoneonline.java.test.testMouse.Cursor.CursorState;
-import com.baseoneonline.java.test.testMouse.Entity.EntityState;
+import com.baseoneonline.java.test.testCedric.Cursor.CursorState;
+import com.baseoneonline.java.test.testCedric.Entity.EntityState;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;

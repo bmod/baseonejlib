@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testMouse;
+package com.baseoneonline.java.test.testCedric;
 
 import com.baseoneonline.java.tweening.Equation;
 import com.baseoneonline.java.tweening.Equations;
