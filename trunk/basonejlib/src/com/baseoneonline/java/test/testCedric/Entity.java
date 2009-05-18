@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testMouse;
+package com.baseoneonline.java.test.testCedric;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector2f;

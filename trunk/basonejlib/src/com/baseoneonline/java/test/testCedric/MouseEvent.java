@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testMouse;
+package com.baseoneonline.java.test.testCedric;
 
 public class MouseEvent {
 

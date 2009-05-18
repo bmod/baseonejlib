@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testMouse;
+package com.baseoneonline.java.test.testCedric;
 
 import com.jme.input.InputHandler;
 import com.jme.input.action.InputAction;
