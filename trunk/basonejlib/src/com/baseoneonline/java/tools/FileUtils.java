@@ -38,6 +38,10 @@ public class FileUtils {
 		}
 		return null;
 	}
+	
+	public static String readFile(String string) {
+		return readFile(new File(string));
+	}
 
 	/**
 	 * Write a string into a file. If the file exists, it will be overwritten.
