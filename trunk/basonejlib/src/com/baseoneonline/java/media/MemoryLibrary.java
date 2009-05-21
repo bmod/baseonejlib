@@ -8,7 +8,7 @@ public class MemoryLibrary extends Library {
 
 	@Override
 	public void add(final MediaItem item) {
-		items.put(item.file.getAbsolutePath(), item);
+		items.put(item.getFile().getAbsolutePath(), item);
 	}
 
 	@Override
