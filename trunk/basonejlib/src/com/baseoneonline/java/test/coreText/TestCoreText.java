@@ -1,5 +1,6 @@
 package com.baseoneonline.java.test.coreText;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -15,7 +16,7 @@ public class TestCoreText {
 	public TestCoreText() {
 
 		String file = "test.coreText";
-		String data = FileUtils.readFile(file);
+		String data = FileUtils.readFile(new File(file));
 		parse(data, file);
 		for (Element elm : elements) {
 			System.out.println(elm);
