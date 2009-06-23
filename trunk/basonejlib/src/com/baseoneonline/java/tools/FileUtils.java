@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class FileUtils {
+	
 	/**
 	 * Read a file into a {@link String} and return it. Will not throw errors
 	 * but log them instead.
@@ -37,10 +38,6 @@ public class FileUtils {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public static String readFile(String string) {
-		return readFile(new File(string));
 	}
 
 	/**

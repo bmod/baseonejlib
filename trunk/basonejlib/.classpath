@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar"/>
 	<classpathentry kind="lib" path="lib/swing-worker.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
+	<classpathentry kind="lib" path="lib/filedrop.jar"/>
+	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
