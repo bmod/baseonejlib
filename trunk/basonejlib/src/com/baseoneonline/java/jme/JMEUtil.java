@@ -3,6 +3,7 @@ package com.baseoneonline.java.jme;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
 
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
@@ -30,6 +31,7 @@ import com.jme.util.resource.SimpleResourceLocator;
 import com.jmex.model.converters.ObjToJme;
 
 public class JMEUtil {
+
 	public static void letThereBeLight(final Node rootNode) {
 		final PointLight light = new PointLight();
 		light.setLocation(new Vector3f(200, 300, 100));
@@ -79,11 +81,11 @@ public class JMEUtil {
 		bs.setDestinationFunction(DestinationFunction.OneMinusSourceAlpha);
 		q.setRenderState(bs);
 	}
-	
-	public static Spatial loadObj(final String name, String tempFile) {
+
+	public static Spatial loadObj(final String name, final String tempFile) {
 		final File f = new File(name);
-		File temp = new File((tempFile == null) ? "temp" : tempFile);
-		
+		final File temp = new File((tempFile == null) ? "temp" : tempFile);
+
 		try {
 			final ObjToJme objToJme = new ObjToJme();
 			ResourceLocatorTool.addResourceLocator(
@@ -100,21 +102,25 @@ public class JMEUtil {
 		}
 		return null;
 	}
-	
-	public static Line createLine(Vector3f[] vtc, ColorRGBA col) {
-		Vector3f[] nml = new Vector3f[vtc.length];
-		ColorRGBA[] cols = new ColorRGBA[vtc.length];
-		Vector2f[] tex = new Vector2f[vtc.length];
-		Vector2f tx = new Vector2f();
-		for (int i=0; i<vtc.length; i++) {
+
+	public static Line createLine(final Vector3f[] vtc, final ColorRGBA col) {
+		final Vector3f[] nml = new Vector3f[vtc.length];
+		final ColorRGBA[] cols = new ColorRGBA[vtc.length];
+		final Vector2f[] tex = new Vector2f[vtc.length];
+		final Vector2f tx = new Vector2f();
+		for (int i = 0; i < vtc.length; i++) {
 			nml[i] = Vector3f.UNIT_Y;
 			cols[i] = col;
 			tex[i] = tx;
 		}
-		Line ln =new Line("Line",vtc, nml, cols, tex);
+		final Line ln = new Line("Line", vtc, nml, cols, tex);
 		ln.setMode(Mode.Connected);
 		return ln;
 	}
 
+	public static URL getResource(final Object resourceClass,
+			final String string) {
+		return resourceClass.getClass().getClassLoader().getResource(string);
+	}
 
 }
