@@ -4,15 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.baseoneonline.java.jme.JMEUtil;
 import com.baseoneonline.java.jme.OrbitCamNode;
 import com.baseoneonline.java.jme.TexturedQuad;
-import com.jme.app.SimpleGame;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
+import com.jme.renderer.lwjgl.LWJGLPbufferTextureRenderer;
 
-public class TestDrawOnTexture extends SimpleGame {
+public class TestDrawOnTexture extends BasicFixedRateGame {
 
 	public static void main(final String[] args) {
 		new TestDrawOnTexture().start();
@@ -24,7 +26,7 @@ public class TestDrawOnTexture extends SimpleGame {
 	TexturedQuad q;
 
 	@Override
-	protected void simpleInitGame() {
+	protected void initFixedRateGame() {
 		MouseInput.get().setCursorVisible(true);
 		// display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
@@ -35,11 +37,14 @@ public class TestDrawOnTexture extends SimpleGame {
 		rootNode.attachChild(camNode);
 
 		JMEUtil.letThereBeLight(rootNode);
+		
+		
+		
 
 	}
 
 	@Override
-	protected void simpleUpdate() {
+	protected void updateLoop(final float t) {
 
 		int w = im.getWidth();
 		int h = im.getHeight();

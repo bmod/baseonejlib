@@ -24,8 +24,8 @@ public class StringUtils {
 	 *            The delimiter to be used.
 	 * @return A String containing all the elements of the array.
 	 */
-	public static String join(String[] array, String delim) {
-		StringBuffer sb = join(array, delim, new StringBuffer());
+	public static String join(final String[] array, final String delim) {
+		final StringBuffer sb = join(array, delim, new StringBuffer());
 		return sb.toString();
 	}
 
@@ -49,11 +49,10 @@ public class StringUtils {
 	 * @return The provided {@link StringBuffer} containing all the elements of
 	 *         the array.
 	 */
-	public static StringBuffer join(String[] array, String delim,
-			StringBuffer sb) {
+	public static StringBuffer join(final String[] array, final String delim,
+			final StringBuffer sb) {
 		for (int i = 0; i < array.length; i++) {
-			if (i != 0)
-				sb.append(delim);
+			if (i != 0) sb.append(delim);
 			sb.append(array[i]);
 		}
 		return sb;
@@ -66,29 +65,27 @@ public class StringUtils {
 	 * @param url
 	 * @return
 	 */
-	public static String urlDecode(String url) {
+	public static String urlDecode(final String url) {
 		try {
 			return URLDecoder.decode(url, Charset.defaultCharset().name());
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"Unsupported Encoding in URL: " + url);
+					"Unsupported Encoding in URL: " + url);
 		}
 		return null;
 	}
 
-	public static String padFront(String number, int length, String chr) {
-		while( number.length() < length) {
-			number = chr+number;
+	public static String padFront(String number, final int length,
+			final String chr) {
+		while (number.length() < length) {
+			number = chr + number;
 		}
 		return number;
 	}
-	
-	
+
 	public static String stripExtension(final String filename) {
 		final int idx = filename.lastIndexOf(".");
-		if (-1 != idx) {
-			return filename.substring(0, idx);
-		}
+		if (-1 != idx) { return filename.substring(0, idx); }
 		return filename;
 	}
 
