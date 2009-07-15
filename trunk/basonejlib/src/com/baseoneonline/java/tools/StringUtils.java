@@ -1,5 +1,6 @@
 package com.baseoneonline.java.tools;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -87,6 +88,21 @@ public class StringUtils {
 		final int idx = filename.lastIndexOf(".");
 		if (-1 != idx) { return filename.substring(0, idx); }
 		return filename;
+	}
+
+	/**
+	 * Replace or add extension to a file(name)
+	 * 
+	 * @param file
+	 *            The source filename to use.
+	 * @param newExtension
+	 *            Don't provide a dot, it will be added.
+	 * @return A new file with the provided extension.
+	 */
+	public static File replaceExtension(final File file,
+			final String newExtension) {
+		final String fname = stripExtension(file.getAbsolutePath());
+		return new File(fname + "." + newExtension);
 	}
 
 }

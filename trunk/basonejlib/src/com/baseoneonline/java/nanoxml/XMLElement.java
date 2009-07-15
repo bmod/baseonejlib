@@ -620,15 +620,15 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
+	 *      java.lang.Object) getAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
@@ -646,7 +646,7 @@ public class XMLElement {
 		}
 		if (value == null) {
 			Logger.getLogger(getClass().getName()).severe(
-				"Value is null: " + name);
+					"Value is null: " + name);
 		}
 		this.attributes.put(name, value.toString());
 	}
@@ -678,17 +678,17 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
+	 *      int) getIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
@@ -734,17 +734,17 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
+	 *      double) getDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
@@ -774,7 +774,8 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement) addChild(XMLElement)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement)
+	 *      addChild(XMLElement)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeChild(com.baseoneonline.java.nanoxml.XMLElement)
@@ -795,18 +796,18 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, String)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
+	 *      java.lang.Object) getAttribute(String, String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
@@ -819,15 +820,15 @@ public class XMLElement {
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
+	 *      int) getIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
+	 *      double) getDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
@@ -850,7 +851,8 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement) addChild(XMLElement)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement)
+	 *      addChild(XMLElement)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#countChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeChild(com.baseoneonline.java.nanoxml.XMLElement)
@@ -871,7 +873,8 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement) addChild(XMLElement)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement)
+	 *      addChild(XMLElement)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#countChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeChild(com.baseoneonline.java.nanoxml.XMLElement)
@@ -900,14 +903,21 @@ public class XMLElement {
 		return lst;
 	}
 
+	public List<XMLElement> getChildren(final boolean recursive) {
+		final List<XMLElement> lst = new ArrayList<XMLElement>();
+		for (final XMLElement x : children) {
+			lst.add(x);
+			lst.addAll(x.getChildren(recursive));
+		}
+		return lst;
+	}
+
 	public XMLElement getChild(final String name) {
 		for (final XMLElement x : getChildren()) {
-			if (x.getName().equalsIgnoreCase(name)) {
-				return x;
-			}
+			if (x.getName().equalsIgnoreCase(name)) { return x; }
 		}
-		Logger.getLogger(getClass().getName()).severe(
-			"Child of " + this.getName() + " not found: " + name);
+		// Logger.getLogger(getClass().getName()).severe(
+		// "Child of " + this.getName() + " not found: " + name);
 		return null;
 	}
 
@@ -915,7 +925,8 @@ public class XMLElement {
 	 * Returns the PCDATA content of the object. If there is no such content,
 	 * <CODE>null</CODE> is returned.
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setContent(java.lang.String) setContent(String)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setContent(java.lang.String)
+	 *      setContent(String)
 	 */
 	public String getContent() {
 		return this.contents;
@@ -953,13 +964,13 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
+	 *      java.lang.Object) getAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
@@ -986,8 +997,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
@@ -1001,12 +1012,12 @@ public class XMLElement {
 		if (this.ignoreCase) {
 			name = name.toUpperCase();
 		}
-		Object value = this.attributes.get(name);
-		if (value == null) {
-			Logger.getLogger(getClass().getName()).warning(
-				"Attribute not found: " + name);
-			value = defaultValue;
-		}
+		final Object value = this.attributes.get(name);
+		// if (value == null) {
+		// Logger.getLogger(getClass().getName()).warning(
+		// "Attribute not found: " + name);
+		// value = defaultValue;
+		// }
 		return value;
 	}
 
@@ -1037,15 +1048,15 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
+	 *      java.lang.Object) getAttribute(String, Object)
 	 */
 	public String getAttribute(String name,
 			final Hashtable<String, String> valueSet, final String defaultKey,
@@ -1085,8 +1096,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
@@ -1118,8 +1129,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
@@ -1162,8 +1173,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
@@ -1194,11 +1205,11 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
+	 *      int) getIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
@@ -1225,8 +1236,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
@@ -1250,17 +1261,17 @@ public class XMLElement {
 		}
 	}
 
-	public ColorRGBA getColorAttribute(String name, ColorRGBA defaultValue) {
+	public ColorRGBA getColorAttribute(String name, final ColorRGBA defaultValue) {
 		name = name.toUpperCase();
-		String c = this.attributes.get(name);
+		final String c = this.attributes.get(name);
 		if (c == null) {
 			Logger.getLogger(getClass().getName()).warning(
-				"Attribute not found: " + name);
+					"Attribute not found: " + name);
 			return defaultValue;
 		}
-		String[] col = c.split(",");
+		final String[] col = c.split(",");
 		if (col.length > 0 && col.length <= 4 && col.length != 2) {
-			float[] colf = new float[col.length];
+			final float[] colf = new float[col.length];
 			for (int i = 0; i < col.length; i++) {
 				colf[i] = Float.parseFloat(col[i]);
 			}
@@ -1268,8 +1279,9 @@ public class XMLElement {
 			if (colf.length == 1) {
 				return new ColorRGBA(colf[0], colf[0], colf[0], 1);
 			} else {
-				float a = colf.length == 4 ? colf[3] : 1;
-				ColorRGBA color = new ColorRGBA(colf[0], colf[1], colf[2], a);
+				final float a = colf.length == 4 ? colf[3] : 1;
+				final ColorRGBA color = new ColorRGBA(colf[0], colf[1],
+						colf[2], a);
 				return color;
 
 			}
@@ -1311,13 +1323,13 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
+	 *      int) getIntAttribute(String, int)
 	 */
 	public int getIntAttribute(String name,
 			final Hashtable<String, Object> valueSet, final String defaultKey,
@@ -1336,9 +1348,8 @@ public class XMLElement {
 			throw this.invalidValueSet(name);
 		}
 		if (result == null) {
-			if (!allowLiteralNumbers) {
-				throw this.invalidValue(name, (String) key);
-			}
+			if (!allowLiteralNumbers) { throw this.invalidValue(name,
+					(String) key); }
 			try {
 				result = Integer.valueOf((String) key);
 			} catch (final NumberFormatException e) {
@@ -1364,11 +1375,11 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
+	 *      double) getDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
@@ -1399,8 +1410,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
@@ -1471,13 +1482,13 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
+	 *      double) getDoubleAttribute(String, double)
 	 */
 	public double getDoubleAttribute(String name,
 			final Hashtable<String, Object> valueSet, final String defaultKey,
@@ -1496,9 +1507,8 @@ public class XMLElement {
 			throw this.invalidValueSet(name);
 		}
 		if (result == null) {
-			if (!allowLiteralNumbers) {
-				throw this.invalidValue(name, (String) key);
-			}
+			if (!allowLiteralNumbers) { throw this.invalidValue(name,
+					(String) key); }
 			try {
 				result = Double.valueOf((String) key);
 			} catch (final NumberFormatException e) {
@@ -1537,8 +1547,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
@@ -1571,7 +1581,8 @@ public class XMLElement {
 	/**
 	 * Returns the name of the element.
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setName(java.lang.String) setName(String)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setName(java.lang.String)
+	 *      setName(String)
 	 */
 	public String getName() {
 		return this.name;
@@ -1659,9 +1670,7 @@ public class XMLElement {
 		for (;;) {
 			char ch = this.scanWhitespace();
 
-			if (ch != '<') {
-				throw this.expectedInput("<");
-			}
+			if (ch != '<') { throw this.expectedInput("<"); }
 
 			ch = this.readChar();
 
@@ -1941,7 +1950,8 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement) addChild(XMLElement)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#addChild(com.baseoneonline.java.nanoxml.XMLElement)
+	 *      addChild(XMLElement)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#countChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateChildren()
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getChildren()
@@ -1976,16 +1986,16 @@ public class XMLElement {
 	 *            </dl>
 	 *            <dl>
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setDoubleAttribute(java.lang.String,
+	 *      double) setDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setIntAttribute(java.lang.String,
+	 *      int) setIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#setAttribute(java.lang.String,
+	 *      java.lang.Object) setAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, Object)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
+	 *      java.lang.Object) getAttribute(String, Object)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
@@ -1998,15 +2008,15 @@ public class XMLElement {
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
+	 *      int) getIntAttribute(String, int)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
+	 *      double) getDoubleAttribute(String, double)
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
@@ -2028,7 +2038,7 @@ public class XMLElement {
 	 */
 	protected XMLElement createAnotherElement() {
 		return new XMLElement(this.entities, this.ignoreWhitespace, false,
-			this.ignoreCase);
+				this.ignoreCase);
 	}
 
 	/**
@@ -2064,7 +2074,8 @@ public class XMLElement {
 	/**
 	 * Writes the XML element to a string.
 	 * 
-	 * @see com.baseoneonline.java.nanoxml.XMLElement#write(java.io.Writer) write(Writer)
+	 * @see com.baseoneonline.java.nanoxml.XMLElement#write(java.io.Writer)
+	 *      write(Writer)
 	 */
 	@Override
 	public String toString() {
@@ -2246,8 +2257,8 @@ public class XMLElement {
 		for (;;) {
 			final char ch = this.readChar();
 			if (((ch < 'A') || (ch > 'Z')) && ((ch < 'a') || (ch > 'z'))
-				&& ((ch < '0') || (ch > '9')) && (ch != '_') && (ch != '.')
-				&& (ch != ':') && (ch != '-') && (ch <= '\u007E')) {
+					&& ((ch < '0') || (ch > '9')) && (ch != '_') && (ch != '.')
+					&& (ch != ':') && (ch != '-') && (ch <= '\u007E')) {
 				this.unreadChar(ch);
 				return;
 			}
@@ -2320,9 +2331,8 @@ public class XMLElement {
 	 */
 	protected void scanString(final StringBuffer string) throws IOException {
 		final char delimiter = this.readChar();
-		if ((delimiter != '\'') && (delimiter != '"')) {
-			throw this.expectedInput("' or \"");
-		}
+		if ((delimiter != '\'') && (delimiter != '"')) { throw this
+				.expectedInput("' or \""); }
 		for (;;) {
 			final char ch = this.readChar();
 			if (ch == delimiter) {
@@ -2447,9 +2457,7 @@ public class XMLElement {
 				dashesToRead = 2;
 			}
 		}
-		if (this.readChar() != '>') {
-			throw this.expectedInput(">");
-		}
+		if (this.readChar() != '>') { throw this.expectedInput(">"); }
 	}
 
 	/**
@@ -2530,9 +2538,7 @@ public class XMLElement {
 	protected boolean checkLiteral(final String literal) throws IOException {
 		final int length = literal.length();
 		for (int i = 0; i < length; i += 1) {
-			if (this.readChar() != literal.charAt(i)) {
-				return false;
-			}
+			if (this.readChar() != literal.charAt(i)) { return false; }
 		}
 		return true;
 	}
@@ -2585,9 +2591,7 @@ public class XMLElement {
 			this.scanIdentifier(buf);
 			final String key = buf.toString();
 			ch = this.scanWhitespace();
-			if (ch != '=') {
-				throw this.expectedInput("=");
-			}
+			if (ch != '=') { throw this.expectedInput("="); }
 			this.unreadChar(this.scanWhitespace());
 			buf.setLength(0);
 			this.scanString(buf);
@@ -2596,9 +2600,7 @@ public class XMLElement {
 		}
 		if (ch == '/') {
 			ch = this.readChar();
-			if (ch != '>') {
-				throw this.expectedInput(">");
-			}
+			if (ch != '>') { throw this.expectedInput(">"); }
 			return;
 		}
 		buf.setLength(0);
@@ -2636,13 +2638,11 @@ public class XMLElement {
 			while (ch != '/') {
 				if (ch == '!') {
 					ch = this.readChar();
-					if (ch != '-') {
-						throw this.expectedInput("Comment or Element");
-					}
+					if (ch != '-') { throw this
+							.expectedInput("Comment or Element"); }
 					ch = this.readChar();
-					if (ch != '-') {
-						throw this.expectedInput("Comment or Element");
-					}
+					if (ch != '-') { throw this
+							.expectedInput("Comment or Element"); }
 					this.skipComment();
 				} else {
 					this.unreadChar(ch);
@@ -2651,9 +2651,7 @@ public class XMLElement {
 					elt.addChild(child);
 				}
 				ch = this.scanWhitespace();
-				if (ch != '<') {
-					throw this.expectedInput("<");
-				}
+				if (ch != '<') { throw this.expectedInput("<"); }
 				ch = this.readChar();
 			}
 			this.unreadChar(ch);
@@ -2665,16 +2663,10 @@ public class XMLElement {
 			}
 		}
 		ch = this.readChar();
-		if (ch != '/') {
-			throw this.expectedInput("/");
-		}
+		if (ch != '/') { throw this.expectedInput("/"); }
 		this.unreadChar(this.scanWhitespace());
-		if (!this.checkLiteral(name)) {
-			throw this.expectedInput(name);
-		}
-		if (this.scanWhitespace() != '>') {
-			throw this.expectedInput(">");
-		}
+		if (!this.checkLiteral(name)) { throw this.expectedInput(name); }
+		if (this.scanWhitespace() != '>') { throw this.expectedInput(">"); }
 	}
 
 	/**
@@ -2717,9 +2709,7 @@ public class XMLElement {
 			buf.append(ch);
 		} else {
 			final char[] value = this.entities.get(key);
-			if (value == null) {
-				throw this.unknownEntity(key);
-			}
+			if (value == null) { throw this.unknownEntity(key); }
 			buf.append(value);
 		}
 	}
@@ -2782,9 +2772,8 @@ public class XMLElement {
 	 */
 	protected XMLParseException invalidValue(final String name,
 			final String value) {
-		final String msg =
-			"Attribute \"" + name + "\" does not contain a valid "
-				+ "value (\"" + value + "\")";
+		final String msg = "Attribute \"" + name
+				+ "\" does not contain a valid " + "value (\"" + value + "\")";
 		return new XMLParseException(this.getName(), this.parserLineNr, msg);
 	}
 

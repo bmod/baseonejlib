@@ -1,0 +1,5 @@
+<!ELEMENT MediaMenu (node,filenode)*>
+<!ELEMENT node ()*>
+<!ELEMENT filenode (launcher)>
+<!ELEMENT launcher EMPTY>
+<!ATTLIST NewAttList>
