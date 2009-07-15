@@ -16,10 +16,10 @@ import com.jme.scene.state.BlendState.SourceFunction;
 import com.jme.scene.state.FogState.DensityFunction;
 import com.jme.util.TextureManager;
 
-public class TestTextures extends SimpleGame {
+public class TestTransparentTextures extends SimpleGame {
 
 	public static void main(final String[] args) {
-		final TestTextures game = new TestTextures();
+		final TestTransparentTextures game = new TestTransparentTextures();
 		game.start();
 	}
 

@@ -20,10 +20,10 @@ import com.jme.util.TextureManager;
 import com.jmex.terrain.TerrainPage;
 import com.jmex.terrain.util.FaultFractalHeightMap;
 
-public class TestVectorcycleRoads extends SimpleGame {
+public class Main extends SimpleGame {
 
 	public static void main(String[] args) {
-		TestVectorcycleRoads app = new TestVectorcycleRoads();
+		Main app = new Main();
 		app.samples = 3;
 		app.start();
 	}
