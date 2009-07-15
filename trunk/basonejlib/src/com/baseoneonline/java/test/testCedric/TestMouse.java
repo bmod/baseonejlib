@@ -3,27 +3,17 @@ package com.baseoneonline.java.test.testCedric;
 import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.baseoneonline.java.jme.JMEUtil;
 import com.baseoneonline.java.jme.OrbitCamNode;
-import com.baseoneonline.java.test.testCedric.core.BoardCursor;
-import com.baseoneonline.java.test.testCedric.core.Cursor;
-import com.baseoneonline.java.test.testCedric.core.DragController;
-import com.baseoneonline.java.test.testCedric.core.DragHandler;
-import com.baseoneonline.java.test.testCedric.core.Entity;
-import com.baseoneonline.java.test.testCedric.core.MouseEvent;
-import com.baseoneonline.java.test.testCedric.core.MouseListener;
-import com.baseoneonline.java.test.testCedric.core.PickHandler;
-import com.baseoneonline.java.test.testCedric.core.TileGridNode;
-import com.baseoneonline.java.test.testCedric.core.Cursor.CursorState;
-import com.baseoneonline.java.test.testCedric.core.Entity.EntityState;
+import com.baseoneonline.java.test.testCedric.Cursor.CursorState;
+import com.baseoneonline.java.test.testCedric.Entity.EntityState;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Spatial;
 
-public class TestCedric extends BasicFixedRateGame {
+public class TestMouse extends BasicFixedRateGame {
 
 	public static void main(final String[] args) {
-		new TestCedric().start();
+		new TestMouse().start();
 	}
 
 	OrbitCamNode orbitCam;
@@ -54,7 +44,7 @@ public class TestCedric extends BasicFixedRateGame {
 
 		orbitCam = new OrbitCamNode(cam);
 		orbitCam.setAzimuth(FastMath.HALF_PI * .6f);
-		orbitCam.setDistance(4);
+		orbitCam.setDistance(6);
 		rootNode.attachChild(orbitCam);
 
 		JMEUtil.letThereBeLight(rootNode);
@@ -70,17 +60,6 @@ public class TestCedric extends BasicFixedRateGame {
 		cursor = new Cursor();
 		cursor.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		rootNode.attachChild(cursor);
-		
-		Spatial model = JMEUtil.loadObj("src/assets/models/rock.obj", null);
-		rootNode.attachChild(model);
-//		try {
-//			URL url = getClass().getClassLoader().getResource("assets/models/rock.dae");
-//			ColladaImporter.load(url.openStream(), "rock");
-//			rootNode.attachChild(ColladaImporter.getModel());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
 
 		initZBuffer();
 	}
@@ -118,7 +97,7 @@ public class TestCedric extends BasicFixedRateGame {
 				ev.getEntity().addController(ctrl);
 				isDragging = true;
 				boardCursor.setVisible(true);
-				cursor.trackObject(ctrl.getAttachPoint());
+				cursor.trackObject(ev.getEntity());
 			}
 		}
 

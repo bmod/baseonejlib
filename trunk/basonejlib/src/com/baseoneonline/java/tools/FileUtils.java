@@ -1,6 +1,7 @@
 package com.baseoneonline.java.tools;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class FileUtils {
+
 	/**
 	 * Read a file into a {@link String} and return it. Will not throw errors
 	 * but log them instead.
@@ -17,22 +19,22 @@ public class FileUtils {
 	 * @return {@link String} containing the contents of the file or null if the
 	 *         file could not be read.
 	 */
-	public static String readFile(File f) {
+	public static String readFile(final File f) {
 		try {
-			FileReader reader = new FileReader(f);
-			StringBuffer buf = new StringBuffer();
+			final FileReader reader = new FileReader(f);
+			final StringBuffer buf = new StringBuffer();
 			int c;
 			while ((c = reader.read()) != -1) {
 				buf.append((char) c);
 			}
 			reader.close();
 			return buf.toString();
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"File not found: " + f.getAbsolutePath());
-		} catch (IOException e) {
+					"File not found: " + f.getAbsolutePath());
+		} catch (final IOException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"IO Exception while reading file: " + f.getAbsolutePath());
+					"IO Exception while reading file: " + f.getAbsolutePath());
 			e.printStackTrace();
 		}
 		return null;
@@ -46,21 +48,40 @@ public class FileUtils {
 	 * @param s
 	 *            Write this {@link String} to the file.
 	 */
-	public static void writeFile(File f, String s) {
+	public static void writeFile(final File f, final String s) {
 		try {
-			FileWriter writer = new FileWriter(f);
+			final FileWriter writer = new FileWriter(f);
 			writer.write(s);
 			writer.flush();
 			writer.close();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"IO Exception while writing: " + f.getAbsolutePath());
+					"IO Exception while writing: " + f.getAbsolutePath());
 		}
 	}
 
-	public static void visitFiles(File dir, int filesOnly,
-			FileVisitor fileVisitor) {
-		// TODO Auto-generated method stub
-		
+	public static void visitFiles(final File dir, final int visitMode,
+			final FileVisitor visitor) {
+		visitFiles(dir, visitMode, true, visitor, null);
+	}
+
+	public static void visitFiles(final File dir, final int visitMode,
+			final boolean recursive, final FileVisitor visitor,
+			final FileFilter filter) {
+		final File[] files = dir.listFiles(filter);
+		for (final File f : files) {
+			if (!f.getName().startsWith(".")) {
+				if (visitMode == FileVisitor.DIRECTORIES_ONLY
+						&& f.isDirectory()) {
+					visitor.visit(f);
+				} else if (visitMode == FileVisitor.FILES_ONLY
+						&& !f.isDirectory()) {
+					visitor.visit(f);
+				}
+				if (recursive && f.isDirectory()) {
+					visitFiles(f, visitMode, recursive, visitor, filter);
+				}
+			}
+		}
 	}
 }
