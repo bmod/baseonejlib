@@ -1,29 +1,19 @@
-package com.baseoneonline.java.test.testCedric;
+package com.baseoneonline.java.test.testMouse;
 
 import com.baseoneonline.java.jme.BasicFixedRateGame;
 import com.baseoneonline.java.jme.JMEUtil;
 import com.baseoneonline.java.jme.OrbitCamNode;
-import com.baseoneonline.java.test.testCedric.core.BoardCursor;
-import com.baseoneonline.java.test.testCedric.core.Cursor;
-import com.baseoneonline.java.test.testCedric.core.DragController;
-import com.baseoneonline.java.test.testCedric.core.DragHandler;
-import com.baseoneonline.java.test.testCedric.core.Entity;
-import com.baseoneonline.java.test.testCedric.core.MouseEvent;
-import com.baseoneonline.java.test.testCedric.core.MouseListener;
-import com.baseoneonline.java.test.testCedric.core.PickHandler;
-import com.baseoneonline.java.test.testCedric.core.TileGridNode;
-import com.baseoneonline.java.test.testCedric.core.Cursor.CursorState;
-import com.baseoneonline.java.test.testCedric.core.Entity.EntityState;
+import com.baseoneonline.java.test.testMouse.Cursor.CursorState;
+import com.baseoneonline.java.test.testMouse.Entity.EntityState;
 import com.jme.input.MouseInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.renderer.Renderer;
-import com.jme.scene.Spatial;
 
-public class TestCedric extends BasicFixedRateGame {
+public class TestMouse extends BasicFixedRateGame {
 
 	public static void main(final String[] args) {
-		new TestCedric().start();
+		new TestMouse().start();
 	}
 
 	OrbitCamNode orbitCam;
@@ -50,11 +40,11 @@ public class TestCedric extends BasicFixedRateGame {
 
 		boardCursor = new BoardCursor(tileGridNode);
 		boardCursor.getLocalTranslation().y = .1f;
-		rootNode.attachChild(boardCursor);
+		// rootNode.attachChild(boardCursor);
 
 		orbitCam = new OrbitCamNode(cam);
 		orbitCam.setAzimuth(FastMath.HALF_PI * .6f);
-		orbitCam.setDistance(4);
+		orbitCam.setDistance(6);
 		rootNode.attachChild(orbitCam);
 
 		JMEUtil.letThereBeLight(rootNode);
@@ -70,24 +60,6 @@ public class TestCedric extends BasicFixedRateGame {
 		cursor = new Cursor();
 		cursor.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		rootNode.attachChild(cursor);
-		
-		Spatial model = JMEUtil.loadObj("src/assets/models/rock.obj", null);
-		rootNode.attachChild(model);
-//		try {
-//			URL url = getClass().getClassLoader().getResource("assets/models/rock.dae");
-//			ColladaImporter.load(url.openStream(), "rock");
-//			rootNode.attachChild(ColladaImporter.getModel());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-
-		initZBuffer();
-	}
-
-	private void initZBuffer() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private final MouseListener entListener = new MouseListener() {
@@ -118,12 +90,9 @@ public class TestCedric extends BasicFixedRateGame {
 				cursor.setState(CursorState.Grab);
 				ctrl = new DragController(ev.getEntity(), boardCursor
 						.mouseOnPlanePosition());
-				grabPos = boardCursor.getGridPosition().clone();
-				System.out.println("Grab: " + grabPos);
+				grabPos = boardCursor.getGridPosition();
 				ev.getEntity().addController(ctrl);
 				isDragging = true;
-				boardCursor.setVisible(true);
-				cursor.trackObject(ctrl.getAttachPoint());
 			}
 		}
 
@@ -136,17 +105,16 @@ public class TestCedric extends BasicFixedRateGame {
 			}
 			if (isDragging) {
 				final Vector2f gridPos = boardCursor.getGridPosition();
+				System.out.println(gridPos);
 				final Entity ent = tileGridNode.getEntity(gridPos);
-				System.out.println("Drop: " + grabPos);
-				if (ent == null) {
+				if (ent != null) {
 					ctrl.drop(tileGridNode.realPosition(gridPos));
 					tileGridNode.moveEntity(grabPos, gridPos);
 				} else {
+					System.out.println("OCCUPIED");
 					ctrl.drop(tileGridNode.realPosition(grabPos));
 				}
 				isDragging = false;
-				boardCursor.setVisible(false);
-				cursor.trackObject(null);
 			}
 
 		}

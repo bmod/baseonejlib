@@ -15,5 +15,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
 	<classpathentry kind="lib" path="lib/filedrop.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/golden_0_2_3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

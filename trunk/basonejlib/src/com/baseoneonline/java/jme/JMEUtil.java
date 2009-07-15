@@ -1,9 +1,5 @@
 package com.baseoneonline.java.jme;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
 import com.jme.input.MouseInput;
@@ -16,7 +12,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.Line.Mode;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -24,10 +19,6 @@ import com.jme.scene.state.BlendState.DestinationFunction;
 import com.jme.scene.state.BlendState.SourceFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jme.util.resource.ResourceLocatorTool;
-import com.jme.util.resource.SimpleResourceLocator;
-import com.jmex.model.converters.ObjToJme;
 
 public class JMEUtil {
 	public static void letThereBeLight(final Node rootNode) {
@@ -42,6 +33,8 @@ public class JMEUtil {
 		rootNode.updateRenderState();
 
 	}
+	
+	
 
 	/**
 	 * @return The position where the mouse pointer intersects with a plane
@@ -79,42 +72,19 @@ public class JMEUtil {
 		bs.setDestinationFunction(DestinationFunction.OneMinusSourceAlpha);
 		q.setRenderState(bs);
 	}
-	
-	public static Spatial loadObj(final String name, String tempFile) {
-		final File f = new File(name);
-		File temp = new File((tempFile == null) ? "temp" : tempFile);
-		
-		try {
-			final ObjToJme objToJme = new ObjToJme();
-			ResourceLocatorTool.addResourceLocator(
-					ResourceLocatorTool.TYPE_TEXTURE,
-					new SimpleResourceLocator(f.getParentFile().toURI()));
-			final FileInputStream fin = new FileInputStream(f);
-			final FileOutputStream fout = new FileOutputStream(temp);
-			objToJme.convert(fin, fout);
-			final Spatial geom = (Spatial) BinaryImporter.getInstance().load(
-					temp);
-			return geom;
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
+
+
+
+	public static Line createLine(Vector3f[] array, ColorRGBA darkGray) {
+		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public static Line createLine(Vector3f[] vtc, ColorRGBA col) {
-		Vector3f[] nml = new Vector3f[vtc.length];
-		ColorRGBA[] cols = new ColorRGBA[vtc.length];
-		Vector2f[] tex = new Vector2f[vtc.length];
-		Vector2f tx = new Vector2f();
-		for (int i=0; i<vtc.length; i++) {
-			nml[i] = Vector3f.UNIT_Y;
-			cols[i] = col;
-			tex[i] = tx;
-		}
-		Line ln =new Line("Line",vtc, nml, cols, tex);
-		ln.setMode(Mode.Connected);
-		return ln;
-	}
 
+
+
+	public static Spatial loadObj(String string, Object object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
