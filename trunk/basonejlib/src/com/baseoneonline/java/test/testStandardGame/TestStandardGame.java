@@ -4,7 +4,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.test.testStandardGame.gameStates.GlobalState;
-import com.baseoneonline.java.test.testStandardGame.gameStates.MenuState;
+import com.baseoneonline.java.test.testStandardGame.menu.MenuInput;
+import com.baseoneonline.java.test.testStandardGame.menu.MenuGameState;
+import com.baseoneonline.java.test.testStandardGame.menu.MenuInput.Trigger;
+import com.jme.input.KeyInput;
 import com.jmex.game.StandardGame;
 import com.jmex.game.state.GameStateManager;
 
@@ -18,13 +21,27 @@ public class TestStandardGame {
 		final StandardGame game = new StandardGame("My Game");
 		game.start();
 
+		mapKeys();
+
 		final GlobalState gstate = new GlobalState(game);
 		gstate.setActive(true);
 		GameStateManager.getInstance().attachChild(gstate);
 
-		final MenuState menuState = new MenuState();
+		final MenuGameState menuState = new MenuGameState();
 		menuState.setActive(true);
 		GameStateManager.getInstance().attachChild(menuState);
+
+	}
+
+	private static void mapKeys() {
+
+		final MenuInput keyMap = MenuInput.get();
+		keyMap.mapKey(KeyInput.KEY_UP, Trigger.Up);
+		keyMap.mapKey(KeyInput.KEY_DOWN, Trigger.Down);
+		keyMap.mapKey(KeyInput.KEY_LEFT, Trigger.Left);
+		keyMap.mapKey(KeyInput.KEY_RIGHT, Trigger.Right);
+		keyMap.mapKey(KeyInput.KEY_RETURN, Trigger.Accept);
+		keyMap.mapKey(KeyInput.KEY_BACK, Trigger.Back);
 
 	}
 }

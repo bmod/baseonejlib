@@ -5,6 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class StringUtils {
 
@@ -103,6 +106,39 @@ public class StringUtils {
 			final String newExtension) {
 		final String fname = stripExtension(file.getAbsolutePath());
 		return new File(fname + "." + newExtension);
+	}
+
+	public static String extractFileName(final String fullPath) {
+		try {
+			final Pattern regex = Pattern.compile("[^/:*?\"<>|\r\n]+$",
+					Pattern.MULTILINE);
+			final Matcher regexMatcher = regex.matcher(fullPath);
+			if (regexMatcher.find()) return regexMatcher.group();
+
+		} catch (final PatternSyntaxException ex) {
+			// Syntax error in the regular expression
+		}
+		return "";
+	}
+
+	/**
+	 * Strips the filename part from a path string.
+	 * 
+	 * @param fullPath
+	 * @return The path without the file or an empty string if there was no path
+	 *         part.
+	 */
+	public static String extractPath(final String fullPath) {
+		try {
+			final Pattern regex = Pattern.compile(".*/");
+			final Matcher regexMatcher = regex.matcher(fullPath);
+			if (regexMatcher.find()) { return regexMatcher.group(); }
+		} catch (final PatternSyntaxException ex) {
+			// Not interesting, not happening
+			throw new RuntimeException(
+					"This should not happen, source code is faulty!");
+		}
+		return "";
 	}
 
 }
