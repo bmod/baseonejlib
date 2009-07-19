@@ -51,7 +51,7 @@ public class ElasticMenu extends Node implements IMenuInputListener,
 
 	@Override
 	public void onMenuInput(final Trigger trigger) {
-		System.out.println(trigger.name());
+		// System.out.println(trigger.name());
 		int index;
 		switch (trigger) {
 		case Up:
