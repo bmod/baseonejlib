@@ -38,10 +38,12 @@ public class BitmapTextFactory {
 
 			if (null == fontDescFile) throw new NullPointerException(
 					"Font could not be loaded: " + fontFile + fntExtension);
+
 			try {
 				font = BitmapFontLoader.load(fontDescFile, fontBitmap);
 			} catch (final IOException e) {
-
+				throw new NullPointerException("Error loading font: "
+						+ fontFile + fntExtension);
 			}
 		}
 		final BitmapText txt = new BitmapText(font, false);

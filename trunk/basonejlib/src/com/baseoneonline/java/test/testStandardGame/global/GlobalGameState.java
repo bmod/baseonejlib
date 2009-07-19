@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testStandardGame.gameStates;
+package com.baseoneonline.java.test.testStandardGame.global;
 
 import java.util.concurrent.Callable;
 
@@ -11,13 +11,13 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.GameTaskQueueManager;
 import com.jmex.game.state.GameState;
 
-public class GlobalState extends GameState {
+public class GlobalGameState extends GameState {
 
 	InputHandler input = new InputHandler();
 
 	AbstractGame game;
 
-	public GlobalState(final AbstractGame game) {
+	public GlobalGameState(final AbstractGame game) {
 
 		this.game = game;
 		GameTaskQueueManager.getManager().update(new Callable<Void>() {
@@ -46,7 +46,7 @@ public class GlobalState extends GameState {
 	public void update(final float tpf) {
 		final KeyBindingManager key = KeyBindingManager.getKeyBindingManager();
 		if (key.isValidCommand("exit", false)) {
-			game.finish();
+			// game.finish();
 		}
 	}
 

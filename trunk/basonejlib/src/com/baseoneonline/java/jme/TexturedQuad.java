@@ -29,6 +29,7 @@ import com.jme.util.TextureManager;
  * @version $Id: TexturedQuad.java,v 1.5 2006-11-22 20:56:55 cananian Exp $
  */
 public class TexturedQuad extends Quad {
+
 	/**
 	 * An image buffer for drawing the texture; this is a soft reference to
 	 * allow reclamation in mostly-static {@link TexturedQuad}s, but hopefully
@@ -71,12 +72,9 @@ public class TexturedQuad extends Quad {
 		this.textureSize = textureSize;
 		this.texture = TextureManager.loadTexture(new BufferedImage(
 				textureSize, textureSize, BufferedImage.TYPE_INT_ARGB),
-				MinificationFilter.NearestNeighborNoMipMaps,
-				MagnificationFilter.NearestNeighbor, true);
+				MinificationFilter.BilinearNearestMipMap,
+				MagnificationFilter.Bilinear, true);
 		texture.setApply(ApplyMode.Modulate);
-		texture
-				.setMinificationFilter(MinificationFilter.NearestNeighborNoMipMaps);
-		texture.setMagnificationFilter(MagnificationFilter.NearestNeighbor);
 
 		final DisplaySystem display = DisplaySystem.getDisplaySystem();
 		textureState = display.getRenderer().createTextureState();
@@ -129,6 +127,7 @@ public class TexturedQuad extends Quad {
 		texture.setImage(TextureManager.loadImage(textureImage, false));
 		// refresh texture state
 		GameTaskQueueManager.getManager().update(new Callable<Void>() {
+
 			public Void call() throws Exception {
 				textureState.load();
 				return null;

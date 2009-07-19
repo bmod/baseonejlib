@@ -1,5 +1,7 @@
 package com.baseoneonline.java.test.testStandardGame.menu;
 
+import com.baseoneonline.java.test.testStandardGame.global.GlobalCommands;
+import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Command;
 import com.baseoneonline.java.tools.SelectionListModel;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
@@ -18,19 +20,17 @@ public class MenuGameState extends GameState {
 		rootNode = new Node();
 		rootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
-		final SelectionListModel<String> model = new SelectionListModel<String>();
-		model.addItem("Base One");
-		model.addItem("Tea for Two");
-		model.addItem("Three Trees");
-		model.addItem("Four You");
-		model.addItem("Take Five");
-		model.addItem("Sixth Sense");
+		final SelectionListModel<Command> model = new SelectionListModel<Command>();
 
-		model.setSelectedIndex(3);
+		model.addItem(GlobalCommands.EXIT_APP);
+		model.addItem(GlobalCommands.LEVEL_SELECT);
+
+		model.setSelectedIndex(0);
 
 		menuNode = new ElasticMenu(model);
 		rootNode.attachChild(menuNode);
 
+		// Enable input for menu node
 		MenuInput.get().addListener(menuNode);
 	}
 
