@@ -3,6 +3,7 @@ package com.baseoneonline.java.test.testStandardGame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.baseoneonline.java.test.testStandardGame.editor.EditorGameState;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalCommands;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalGameState;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Command;
@@ -34,6 +35,10 @@ public class TestStandardGame {
 		final GlobalGameState gstate = new GlobalGameState(game);
 		gstate.setActive(true);
 		GameStateManager.getInstance().attachChild(gstate);
+
+		EditorGameState editorState = new EditorGameState();
+		editorState.setActive(true);
+		GameStateManager.getInstance().attachChild(editorState);
 
 		final MenuGameState menuState = new MenuGameState();
 		menuState.setActive(true);

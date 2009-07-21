@@ -26,7 +26,7 @@ public class TestGenCurve extends SimpleGame {
 		cam.setLocation(new Vector3f(3, 3, 3));
 		cam.lookAt(new Vector3f(), Vector3f.UNIT_Y);
 
-		rootNode.attachChild(new LineGrid());
+		rootNode.attachChild(new LineGrid(1));
 		rootNode.attachChild(TestRods.get());
 
 		Spatial path = loadData("path.xml");

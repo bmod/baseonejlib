@@ -46,7 +46,7 @@ public class GlobalGameState extends GameState {
 	public void update(final float tpf) {
 		final KeyBindingManager key = KeyBindingManager.getKeyBindingManager();
 		if (key.isValidCommand("exit", false)) {
-			// game.finish();
+			game.finish();
 		}
 	}
 

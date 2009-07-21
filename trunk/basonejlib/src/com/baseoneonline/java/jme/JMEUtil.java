@@ -51,10 +51,14 @@ public class JMEUtil {
 	public static Vector3f getMousePosition3D(final Plane p) {
 		final Vector2f mousePos = new Vector2f(MouseInput.get().getXAbsolute(),
 				MouseInput.get().getYAbsolute());
+		return getPosition3D(mousePos, p);
+	}
+
+	public static Vector3f getPosition3D(Vector2f pos2d, Plane p) {
 		final Vector3f point1 = DisplaySystem.getDisplaySystem()
-				.getWorldCoordinates(mousePos, 0);
+				.getWorldCoordinates(pos2d, 0);
 		final Vector3f point2 = DisplaySystem.getDisplaySystem()
-				.getWorldCoordinates(mousePos, 1);
+				.getWorldCoordinates(pos2d, 1);
 		final Vector3f direction = point2.subtractLocal(point1)
 				.normalizeLocal();
 		final Ray ray = new Ray(point1, direction);
