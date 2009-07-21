@@ -36,7 +36,7 @@ public class TestStandardGame {
 		gstate.setActive(true);
 		GameStateManager.getInstance().attachChild(gstate);
 
-		EditorGameState editorState = new EditorGameState();
+		final EditorGameState editorState = new EditorGameState();
 		editorState.setActive(true);
 		GameStateManager.getInstance().attachChild(editorState);
 

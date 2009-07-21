@@ -17,5 +17,10 @@
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/golden_0_2_3.jar"/>
+	<classpathentry kind="lib" path="lib/piccolo.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/BaseOneJLib/doc/doc_piccolo2d.zip!/doc/api"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
