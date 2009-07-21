@@ -3,9 +3,16 @@ package com.baseoneonline.java.tools;
 import java.io.File;
 import java.io.FileFilter;
 
-public class FileExensionFilter implements FileFilter {
+public class FileExensionFilter extends javax.swing.filechooser.FileFilter
+		implements FileFilter {
 
 	String[] extensions;
+	String description = "Files";
+
+	public FileExensionFilter(final String[] ext, final String description) {
+		this(ext);
+		this.description = description;
+	}
 
 	public FileExensionFilter(final String[] ext) {
 		extensions = new String[ext.length];
@@ -25,5 +32,10 @@ public class FileExensionFilter implements FileFilter {
 			if (f.getName().toLowerCase().endsWith(ext)) return true;
 		}
 		return false;
+	}
+
+	@Override
+	public String getDescription() {
+		return description + " (" + StringUtils.join(extensions, ", ") + ")";
 	}
 }
