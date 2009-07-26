@@ -47,13 +47,9 @@ public class TestDrawOnTexture extends BasicFixedRateGame {
 		MouseInput.get().setCursorVisible(true);
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		// q = new TexturedQuad("q", 5, 256);
-		// rootNode.attachChild(q);
-
 		im = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
 
 		drawShape(im, .5f);
-		// drawShape(im, 1);
 
 		tex = TextureManager.loadTexture(im, MinificationFilter.Trilinear,
 				MagnificationFilter.NearestNeighbor, true);
