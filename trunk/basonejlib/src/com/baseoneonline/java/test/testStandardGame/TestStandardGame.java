@@ -36,12 +36,16 @@ public class TestStandardGame {
 		gstate.setActive(true);
 		GameStateManager.getInstance().attachChild(gstate);
 
+		final MainGameState gameState = new MainGameState();
+		gameState.setActive(true);
+		GameStateManager.getInstance().attachChild(gameState);
+
 		final EditorGameState editorState = new EditorGameState();
 		editorState.setActive(true);
 		GameStateManager.getInstance().attachChild(editorState);
 
 		final MenuGameState menuState = new MenuGameState();
-		menuState.setActive(true);
+		// menuState.setActive(true);
 		GameStateManager.getInstance().attachChild(menuState);
 
 	}

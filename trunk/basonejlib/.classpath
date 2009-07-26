@@ -3,12 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/db4o-6.4.54.11278-java5.jar"/>
-	<classpathentry kind="lib" path="lib/entagged-audioformats-0.15.jar"/>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
 	<classpathentry kind="lib" path="lib/trove-2.0.4.jar" sourcepath="lib/trove-src-2.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/j3dcore.jar"/>
-	<classpathentry kind="lib" path="lib/j3dutils.jar"/>
-	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="lib" path="lib/vldocking_2.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar"/>
 	<classpathentry kind="lib" path="lib/swing-worker.jar"/>
@@ -22,5 +18,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/BaseOneJLib/doc/doc_piccolo2d.zip!/doc/api"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jbox2d-2.0.1-full.jar"/>
+	<classpathentry kind="lib" path="lib/jaudiotagger.jar" sourcepath="lib/jaudiotaggersrc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
