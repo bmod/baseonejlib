@@ -1,7 +1,6 @@
 package com.baseoneonline.java.tools;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,10 +30,10 @@ public class FileUtils {
 			return buf.toString();
 		} catch (final FileNotFoundException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-					"File not found: " + f.getAbsolutePath());
+				"File not found: " + f.getAbsolutePath());
 		} catch (final IOException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-					"IO Exception while reading file: " + f.getAbsolutePath());
+				"IO Exception while reading file: " + f.getAbsolutePath());
 			e.printStackTrace();
 		}
 		return null;
@@ -56,32 +55,25 @@ public class FileUtils {
 			writer.close();
 		} catch (final IOException e) {
 			Logger.getLogger(StringUtils.class.getName()).warning(
-					"IO Exception while writing: " + f.getAbsolutePath());
+				"IO Exception while writing: " + f.getAbsolutePath());
 		}
 	}
 
-	public static void visitFiles(final File dir, final int visitMode,
-			final FileVisitor visitor) {
-		visitFiles(dir, visitMode, true, visitor, null);
-	}
+	private static char[] ALLOWED_CHARS =
+		"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: ".toCharArray();
 
-	public static void visitFiles(final File dir, final int visitMode,
-			final boolean recursive, final FileVisitor visitor,
-			final FileFilter filter) {
-		final File[] files = dir.listFiles(filter);
-		for (final File f : files) {
-			if (!f.getName().startsWith(".")) {
-				if (visitMode == FileVisitor.DIRECTORIES_ONLY
-						&& f.isDirectory()) {
-					visitor.visit(f);
-				} else if (visitMode == FileVisitor.FILES_ONLY
-						&& !f.isDirectory()) {
-					visitor.visit(f);
-				}
-				if (recursive && f.isDirectory()) {
-					visitFiles(f, visitMode, recursive, visitor, filter);
+	public static String removeIllegalChars(String filename) {
+		StringBuffer buf = new StringBuffer();
+		char[] fname = filename.toCharArray();
+		for (char fc : fname) {
+			for (char c : ALLOWED_CHARS) {
+				if (fc == c) {
+					buf.append(c);
+					break;
 				}
 			}
 		}
+		return buf.toString();
 	}
+
 }

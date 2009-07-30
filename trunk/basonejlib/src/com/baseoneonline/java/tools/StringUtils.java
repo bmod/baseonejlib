@@ -141,4 +141,9 @@ public class StringUtils {
 		return "";
 	}
 
+	public static String addTrailingSlash(String targetPath) {
+		if (targetPath.endsWith("/") || targetPath.endsWith("\\")) return targetPath;
+		return targetPath+"/";
+	}
+
 }
