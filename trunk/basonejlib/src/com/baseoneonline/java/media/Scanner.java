@@ -11,8 +11,8 @@ import javax.swing.Timer;
 
 import com.baseoneonline.java.media.library.SQLLibrary;
 import com.baseoneonline.java.media.library.items.MediaItem;
-import com.baseoneonline.java.tools.FileUtils;
-import com.baseoneonline.java.tools.FileVisitor;
+import com.baseoneonline.java.tools.DirectoryWalker;
+import com.baseoneonline.java.tools.DirectoryWalker.Mode;
 
 public class Scanner {
 	public static enum State {
@@ -85,18 +85,22 @@ public class Scanner {
 		}
 
 		setState(State.ADDING_FILES);
+		
+		DirectoryWalker walker = new DirectoryWalker() {
+			@Override
+			public void visit(File f) {
+				currentFile = f;
+				final MediaItem m = MediaItem.create(f);
+				m.readMetadata();
+				lib.add(m);
+			}
+		};
+		walker.setVisitMode(Mode.FilesOnly);
+		walker.setFileFilter(MediaItem.FILE_FILTER);
 
 		for (final File dir : dirs) {
-			FileUtils.visitFiles(dir, FileVisitor.FILES_ONLY, true,
-					new FileVisitor() {
-						@Override
-						public void visit(final File f) {
-							currentFile = f;
-							final MediaItem m = MediaItem.create(f);
-							m.readMetadata();
-							lib.add(m);
-						}
-					}, MediaItem.FILE_FILTER);
+			walker.setRoot(dir);
+			walker.start();
 		}
 
 		currentFile = null;
