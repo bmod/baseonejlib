@@ -20,6 +20,8 @@ public class MusicOrganizer {
 
 	SwingWorker<Void, File> worker;
 	private static MusicOrganizer instance;
+	
+	private File rootPath;
 
 	private MusicOrganizer() {
 
@@ -30,35 +32,48 @@ public class MusicOrganizer {
 			instance = new MusicOrganizer();
 		return instance;
 	}
+	
+	public void setRootPath(File rootPath) {
+		this.rootPath = rootPath;
+	}
 
-	public void organize(final File rootPath) {
+	public File getRootPath() {
+		return rootPath;
+	}
+	
+	public void organize() {
 		worker = new SwingWorker<Void, File>() {
 			@Override
 			protected Void doInBackground() throws Exception {
 				
-				// Gather
-				final ArrayList<File> files = new ArrayList<File>();
-				DirectoryWalker walker = new DirectoryWalker(rootPath) {
-					@Override
-					public void visit(File f) {
-						files.add(f);
-					}
-				};
+				List<File> files = getAllFiles();
 				
 				// Process
 				for (File f : files ) {
 					processFile(f);
 				}
 				
-				walker.setFileFilter(new AudioFileFilter());
-				walker.setVisitMode(Mode.FilesOnly);
-				walker.start();
+
 				return null;
 			}
 		};
 		worker.execute();
 	}
 
+	public List<File> getAllFiles() {
+		// Gather
+		final ArrayList<File> files = new ArrayList<File>();
+		DirectoryWalker walker = new DirectoryWalker(rootPath) {
+			@Override
+			public void visit(File f) {
+				files.add(f);
+			}
+		};
+		walker.setFileFilter(new AudioFileFilter());
+		walker.setVisitMode(Mode.FilesOnly);
+		walker.start();
+		return files;
+	}
 	
 	private SortRule getDefaultSortRule() {
 		return getSortRules().get(0);
