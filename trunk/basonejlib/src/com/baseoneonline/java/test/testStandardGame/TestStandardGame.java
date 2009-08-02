@@ -8,7 +8,6 @@ import com.baseoneonline.java.test.testStandardGame.global.GlobalCommands;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalGameState;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Command;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Listener;
-import com.baseoneonline.java.test.testStandardGame.menu.MenuGameState;
 import com.baseoneonline.java.test.testStandardGame.menu.MenuInput;
 import com.baseoneonline.java.test.testStandardGame.menu.MenuInput.Trigger;
 import com.jme.input.KeyInput;
@@ -44,9 +43,13 @@ public class TestStandardGame {
 		editorState.setActive(true);
 		GameStateManager.getInstance().attachChild(editorState);
 
-		final MenuGameState menuState = new MenuGameState();
+		final StatusState statusState = new StatusState();
+		statusState.setActive(true);
+		GameStateManager.getInstance().attachChild(statusState);
+
+		// final MenuGameState menuState = new MenuGameState();
 		// menuState.setActive(true);
-		GameStateManager.getInstance().attachChild(menuState);
+		// GameStateManager.getInstance().attachChild(menuState);
 
 	}
 

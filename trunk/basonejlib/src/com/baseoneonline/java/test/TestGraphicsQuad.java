@@ -32,8 +32,7 @@ public class TestGraphicsQuad extends SimpleGame {
 	@Override
 	protected void simpleInitGame() {
 		display.getRenderer().setBackgroundColor(ColorRGBA.darkGray);
-		q = new CircleQuad();
-		// q.setRadius(.5f);
+		q = new CircleQuad(.1f, .1f);
 		rootNode.attachChild(q);
 	}
 
@@ -47,8 +46,18 @@ public class TestGraphicsQuad extends SimpleGame {
 class CircleQuad extends GraphicsQuad {
 
 	private float radius = 1;
-	private final float strokeWidth = .1f;
+	private float strokeWidth = .1f;
 	private Ellipse2D ellipse;
+
+	public CircleQuad() {
+
+	}
+
+	public CircleQuad(final float radius, final float strokeWidth) {
+		this.strokeWidth = strokeWidth;
+		this.radius = radius;
+		redraw();
+	}
 
 	@Override
 	protected void draw(final Graphics2D g) {
@@ -93,8 +102,6 @@ abstract class GraphicsQuad extends com.jme.scene.shape.Quad {
 		super("GraphicsQuad", 10, 10);
 		setRenderState(getBlendState());
 		setRenderState(getTextureState());
-		redraw();
-		xform.translate(64, 64);
 	}
 
 	private TextureState getTextureState() {
