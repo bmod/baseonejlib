@@ -1,31 +1,28 @@
 package com.baseoneonline.java.test;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import com.baseoneonline.java.particleSystem.ParticleSystem;
+import com.jme.app.SimpleGame;
+import com.jme.renderer.ColorRGBA;
 
-import com.golden.gamedev.GameLoader;
-
-public class TestParticleSystem extends com.golden.gamedev.Game {
+public class TestParticleSystem extends SimpleGame {
 
 	public static void main(final String[] args) {
-		final GameLoader ldr = new GameLoader();
-		ldr.setup(new TestParticleSystem(), new Dimension(640, 480), false);
-		ldr.start();
+
+		new TestParticleSystem().start();
+	}
+
+	ParticleSystem psys = new ParticleSystem();
+
+	@Override
+	protected void simpleInitGame() {
+		display.getRenderer().setBackgroundColor(ColorRGBA.blue);
+
 	}
 
 	@Override
-	public void initResources() {
+	protected void simpleUpdate() {
+		psys.step();
 
-	}
-
-	@Override
-	public void render(final Graphics2D g) {
-
-	}
-
-	@Override
-	public void update(final long g) {
-		System.out.println(g);
 	}
 
 }
