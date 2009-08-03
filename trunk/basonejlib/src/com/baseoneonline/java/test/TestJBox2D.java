@@ -11,6 +11,7 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 
 import com.jme.app.SimpleGame;
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
@@ -29,7 +30,7 @@ public class TestJBox2D extends SimpleGame {
 	@Override
 	protected void simpleInitGame() {
 		final AABB aabb = new AABB(new Vec2(-1000, -1000), new Vec2(1000, 1000));
-		world = new World(aabb, new Vec2(0, .1f), true);
+		world = new World(aabb, new Vec2(0, -.1f), true);
 
 		createBox(-10, 0, 1, 20);
 		createBox(10, 0, 1, 20);
@@ -38,7 +39,7 @@ public class TestJBox2D extends SimpleGame {
 
 		createBall(0, 0, 1);
 
-		cam.setUp(new Vector3f(0, -1, 0));
+		// cam.setUp(new Vector3f(0, 1, 0));
 
 	}
 
@@ -48,14 +49,14 @@ public class TestJBox2D extends SimpleGame {
 		obj.bodyDef = new BodyDef();
 
 		obj.body = world.createBody(obj.bodyDef);
-		obj.body.setXForm(new Vec2(x, y), 0);
+		obj.body.setXForm(new Vec2(x, y), FastMath.nextRandomFloat() * .1f);
 
 		final PolygonDef shape = new PolygonDef();
+		shape.restitution = .6f;
 		shape.setAsBox(w / 2, h / 2);
 		shape.density = 1;
 		obj.body.createShape(shape);
-		obj.body.setMassFromShapes();
-		obj.spatial = new Box("box", new Vector3f(), w, h, 1);
+		obj.spatial = new Box("box", new Vector3f(), w / 2, h / 2, 1);
 		rootNode.attachChild(obj.spatial);
 		objects.add(obj);
 	}
@@ -67,7 +68,7 @@ public class TestJBox2D extends SimpleGame {
 		obj.body = world.createBody(obj.bodyDef);
 		obj.body.setXForm(new Vec2(x, y), 0);
 		final CircleDef shape = new CircleDef();
-
+		shape.restitution = .3f;
 		shape.density = 1;
 		shape.radius = radius;
 		obj.body.createShape(shape);
@@ -84,7 +85,7 @@ public class TestJBox2D extends SimpleGame {
 		for (final PhysObj o : objects) {
 			final Vec2 v = o.body.getPosition();
 			o.spatial.setLocalTranslation(v.x, v.y, 0);
-			System.out.println(v);
+			o.spatial.getLocalRotation().fromAngles(0, 0, o.body.getAngle());
 		}
 	}
 }

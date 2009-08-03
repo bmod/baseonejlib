@@ -1,6 +1,7 @@
 package com.baseoneonline.java.particleSystem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.baseoneonline.java.particleSystem.collision.CollisionShape;
 import com.baseoneonline.java.particleSystem.force.ForceField;
@@ -11,7 +12,7 @@ public class ParticleSystem {
 	private final ArrayList<ForceField> forceFields = new ArrayList<ForceField>();
 	private final ArrayList<CollisionShape> collisions = new ArrayList<CollisionShape>();
 
-	private float damp;
+	private final float damp = 1;
 	private final float sleepTreshold = .01f;
 
 	public ParticleSystem() {}
@@ -54,5 +55,9 @@ public class ParticleSystem {
 				p.y += p.vy;
 			}
 		}
+	}
+
+	public List<Particle> getParticles() {
+		return particles;
 	}
 }
