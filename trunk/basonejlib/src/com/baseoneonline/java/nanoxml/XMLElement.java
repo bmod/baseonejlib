@@ -916,8 +916,8 @@ public class XMLElement {
 		for (final XMLElement x : getChildren()) {
 			if (x.getName().equalsIgnoreCase(name)) { return x; }
 		}
-		// Logger.getLogger(getClass().getName()).severe(
-		// "Child of " + this.getName() + " not found: " + name);
+		Logger.getLogger(getClass().getName()).severe(
+				"Child of " + this.getName() + " not found: " + name);
 		return null;
 	}
 

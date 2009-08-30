@@ -19,7 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import com.baseoneonline.java.swing.BaseFrame;
-import com.baseoneonline.java.tools.FileExensionFilter;
+import com.baseoneonline.java.tools.FileExtensionFilter;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.nodes.PImage;
@@ -41,7 +41,7 @@ public class TestEdgeTracing extends BaseFrame {
 
 				private final String[] fileExtensions = { "jpg", "png" };
 
-				private final FileExensionFilter imageFileFilter = new FileExensionFilter(
+				private final FileExtensionFilter imageFileFilter = new FileExtensionFilter(
 						fileExtensions);
 
 				@Override
