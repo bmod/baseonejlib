@@ -60,17 +60,7 @@ public abstract class SimpleJMEPanel extends JPanel {
 
 			@Override
 			public void componentResized(final ComponentEvent ce) {
-				impl.resizeCanvas(getWidth(), getHeight());
-				canvas.setSize(getWidth(), getHeight());
-				((JMECanvas) canvas).makeDirty();
-
-				final Camera cam = impl.getCamera();
-				if (null != cam) {
-					final float aspect = (float) getWidth()
-							/ (float) getHeight();
-
-					cam.setFrustumPerspective(60, aspect, 1, 1000);
-				}
+				myComponentResized();
 			}
 		});
 
@@ -86,6 +76,19 @@ public abstract class SimpleJMEPanel extends JPanel {
 
 		// -----------END OF GL STUFF-------------
 		add(canvas, BorderLayout.CENTER);
+	}
+
+	private void myComponentResized() {
+		impl.resizeCanvas(getWidth(), getHeight());
+		canvas.setSize(getWidth(), getHeight());
+		((JMECanvas) canvas).makeDirty();
+
+		final Camera cam = impl.getCamera();
+		if (null != cam) {
+			final float aspect = (float) getWidth() / (float) getHeight();
+
+			cam.setFrustumPerspective(60, aspect, 1, 1000);
+		}
 	}
 
 	public void setImplementor(final SimpleCanvasImpl impl) {
