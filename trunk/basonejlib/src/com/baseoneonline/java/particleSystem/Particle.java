@@ -5,6 +5,9 @@ public class Particle extends Vec2 {
 	public float vx;
 	public float vy;
 	public boolean asleep = false;
+	
+	public float age = 0;
+	public float life = 0;
 
 	public Particle() {}
 

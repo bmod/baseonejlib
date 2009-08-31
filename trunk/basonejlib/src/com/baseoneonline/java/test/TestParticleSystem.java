@@ -16,7 +16,9 @@ public class TestParticleSystem extends SimpleGame {
 	@Override
 	protected void simpleInitGame() {
 		display.getRenderer().setBackgroundColor(ColorRGBA.blue);
-
+		
+		
+		
 	}
 
 	@Override

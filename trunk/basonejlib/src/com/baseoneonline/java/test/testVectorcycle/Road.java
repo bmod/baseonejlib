@@ -15,22 +15,21 @@ import com.jme.scene.Spatial;
 
 public class Road {
 
-	private final ArrayList<RoadSegment>	segments		=
-																new ArrayList<RoadSegment>();
-	private RoadSegment						lastSegment;
-	private final int						numTracks		= 3;
-	private final float						width;
+	private final ArrayList<RoadSegment> segments = new ArrayList<RoadSegment>();
+	private RoadSegment lastSegment;
+	private final int numTracks = 3;
+	private final float width;
 
-	private ITerrain						terrain;
-	private float							roadOffset;
+	private ITerrain terrain;
+	private float roadOffset;
 
-	private final Vector2f					anglePrecision	=
-																new Vector2f(0,
-																	0.001f);
+	private final Vector2f anglePrecision = new Vector2f(0, 0.001f);
 
 	public Road(float width) {
 		this.width = width;
 	}
+
+
 
 	public Road(int width, ITerrain terrain, float roadOffset) {
 		this.terrain = terrain;
@@ -41,8 +40,7 @@ public class Road {
 	public void addSegment(float dist, float angle) {
 		RoadSegment seg;
 		if (null != lastSegment) {
-			seg =
-				new RoadSegment(lastSegment.curve.end, dist,
+			seg = new RoadSegment(lastSegment.curve.end, dist,
 					lastSegment.endAngle, lastSegment.endAngle + angle);
 		} else {
 			seg = new RoadSegment(new Vector2f(), dist, 0, angle);
@@ -98,11 +96,11 @@ public class Road {
 		Matrix3f rotation = new Matrix3f();
 		// calculate tangent
 		Vector3f point = getPoint(p);
-		Vector3f tangent =
-			point.subtract(getPoint(p.add(anglePrecision))).normalizeLocal();
+		Vector3f tangent = point.subtract(getPoint(p.add(anglePrecision)))
+				.normalizeLocal();
 		// calculate normal
-		Vector3f tangent2 =
-			getPoint(p.subtract(anglePrecision)).subtract(point);
+		Vector3f tangent2 = getPoint(p.subtract(anglePrecision))
+				.subtract(point);
 		Vector3f normal = tangent.cross(tangent2).normalizeLocal();
 		// calculate binormal
 		Vector3f binormal = tangent.cross(normal).normalizeLocal();
@@ -112,13 +110,13 @@ public class Road {
 		rotation.setColumn(2, binormal);
 		return rotation;
 	}
-	
+
 	public Matrix3f getOrientation(Vector2f p, Vector3f up) {
 		Matrix3f rotation = new Matrix3f();
 		// calculate tangent
 		Vector3f point = getPoint(p);
-		Vector3f tangent =
-			point.subtract(getPoint(p.add(anglePrecision))).normalizeLocal();
+		Vector3f tangent = point.subtract(getPoint(p.add(anglePrecision)))
+				.normalizeLocal();
 		// calculate normal
 		Vector3f normal = tangent.cross(tangent).normalizeLocal();
 		// calculate binormal
