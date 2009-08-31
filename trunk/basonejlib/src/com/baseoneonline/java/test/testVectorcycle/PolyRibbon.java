@@ -11,6 +11,11 @@ import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
 import com.jme.util.geom.BufferUtils;
 
+
+/**
+ * @author "B. Korsmit"
+ *	 
+ */
 public class PolyRibbon extends TriMesh {
 	Node pnode = new Node();
 	Node cnode = new Node();
