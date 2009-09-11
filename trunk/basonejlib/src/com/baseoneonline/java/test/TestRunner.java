@@ -11,22 +11,6 @@ public class TestRunner {
 		runRunner();
 	}
 
-	private static void testRun() {
-		try {
-			String line;
-			final Process p = Runtime.getRuntime().exec(
-					System.getenv("windir") + "\\system32\\" + "tree.com /A");
-			final BufferedReader input = new BufferedReader(
-					new InputStreamReader(p.getInputStream()));
-			while ((line = input.readLine()) != null) {
-				System.out.println(line);
-			}
-			input.close();
-		} catch (final Exception err) {
-			err.printStackTrace();
-		}
-	}
-
 	private static void runRunner() {
 		final Runner runner = new Runner("test/potrace -h");
 		runner.run();
@@ -52,7 +36,7 @@ class Runner {
 					proc.getInputStream()));
 
 			String line;
-			final StringBuffer buf = new StringBuffer();
+			new StringBuffer();
 			while ((line = rd.readLine()) != null) {
 				System.out.println(line);
 			}

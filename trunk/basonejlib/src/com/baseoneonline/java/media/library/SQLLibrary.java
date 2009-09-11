@@ -10,11 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.media.Attribute;
 import com.baseoneonline.java.media.library.items.MediaItem;
 import com.baseoneonline.java.tools.StringUtils;
 
@@ -26,8 +24,6 @@ public class SQLLibrary {
 
 	private final int flushInterval = 1000;
 	private int flushCounter = 0;
-
-	private final HashMap<Class<?>, String> typeMap = new HashMap<Class<?>, String>();
 
 	/**
 	 * @param db
@@ -79,24 +75,6 @@ public class SQLLibrary {
 		} catch (final SQLException e) {
 			e.printStackTrace();
 
-		}
-	}
-
-	private void setValue(final int i, final PreparedStatement prep,
-			final Attribute<?> att) {
-		try {
-			if (att.value instanceof String) {
-				prep.setString(i, (String) att.value);
-			} else if (att.value instanceof Long) {
-				prep.setLong(i, (Long) att.value);
-			} else if (att.value instanceof Integer) {
-				prep.setInt(i, (Integer) att.value);
-			} else if (att.value instanceof File) {
-				prep.setString(i, ((File) att.value).toURI().toString());
-			}
-		} catch (final SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

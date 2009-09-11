@@ -2,15 +2,12 @@ package com.baseoneonline.java.media;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 
-import com.baseoneonline.java.media.nodes.FileNode;
 import com.baseoneonline.java.media.nodes.INode;
 import com.baseoneonline.java.media.ui.InfoPanel;
 import com.baseoneonline.java.media.ui.MediaTreePanel;
@@ -61,39 +58,6 @@ class GUI extends JFrame {
 	}
 
 	Process proc;
-
-	private void showNode(final INode node) {
-		if (node instanceof FileNode) {
-			final FileNode fnode = (FileNode) node;
-			System.out.println("Showing node: " + fnode);
-		}
-	}
-
-	private void runProgram(final String program, final File file) {
-		runProgram(program, file.getAbsolutePath());
-	}
-
-	private void runProgram(final String program, final String file) {
-
-		final String command = program + " \"" + file + "\"";
-
-		Logger.getLogger(getClass().getName()).info(
-				"Running process: " + command);
-
-		if (null != proc) {
-			proc.destroy();
-		}
-		// get the current run time
-		final Runtime rt = Runtime.getRuntime();
-		// command that needs to be executed.
-		try {
-			// execute the command as a separate process
-			proc = rt.exec(command);
-
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	WindowAdapter winAdapter = new WindowAdapter() {
 

@@ -1,16 +1,10 @@
 package com.baseoneonline.java.test.testMedia;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
-import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 
 import com.baseoneonline.java.media.library.SQLLibrary;
-import com.baseoneonline.java.media.library.items.MediaItem;
 
 public class TestViewLibrary extends JFrame {
 
@@ -32,24 +26,5 @@ public class TestViewLibrary extends JFrame {
 		setLayout(new BorderLayout());
 		final MediaTablePanel panel = new MediaTablePanel(lib);
 		add(panel);
-	}
-
-	private void showList() {
-		final ListModel mdl = new AbstractListModel() {
-
-			private final List<MediaItem> items = lib.getItems();
-
-			@Override
-			public Object getElementAt(final int index) {
-				return items.get(index);
-			}
-
-			@Override
-			public int getSize() {
-				return items.size();
-			}
-
-		};
-		add(new JScrollPane(new JList(mdl)));
 	}
 }

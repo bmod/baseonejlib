@@ -16,7 +16,6 @@ public class Cursor extends Quad {
 
 	private final HashMap<CursorState, TextureState> texStates = new HashMap<CursorState, TextureState>();
 
-	private CursorState state;
 	private Vector3f trackObject = null;
 	Vector3f offset = new Vector3f(22, -12, 0);
 	Vector3f screenPos = new Vector3f();
@@ -48,7 +47,6 @@ public class Cursor extends Quad {
 	}
 
 	public void setState(final CursorState s) {
-		state = s;
 		setRenderState(texStates.get(s));
 		updateRenderState();
 	}

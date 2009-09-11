@@ -26,7 +26,7 @@ public class AnimatedNGon extends NGon {
 
 	@Override
 	public void updateGeometricState(final float time, final boolean initiator) {
-		final FloatBuffer buf = line.getVertexBuffer();
+		line.getVertexBuffer();
 		final int len = line.getVertexCount();
 		for (int i = 0; i < len; i += 3) {
 

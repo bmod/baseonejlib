@@ -33,9 +33,7 @@ public class ParticleSystem {
 				p.vx += (p.tx - p.x) * p.K;
 				p.vy += (p.ty - p.y) * p.K;
 			}
-			for (final AbstractField field : fields) {
 
-			}
 			p.vx *= p.damp;
 			p.vy *= p.damp;
 			p.x += p.vx;

@@ -4,10 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.test.testStandardGame.editor.EditorGameState;
-import com.baseoneonline.java.test.testStandardGame.global.GlobalCommands;
 import com.baseoneonline.java.test.testStandardGame.global.GlobalGameState;
-import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Command;
-import com.baseoneonline.java.test.testStandardGame.global.GlobalController.Listener;
 import com.baseoneonline.java.test.testStandardGame.menu.MenuInput;
 import com.baseoneonline.java.test.testStandardGame.menu.MenuInput.Trigger;
 import com.jme.input.KeyInput;
@@ -52,16 +49,6 @@ public class TestStandardGame {
 		// GameStateManager.getInstance().attachChild(menuState);
 
 	}
-
-	private final Listener globalListener = new Listener() {
-
-		@Override
-		public void command(final Command c) {
-			if (GlobalCommands.EXIT_APP == c) {
-				game.finish();
-			}
-		}
-	};
 
 	private void mapKeys() {
 

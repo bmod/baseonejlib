@@ -16,7 +16,6 @@ public class Cursor extends Quad {
 
 	private final HashMap<CursorState, TextureState> texStates = new HashMap<CursorState, TextureState>();
 
-	private CursorState state;
 	Vector2f offset = new Vector2f(22, -12);
 
 	public static enum CursorState {
@@ -42,7 +41,6 @@ public class Cursor extends Quad {
 	}
 
 	public void setState(final CursorState s) {
-		state = s;
 		setRenderState(texStates.get(s));
 		updateRenderState();
 	}
