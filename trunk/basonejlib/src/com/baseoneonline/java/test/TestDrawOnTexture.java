@@ -86,8 +86,6 @@ public class TestDrawOnTexture extends BasicFixedRateGame {
 		final float h = im.getHeight() - strokeWidth;
 
 		final float hw = w / 2;
-		final float hh = h / 2;
-
 		final float r = radius * hw;
 		final Graphics2D g = (Graphics2D) im.getGraphics();
 

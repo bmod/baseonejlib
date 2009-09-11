@@ -31,7 +31,6 @@ public abstract class GLPanel extends JPanel {
 	private Canvas glCanvas;
 	protected DisplaySystem display;
 	private final int cwidth, cheight;
-	private Node rootNode;
 	private MyImpl impl;
 
 	public GLPanel() {

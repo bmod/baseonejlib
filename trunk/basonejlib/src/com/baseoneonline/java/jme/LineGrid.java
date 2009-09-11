@@ -7,7 +7,6 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.Line.Mode;
-import com.jme.scene.shape.Box;
 
 public class LineGrid extends Node {
 
@@ -62,38 +61,6 @@ public class LineGrid extends Node {
 		// line.updateModelBound();
 
 	}
-
-	private void addBox(final float x, final float z) {
-		final Box b = new Box("", new Vector3f(x, 0, z), .1f, .1f, .1f);
-		attachChild(b);
-	}
-
-	// private TexCoords createTexCoors(final int size) {
-	// final Vector2f coord = new Vector2f();
-	// final Vector2f[] coords = new Vector2f[size];
-	// for (int i = 0; i < size; i++) {
-	// coords[i] = coord;
-	// }
-	// return TexCoords.makeNew(coords);
-	// }
-	//
-	// private FloatBuffer createNormalBuffer(final Vector3f vec, final int
-	// size) {
-	// final FloatBuffer buf = FloatBuffer.allocate(size * 3);
-	// for (int i = 0; i < size; i++) {
-	// buf.put(vec.x).put(vec.y).put(vec.z);
-	// }
-	// return buf;
-	// }
-	//
-	// private FloatBuffer createColorBuffer(final ColorRGBA col, final int
-	// size) {
-	// final FloatBuffer buf = FloatBuffer.allocate(size * 4);
-	// for (int i = 0; i < size; i++) {
-	// buf.put(col.r).put(col.g).put(col.b).put(col.a);
-	// }
-	// return buf;
-	// }
 
 	public void setBounds(final float xMin, final float xMax, final float zMin,
 			final float zMax) {

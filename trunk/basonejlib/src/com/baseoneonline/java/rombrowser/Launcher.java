@@ -17,7 +17,7 @@ public class Launcher {
 		Logger.getLogger(getClass().getName()).info(command);
 
 		try {
-			final Process proc = Runtime.getRuntime().exec(command);
+			Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
 			java.util.logging.Logger.getLogger(Launcher.class.getName())
 					.warning(e.getMessage());

@@ -14,7 +14,6 @@ public class DynamicLine extends Line {
 	protected ColorRGBA color;
 	protected FloatBuffer verts;
 	protected FloatBuffer source;
-	private Shape shape;
 	private final Vector3f[] vtc;
 	
 	public DynamicLine(int segs, Shape shape, ColorRGBA col) {

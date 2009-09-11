@@ -65,8 +65,4 @@ public class MediaTablePanel extends JPanel {
 
 		add(new JScrollPane(table));
 	}
-
-	private void updateFilter(final String trim) {
-
-	}
 }

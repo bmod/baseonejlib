@@ -22,8 +22,6 @@ import com.jmex.game.state.GameState;
 
 public class EditorGameState extends GameState {
 
-	private static int MOUSE_LEFT_BUTTON = 0, MOUSE_RIGHT_BUTTON = 1,
-			MOUSE_MIDDLE_BUTTON = 2;
 	private static final String SCROLL_LEFT = "scrollLeft",
 			SCROLL_RIGHT = "scrollRight", SCROLL_UP = "scrollUp",
 			SCROLL_DOWN = "scrollDown", ZOOM_IN = "zoomIn",
@@ -36,8 +34,6 @@ public class EditorGameState extends GameState {
 	DisplaySystem display;
 
 	private LineGrid grid;
-
-	private float dummy;
 
 	private final float keyScrollSpeed = .01f;
 

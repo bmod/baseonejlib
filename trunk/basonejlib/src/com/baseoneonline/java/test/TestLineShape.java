@@ -21,8 +21,7 @@ public class TestLineShape extends BasicFixedRateGame {
 	@Override
 	protected void initFixedRateGame() {
 		MouseInput.get().setCursorVisible(true);
-		final Box b = new Box("b", new Vector3f(), 1, 1, 1);
-		// rootNode.attachChild(b);
+		new Box("b", new Vector3f(), 1, 1, 1);
 
 		camNode = new OrbitCamNode(cam);
 		rootNode.attachChild(camNode);

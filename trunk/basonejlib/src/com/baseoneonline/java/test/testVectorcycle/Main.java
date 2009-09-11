@@ -107,32 +107,6 @@ public class Main extends SimpleGame {
 		return null;
 	}
 
-	private Road createRoad() {
-		Road road = new Road(10, null, .5f);
-
-		road.addSegment(100, FastMath.HALF_PI);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, FastMath.HALF_PI);
-		road.addSegment(100, FastMath.HALF_PI);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, FastMath.HALF_PI);
-		road.addSegment(100, -FastMath.HALF_PI);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, -FastMath.HALF_PI);
-		road.addSegment(100, -FastMath.HALF_PI);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, 0);
-		road.addSegment(100, -FastMath.HALF_PI);
-		return road;
-	}
-
 	@Override
 	protected void simpleUpdate() {
 		for (Car c : cars) {

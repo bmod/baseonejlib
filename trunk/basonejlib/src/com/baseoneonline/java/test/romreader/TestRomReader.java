@@ -4,19 +4,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 
 public class TestRomReader {
 
-	private String[] romFiles = { 
+	private final String[] romFiles = { 
 			"M:/games/Roms/Nintendo SNES/Addams Family Values.smc",
 			"M:/games/Roms/Nintendo SNES/Adventures of Batman & Robin.smc", 
 			"M:/games/Roms/Nintendo SNES/Seiken Densetsu 3.smc", 
 			"M:/games/Roms/Nintendo SNES/Robotrek.smc", 
 			};
-	private Logger log = Logger.getLogger(getClass().getName());
-
 	public static void main(String[] args) {
 		new TestRomReader();
 	}
