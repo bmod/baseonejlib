@@ -13,6 +13,7 @@ import com.baseoneonline.java.swing.DockingFrame;
 import com.baseoneonline.java.swing.FileDropListPanel;
 
 public class TestPostMulitplyImages extends DockingFrame {
+
 	public static void main(final String[] args) {
 		new TestPostMulitplyImages();
 	}
@@ -70,6 +71,7 @@ public class TestPostMulitplyImages extends DockingFrame {
 	}
 
 	private final FileFilter imageFileFilter = new FileFilter() {
+
 		@Override
 		public boolean accept(final File pathname) {
 			final String n = pathname.getName().toLowerCase();
@@ -78,12 +80,20 @@ public class TestPostMulitplyImages extends DockingFrame {
 		}
 	};
 
+	@Override
+	protected void frameClosing() {
+	// TODO Auto-generated method stub
+
+	}
+
 }
 
 interface ImageOperaton {
+
 	void process(final BufferedImage im);
 
 	public static ImageOperaton MultiplyByAlpha = new ImageOperaton() {
+
 		@Override
 		public void process(final BufferedImage im) {
 			final WritableRaster r = im.getRaster();

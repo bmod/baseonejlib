@@ -29,6 +29,12 @@ public class TestSimpleJMEPanel extends JFrame {
 			protected void initJME() {
 
 			}
+
+			@Override
+			protected void updateJME(final float t) {
+			// TODO Auto-generated method stub
+
+			}
 		};
 		add(canvas);
 

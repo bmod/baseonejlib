@@ -110,6 +110,12 @@ public class TestEdgeTracing extends BaseFrame {
 		}
 	}
 
+	@Override
+	protected void frameClosing() {
+	// TODO Auto-generated method stub
+
+	}
+
 }
 
 class FilterPanel extends JPanel {

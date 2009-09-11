@@ -9,26 +9,17 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
-import jmetest.util.JMESwingTest;
-
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyInput;
 import com.jme.input.action.InputAction;
 import com.jme.input.action.InputActionEvent;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
-import com.jme.scene.shape.Box;
-import com.jme.scene.state.TextureState;
+import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 import com.jme.system.canvas.JMECanvas;
 import com.jme.system.canvas.SimpleCanvasImpl;
 import com.jme.system.lwjgl.LWJGLSystemProvider;
-import com.jme.util.TextureManager;
 import com.jmex.awt.input.AWTMouseInput;
 import com.jmex.awt.lwjgl.LWJGLAWTCanvasConstructor;
 
@@ -36,6 +27,7 @@ public abstract class SimpleJMEPanel extends JPanel {
 
 	Canvas canvas = null;
 	private SimpleCanvasImpl impl;
+	private boolean queueForResize = true;
 
 	public SimpleJMEPanel() {
 		init();
@@ -60,7 +52,17 @@ public abstract class SimpleJMEPanel extends JPanel {
 
 			@Override
 			public void componentResized(final ComponentEvent ce) {
-				myComponentResized();
+				resizeComponent();
+			}
+
+			@Override
+			public void componentMoved(final ComponentEvent e) {
+				resizeComponent();
+			}
+
+			@Override
+			public void componentShown(final ComponentEvent e) {
+				resizeComponent();
 			}
 		});
 
@@ -78,13 +80,16 @@ public abstract class SimpleJMEPanel extends JPanel {
 		add(canvas, BorderLayout.CENTER);
 	}
 
-	private void myComponentResized() {
+	private void resizeComponent() {
 		impl.resizeCanvas(getWidth(), getHeight());
 		canvas.setSize(getWidth(), getHeight());
+		canvas.setLocation(0, 0);
 		((JMECanvas) canvas).makeDirty();
 
-		final Camera cam = impl.getCamera();
-		if (null != cam) {
+		final Renderer renderer = DisplaySystem.getDisplaySystem()
+				.getRenderer();
+		if (null != renderer) {
+			final Camera cam = renderer.getCamera();
 			final float aspect = (float) getWidth() / (float) getHeight();
 
 			cam.setFrustumPerspective(60, aspect, 1, 1000);
@@ -106,103 +111,82 @@ public abstract class SimpleJMEPanel extends JPanel {
 	@Override
 	public int getHeight() {
 		int h = super.getHeight();
-		if (h < 100) h = 100;
+		if (h < 100) {
+			h = 100;
+		}
 		return h;
+	}
+
+	public Node getRootNode() {
+		return impl.getRootNode();
 	}
 
 	protected abstract void initJME();
 
-}
+	protected abstract void updateJME(float t);
 
-class MyImplementor extends SimpleCanvasImpl {
+	class MyImplementor extends SimpleCanvasImpl {
 
-	private Quaternion rotQuat;
-	private float angle = 0;
-	private Vector3f axis;
-	private Box box;
-	long startTime = 0;
-	long fps = 0;
-	private InputHandler input;
+		long startTime = 0;
+		long fps = 0;
+		private InputHandler input;
 
-	private final Logger logger = Logger.getLogger(getClass().getName());
+		private final Logger logger = Logger.getLogger(getClass().getName());
 
-	public MyImplementor(final int width, final int height) {
-		super(width, height);
-	}
-
-	@Override
-	public void simpleSetup() {
-
-		// Normal Scene setup stuff...
-		rotQuat = new Quaternion();
-		axis = new Vector3f(1, 1, 0.5f);
-		axis.normalizeLocal();
-
-		final Vector3f max = new Vector3f(5, 5, 5);
-		final Vector3f min = new Vector3f(-5, -5, -5);
-
-		box = new Box("Box", min, max);
-		box.setModelBound(new BoundingBox());
-		box.updateModelBound();
-		box.setLocalTranslation(new Vector3f(0, 0, -10));
-		box.setRenderQueueMode(Renderer.QUEUE_SKIP);
-		rootNode.attachChild(box);
-
-		box.setRandomColors();
-
-		final TextureState ts = renderer.createTextureState();
-		ts.setEnabled(true);
-		ts.setTexture(TextureManager.loadTexture(
-				JMESwingTest.class.getClassLoader().getResource(
-						"jmetest/data/images/Monkey.jpg"),
-				Texture.MinificationFilter.BilinearNearestMipMap,
-				Texture.MagnificationFilter.Bilinear));
-
-		rootNode.setRenderState(ts);
-		startTime = System.currentTimeMillis() + 5000;
-
-		input = new InputHandler();
-		input.addAction(new InputAction() {
-
-			public void performAction(final InputActionEvent evt) {
-				logger.info(evt.getTriggerName());
-			}
-		}, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL,
-				InputHandler.AXIS_NONE, false);
-
-		input.addAction(new InputAction() {
-
-			public void performAction(final InputActionEvent evt) {
-				logger.info(evt.getTriggerName());
-			}
-		}, InputHandler.DEVICE_KEYBOARD, InputHandler.BUTTON_ALL,
-				InputHandler.AXIS_NONE, false);
-	}
-
-	@Override
-	public void simpleUpdate() {
-		input.update(tpf);
-
-		// Code for rotating the box... no surprises here.
-		if (tpf < 1) {
-			angle = angle + (tpf * 25);
-			if (angle > 360) {
-				angle = 0;
-			}
+		public MyImplementor(final int width, final int height) {
+			super(width, height);
 		}
-		rotQuat.fromAngleNormalAxis(angle * FastMath.DEG_TO_RAD, axis);
-		box.setLocalRotation(rotQuat);
 
-		if (startTime > System.currentTimeMillis()) {
-			fps++;
-		} else {
-			final long timeUsed = 5000 + (startTime - System
-					.currentTimeMillis());
+		@Override
+		public Node getRootNode() {
+			return super.getRootNode();
+		}
+
+		@Override
+		public void simpleSetup() {
+
+			input = new InputHandler();
+			input.addAction(new InputAction() {
+
+				public void performAction(final InputActionEvent evt) {
+					logger.info(evt.getTriggerName());
+				}
+			}, InputHandler.DEVICE_MOUSE, InputHandler.BUTTON_ALL,
+					InputHandler.AXIS_NONE, false);
+
+			input.addAction(new InputAction() {
+
+				public void performAction(final InputActionEvent evt) {
+					logger.info(evt.getTriggerName());
+				}
+			}, InputHandler.DEVICE_KEYBOARD, InputHandler.BUTTON_ALL,
+					InputHandler.AXIS_NONE, false);
 			startTime = System.currentTimeMillis() + 5000;
-			logger.info(fps + " frames in " + (timeUsed / 1000f)
-					+ " seconds = " + (fps / (timeUsed / 1000f))
-					+ " FPS (average)");
-			fps = 0;
+			initJME();
+		}
+
+		@Override
+		public void simpleUpdate() {
+			if (queueForResize) {
+				resizeComponent();
+				queueForResize = false;
+			}
+
+			input.update(tpf);
+
+			if (startTime > System.currentTimeMillis()) {
+				fps++;
+			} else {
+				final long timeUsed = 5000 + (startTime - System
+						.currentTimeMillis());
+				startTime = System.currentTimeMillis() + 5000;
+				logger.info(fps + " frames in " + (timeUsed / 1000f)
+						+ " seconds = " + (fps / (timeUsed / 1000f))
+						+ " FPS (average)");
+				fps = 0;
+			}
+
+			updateJME(tpf);
 		}
 	}
 }

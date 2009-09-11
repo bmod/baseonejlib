@@ -8,6 +8,13 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 
+/**
+ * Basic JFrame that stores its size and position on close. Extend this class
+ * and instantiate it to show the frame.
+ * 
+ * @author B. Korsmit
+ * 
+ */
 public abstract class BaseFrame extends JFrame {
 
 	private final Preferences prefs;
@@ -70,6 +77,8 @@ public abstract class BaseFrame extends JFrame {
 					.warning(e.getMessage());
 		}
 	}
+
+	protected abstract void frameClosing();
 
 	protected abstract void initFrame();
 }
