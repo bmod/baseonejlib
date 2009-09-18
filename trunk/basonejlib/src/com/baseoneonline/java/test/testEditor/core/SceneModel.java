@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testEditor;
+package com.baseoneonline.java.test.testEditor.core;
 
 import java.util.ArrayList;
 

@@ -1,5 +1,6 @@
-package com.baseoneonline.java.test.testEditor;
+package com.baseoneonline.java.test.testEditor.core;
 
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 
 import com.baseoneonline.java.test.testEditor.gnodes.Block;
@@ -21,8 +22,9 @@ public class PNodeFactory {
 	}
 
 	private PNode createBlock(Block n) {
-		PPath path =
-			new PPath(new Rectangle2D.Float(0, 0, n.width, n.height));
+		PPath path = new PPath(new Rectangle2D.Float(0, 0, n.width, n.height));
+		path.setPaint(new Color(1, 0, 1, .3f));
+		path.setStrokePaint(new Color(1, 0, 1, .5f));
 		return path;
 	}
 

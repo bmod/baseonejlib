@@ -13,7 +13,6 @@ import javax.swing.JFrame;
  * and instantiate it to show the frame.
  * 
  * @author B. Korsmit
- * 
  */
 public abstract class BaseFrame extends JFrame {
 
@@ -24,10 +23,10 @@ public abstract class BaseFrame extends JFrame {
 	public BaseFrame() {
 		prefs = Preferences.userNodeForPackage(getClass());
 		setTitle(getClass().getSimpleName());
-		setVisible(true);
 
 		restoreFrame();
 		initFrame();
+		setVisible(true);
 	}
 
 	public Preferences getPrefs() {
@@ -41,13 +40,19 @@ public abstract class BaseFrame extends JFrame {
 		int y = prefs.getInt(APP_Y, 0);
 		final int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
-		if (w > sw) w = sw;
-		if (h > sh) h = sh;
+		if (w > sw)
+			w = sw;
+		if (h > sh)
+			h = sh;
 
-		if (x < 0) x = 0;
-		if (x + w > sw) x = sw - w;
-		if (y < 0) y = 0;
-		if (y + h > sh) y = sh - h;
+		if (x < 0)
+			x = 0;
+		if (x + w > sw)
+			x = sw - w;
+		if (y < 0)
+			y = 0;
+		if (y + h > sh)
+			y = sh - h;
 
 		setSize(w, h);
 		setLocation(x, y);
