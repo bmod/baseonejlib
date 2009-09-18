@@ -25,6 +25,10 @@ public abstract class DockingFrame {
 
 	private final DockingDesktop desk = new DockingDesktop();
 
+	public JFrame getFrame() {
+		return baseFrame;
+	}
+
 	BaseFrame baseFrame = new BaseFrame() {
 
 		@Override
@@ -58,8 +62,8 @@ public abstract class DockingFrame {
 		final String layoutData = baseFrame.getPrefs().get(LAYOUT, "");
 		if (layoutData.length() > 0) {
 			try {
-				final ByteArrayInputStream bais = new ByteArrayInputStream(
-						layoutData.getBytes());
+				final ByteArrayInputStream bais =
+					new ByteArrayInputStream(layoutData.getBytes());
 				desk.readXML(bais);
 
 				for (final DockableState d : desk.getDockables()) {

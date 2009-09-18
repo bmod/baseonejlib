@@ -10,11 +10,11 @@ public class GNode {
 	public boolean isEditable() {
 		return editable;
 	}
-	
+
 	public void setEditable(boolean editable) {
 		this.editable = editable;
 	}
-	
+
 	public AffineTransform getTransform() {
 		return transform;
 	}
@@ -22,4 +22,5 @@ public class GNode {
 	public void setTransform(AffineTransform transform) {
 		this.transform = transform;
 	}
+
 }

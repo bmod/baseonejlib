@@ -1,26 +1,24 @@
-package com.baseoneonline.java.test.testEditor;
+package com.baseoneonline.java.test.testEditor.core;
 
-import java.awt.Color;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.test.testEditor.gnodes.GNode;
+import com.baseoneonline.java.test.testEditor.tools.SelectionTool;
+import com.baseoneonline.java.test.testEditor.tools.Tool;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolo.nodes.PText;
+import edu.umd.cs.piccolo.util.PBounds;
 
 public class EditPanel extends PCanvas implements SceneModelListener {
 
-	private final Logger log = Logger.getLogger(getClass().getName());
-
 	private static final String GNODE = "gnode";
 
-	PText text;
+	private final Logger log = Logger.getLogger(getClass().getName());
 
-	private final PPath selectionHandle;
+	private final RubberBand rubberBand;
 
 	private Tool currentTool;
 	private final SelectionTool selectionTool;
@@ -33,15 +31,25 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 	public EditPanel() {
 		setPanEventHandler(null);
 		setZoomEventHandler(null);
-		
-		// Create selectionhandle/rubberband
-		selectionHandle = new PPath(new Rectangle2D.Float(0, 0, 10, 10));
-		selectionHandle.setStrokePaint(Color.BLUE);
-		selectionHandle.setVisible(false);
-		getLayer().addChild(selectionHandle);
 
-		selectionTool = new SelectionTool();
+		// Create selection handle / rubber band
+		rubberBand = new RubberBand();
+		rubberBand.setVisible(false);
+		getLayer().addChild(rubberBand);
+
+		selectionTool = new SelectionTool(this);
 		setTool(selectionTool);
+
+	}
+
+	public void setRubberBand(PBounds bounds, AffineTransform xf) {
+		rubberBand.setBounds(bounds);
+		rubberBand.setTransform(xf);
+		rubberBand.setVisible(true);
+	}
+
+	public void hideRubberBand() {
+		rubberBand.setVisible(false);
 	}
 
 	public void setModel(SceneModel m) {
@@ -58,22 +66,30 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 		this.model = m;
 		model.addModelListener(this);
 
-		// Populate
+		// Populate form model. After this, only update from events.
 		for (int i = 0; i < model.numNodes(); i++) {
 			nodeAdded(model.getNode(i));
 		}
 	}
 
 	private void setTool(Tool t) {
+		if (t == currentTool) {
+			log.warning("Setting the same tool twice or more: skipping...");
+			return;
+		}
 		if (null != currentTool) {
-			getLayer().removeInputEventListener(currentTool);
+			removeInputEventListener(currentTool);
 		}
 		currentTool = t;
-		getLayer().addInputEventListener(currentTool);
+
+		addInputEventListener(currentTool);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.baseoneonline.java.test.testEditor.SceneModelListener#nodeAdded(com.baseoneonline.java.test.testEditor.gnodes.GNode)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.baseoneonline.java.test.testEditor.SceneModelListener#nodeAdded(com
+	 * .baseoneonline.java.test.testEditor.gnodes.GNode)
 	 */
 	@Override
 	public void nodeAdded(GNode gn) {
@@ -84,22 +100,20 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 		nodeTransformed(gn);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.baseoneonline.java.test.testEditor.SceneModelListener#nodeRemoved(com.baseoneonline.java.test.testEditor.gnodes.GNode)
-	 */
 	@Override
 	public void nodeRemoved(GNode gn) {
 		PNode pn = nodeMap.remove(gn);
 		getLayer().removeChild(pn);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.baseoneonline.java.test.testEditor.SceneModelListener#nodeTransformed(com.baseoneonline.java.test.testEditor.gnodes.GNode)
-	 */
 	@Override
 	public void nodeTransformed(GNode gn) {
 		PNode pn = nodeMap.get(gn);
 		pn.setTransform(gn.getTransform());
+	}
+
+	public GNode getGNode(PNode n) {
+		return (GNode) n.getAttribute(GNODE);
 	}
 
 }
