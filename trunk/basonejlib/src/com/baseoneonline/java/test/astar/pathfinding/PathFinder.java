@@ -1,74 +1,93 @@
 package com.baseoneonline.java.test.astar.pathfinding;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class PathFinder {
 
 	private IGraph graph;
 	private final HashMap<INode, Node> nodeMap = new HashMap<INode, Node>();
-	private ArrayList<Node> open;
-	private ArrayList<Node> closed;
+	private ArrayList<Node> closedSet;
+	PriorityQueue<Node> openSet;
 
 	public PathFinder() {
 
 	}
 
-	public ArrayList<INode> solve(INode start, INode goal, IGraph graph) {
+	public ArrayList<INode> solve(INode istart, INode igoal, IGraph graph) {
+		if (istart == igoal)
+			return new ArrayList<INode>();
 		this.graph = graph;
-		open = new ArrayList<Node>();
-		closed = new ArrayList<Node>();
+		ArrayList<Node> closed = new ArrayList<Node>();
+		ArrayList<Node> open = new ArrayList<Node>();
 
-		Node goalNode = getNode(goal);
-		open.add(getNode(start));
+		Node start = getNode(istart);
+		Node goal = getNode(igoal);
 
-		int i = 0;
+		Node node = start;
+		node.h = 0;
+		open.add(node);
 
-		while (open.size() > 0) {
-			i++;
-			Node x = lowest(open);
+		boolean solved = false;
 
-			if (x == goalNode) {
-				return null;
-				// return createPath(x);
+		while (!solved) {
+			if (open.size() < 1)
+				break;
+			node = lowestIn(open);
+			open.remove(node);
+			closed.add(node);
+
+			if (node == goal) {
+				solved = true;
+				break;
 			}
 
-			open.remove(x);
-			closed.add(x);
-
-			for (Node y : getNeighbors(x)) {
-
-				if (closed.contains(y))
-					continue;
-
-				float g = x.g + distance(x, y);
-
-				boolean g_better = false;
-
-				if (!open.contains(y)) {
-					open.add(y);
-					g_better = true;
-				} else if (g < y.g) {
-					g_better = true;
+			for (Node n : getNeighbors(node)) {
+				if (!open.contains(n) && !closed.contains(n)) {
+					open.add(n);
+					n.parent = node;
+					n.h = distance(n, goal);
+					n.g = node.g;
+				} else {
+					float f = n.g + node.g + n.h;
+					if (f < n.getF()) {
+						n.parent = node;
+						n.g = node.g;
+					}
 				}
-
-				if (g_better) {
-					y.cameFrom = x;
-					y.g = g;
-					y.h = distance(y, goalNode) + .1f;
-					y.f = y.g + y.h;
-				}
-
 			}
-
 		}
-		return null;
 
+		ArrayList<INode> solution = new ArrayList<INode>();
+		if (solved) {
+			solution.add(node.parent.node);
+			while (null != node.parent && node.parent != start) {
+				node = node.parent;
+				solution.add(node.node);
+			}
+		}
+
+		closedSet = closed;
+
+		return solution;
 	}
+
+	private final Comparator<Node> comparator = new Comparator<Node>() {
+		@Override
+		public int compare(Node o1, Node o2) {
+			if (o1.getF() < o2.getF())
+				return -1;
+			else if (o1.getF() > o2.getF())
+				return 1;
+			return 0;
+		}
+	};
 
 	public ArrayList<INode> getClosed() {
 		ArrayList<INode> nodes = new ArrayList<INode>();
-		for (Node n : closed) {
+		for (Node n : closedSet) {
 			nodes.add(n.node);
 		}
 		return nodes;
@@ -96,13 +115,13 @@ public class PathFinder {
 		return re;
 	}
 
-	private Node lowest(ArrayList<Node> list) {
-		float f = Float.MAX_VALUE;
+	private Node lowestIn(ArrayList<Node> list) {
+		float f = Float.POSITIVE_INFINITY;
 		Node node = null;
 		for (Node n : list) {
-			if (n.f < f) {
+			if (n.getF() < f) {
 				node = n;
-				f = node.f;
+				f = node.getF();
 			}
 		}
 		return node;
@@ -111,10 +130,13 @@ public class PathFinder {
 	private ArrayList<INode> createPath(Node goal) {
 		ArrayList<INode> re = new ArrayList<INode>();
 		Node node = goal;
-		while (node.cameFrom != null) {
-			System.out.println(node);
+		int i = 0;
+		int max = 10;
+		while (node.parent != null) {
 			re.add(node.node);
-			node = node.cameFrom;
+			node = node.parent;
+			if (i++ > max)
+				break;
 		}
 		return re;
 	}
@@ -125,8 +147,8 @@ class Node {
 
 	public float g = 0;
 	public float h = 0;
-	public float f = 0;
-	public Node cameFrom;
+	// public float f = 0;
+	public Node parent;
 
 	public final INode node;
 
@@ -137,5 +159,9 @@ class Node {
 	@Override
 	public String toString() {
 		return "Node " + node;
+	}
+
+	public float getF() {
+		return g + h;
 	}
 }

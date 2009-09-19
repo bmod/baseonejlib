@@ -19,14 +19,16 @@ public class GraphView extends JPanel {
 
 	private final Color col_start = Color.ORANGE;
 	private final Color col_goal = Color.GREEN;
-	private final Color col_mark = Color.BLUE;
+	private final Color col_path = Color.MAGENTA;
+	private final Color col_visited = Color.LIGHT_GRAY;
 
 	private final int cellMargin = 1;
 
 	private final Vec2i start = new Vec2i();
 	private final Vec2i goal = new Vec2i();
 
-	private Vec2i[] markNodes;
+	private Vec2i[] path;
+	private Vec2i[] visited;
 
 	public GraphView(final Graph g) {
 		this.graph = g;
@@ -43,9 +45,12 @@ public class GraphView extends JPanel {
 		return goal;
 	}
 
-	public void markNodes(Vec2i[] nodes) {
-		this.markNodes = nodes;
-		repaint();
+	public void markPath(Vec2i[] nodes) {
+		this.path = nodes;
+	}
+
+	public void markVisited(Vec2i[] visited) {
+		this.visited = visited;
 	}
 
 	private final MouseAdapter mouseAdapter = new MouseAdapter() {
@@ -126,12 +131,26 @@ public class GraphView extends JPanel {
 				- cellMargin * 2);
 
 		// Marked path
-		if (null != markNodes) {
-			g.setColor(col_mark);
-			for (Vec2i m : markNodes) {
+		if (null != path) {
+			g.setColor(col_path);
+			for (Vec2i m : path) {
+				g.drawRect(m.x * space + 1, m.y * space + 1, tileSize - 2,
+					tileSize - 2);
+			}
+		}
+
+		// Marked visited
+		if (null != visited) {
+			g.setColor(col_visited);
+			for (Vec2i m : visited) {
 				g.drawRect(m.x * space, m.y * space, tileSize, tileSize);
 			}
 		}
+
+		// Draw coords
+		g.setColor(Color.BLACK);
+		int y = (graph.getH() + 1) * space;
+		g.drawString(start.toString(), 10, y);
 
 	}
 

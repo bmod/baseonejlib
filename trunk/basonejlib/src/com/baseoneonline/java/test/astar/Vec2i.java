@@ -19,4 +19,9 @@ public class Vec2i {
 		y = pos.y;
 	}
 
+	@Override
+	public String toString() {
+		return "x: " + x + " y:" + y;
+	}
+
 }

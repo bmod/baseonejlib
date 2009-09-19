@@ -10,4 +10,6 @@ public interface IGraph {
 
 	public ArrayList<INode> getNeighbors(INode node);
 
+	public int size();
+
 }
