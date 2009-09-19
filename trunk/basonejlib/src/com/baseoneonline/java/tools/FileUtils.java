@@ -1,10 +1,12 @@
 package com.baseoneonline.java.tools;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 public class FileUtils {
@@ -60,7 +62,8 @@ public class FileUtils {
 	}
 
 	private static char[] ALLOWED_CHARS =
-		"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: ".toCharArray();
+		"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: "
+				.toCharArray();
 
 	public static String removeIllegalChars(String filename) {
 		StringBuffer buf = new StringBuffer();
@@ -74,6 +77,22 @@ public class FileUtils {
 			}
 		}
 		return buf.toString();
+	}
+
+	public static String readFile(URL url) {
+		try {
+			BufferedInputStream bin = new BufferedInputStream(url.openStream());
+			StringBuffer buf = new StringBuffer();
+			int c;
+			while ((c = bin.read()) != -1) {
+				buf.append((char) c);
+			}
+			return buf.toString();
+		} catch (IOException e) {
+			Logger.getLogger(FileUtils.class.getName()).severe(
+				"Error loading: " + url);
+		}
+		return null;
 	}
 
 }
