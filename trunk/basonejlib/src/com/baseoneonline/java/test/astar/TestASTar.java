@@ -12,9 +12,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.baseoneonline.java.pathfinding.AStar;
+import com.baseoneonline.java.pathfinding.TileGraph;
+import com.baseoneonline.java.pathfinding.TileNode;
 import com.baseoneonline.java.swing.BaseFrame;
-import com.baseoneonline.java.test.astar.pathfinding.INode;
-import com.baseoneonline.java.test.astar.pathfinding.PathFinder;
+import com.baseoneonline.java.tools.FileUtils;
 
 public class TestASTar extends BaseFrame {
 
@@ -30,26 +32,31 @@ public class TestASTar extends BaseFrame {
 		System.exit(0);
 	}
 
+	private TileGraph graph;
+	private AStar finder;
+
 	@Override
 	protected void initFrame() {
 
-		final Graph graph = new Graph();
-		graph.init(30, 20);
+		graph = new TileGraph();
+		graph.init(50, 40);
+		finder = new AStar(graph);
+		initComponents();
+	}
+
+	private void initComponents() {
 		final GraphView view = new GraphView(graph);
 		add(view);
-
 		final MapModel mdl = new MapModel();
 		final JList list = new JList(mdl);
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				graph.init(mdl.getURL(list.getSelectedIndex()));
+				loadMap(mdl.getURL(list.getSelectedIndex()));
 				view.repaint();
 			}
 		});
 		add(new JScrollPane(list), BorderLayout.EAST);
-
-		final PathFinder finder = new PathFinder();
 
 		view.addPropertyChangeListener("mapChange",
 			new PropertyChangeListener() {
@@ -60,26 +67,41 @@ public class TestASTar extends BaseFrame {
 			});
 	}
 
-	private void solve(Graph graph, GraphView view, PathFinder finder) {
-		GraphNode strt = graph.getNode(view.getStart().x, view.getStart().y);
-		GraphNode goal = graph.getNode(view.getGoal().x, view.getGoal().y);
+	public void loadMap(URL url) {
+		String str = FileUtils.readFile(url);
+		char block = "#".charAt(0);
+		int i = 0;
+		int w = -1;
+		int h = -1;
+		String[] rows = str.split("\n");
+		h = rows.length;
+		for (int y = 0; y < h; y++) {
 
-		// Call solver
-		ArrayList<INode> solution = finder.solve(strt, goal, graph);
-		ArrayList<INode> visitedNodes = finder.getClosed();
-		view.markPath(inodesToVec2i(solution));
-		view.markVisited(inodesToVec2i(visitedNodes));
-
-		view.repaint(0);
+			if (-1 == w) {
+				w = rows[y].length() - 1;
+				graph.init(w, h);
+			}
+			for (int x = 0; x < w; x++) {
+				char d = rows[y].charAt(x);
+				if (d == block) {
+					graph.setCost(x, y, -1);
+				} else {
+					graph.setCost(x, y, 0);
+				}
+				i++;
+			}
+		}
 	}
 
-	private Vec2i[] inodesToVec2i(ArrayList<INode> inodes) {
-		Vec2i[] pts = new Vec2i[inodes.size()];
-		for (int i = 0; i < pts.length; i++) {
-			GraphNode n = (GraphNode) inodes.get(i);
-			pts[i] = new Vec2i(n.x, n.y);
-		}
-		return pts;
+	private void solve(TileGraph graph, GraphView view, AStar finder) {
+		TileNode strt = graph.getNode(view.getStart().x, view.getStart().y);
+		TileNode goal = graph.getNode(view.getGoal().x, view.getGoal().y);
+
+		// Call solver
+		ArrayList<Integer> solution = finder.solve(strt.index, goal.index);
+		view.markPath(graph.getPositions(solution));
+
+		view.repaint();
 	}
 
 }
