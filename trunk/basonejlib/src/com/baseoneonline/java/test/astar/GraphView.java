@@ -7,9 +7,12 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import com.baseoneonline.java.math.Vec2i;
+import com.baseoneonline.java.pathfinding.TileGraph;
+
 public class GraphView extends JPanel {
 
-	private final Graph graph;
+	private final TileGraph graph;
 	private final int tileSize = 10;
 	private final int tileSpacing = 1;
 	private final int space = tileSize + tileSpacing;
@@ -30,7 +33,7 @@ public class GraphView extends JPanel {
 	private Vec2i[] path;
 	private Vec2i[] visited;
 
-	public GraphView(final Graph g) {
+	public GraphView(final TileGraph g) {
 		this.graph = g;
 
 		addMouseListener(mouseAdapter);

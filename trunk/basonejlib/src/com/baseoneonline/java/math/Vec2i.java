@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.astar;
+package com.baseoneonline.java.math;
 
 public class Vec2i {
 
@@ -21,7 +21,7 @@ public class Vec2i {
 
 	@Override
 	public String toString() {
-		return "x: " + x + " y:" + y;
+		return "[" + getClass().getName() + " x: " + x + " y:" + y + " ]";
 	}
 
 }
