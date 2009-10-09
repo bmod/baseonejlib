@@ -8,10 +8,13 @@ import com.jmex.game.state.GameStateManager;
 public class Main {
 
 	public static void main(final String[] args) {
+
 		new Main();
+
 	}
 
 	public Main() {
+
 		final StandardGame game = new StandardGame("C3");
 		game.start();
 
