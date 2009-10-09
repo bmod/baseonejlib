@@ -1,17 +1,16 @@
 package game.managers;
 
+import game.Level;
 import game.resources.LevelResource;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
-import com.baseoneonline.java.nanoxml.XMLParseException;
 import com.jme.scene.Spatial;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.converters.ObjToJme;
@@ -26,54 +25,85 @@ public class ResourceManager {
 
 	private final Logger log = Logger.getLogger(getClass().getName());
 
+	private final HashMap<String, LevelResource> levelResources =
+		new HashMap<String, LevelResource>();
+
 	private ResourceManager() {
 
 	}
 
-	public LevelResource getLevelDescriptor(final String id)
-			throws XMLParseException, IOException {
-		final XMLElement xml = new XMLElement();
-		final String path = PATH_ASSET_ROOT + PATH_LEVELS + id + "/"
-				+ FILE_DESCRIPTION;
-		xml.parseFromReader(new InputStreamReader(getStream(path)));
-		return parseLevelResource(xml);
+	public LevelResource getLevelResource(final String id) {
+		LevelResource src = levelResources.get(id);
+		if (null == src) {
+			src = loadLevelResource(levelPath(id) + FILE_DESCRIPTION);
+		}
+
+		return src;
 	}
 
-	private LevelResource parseLevelResource(final XMLElement xml) {
+	private LevelResource loadLevelResource(final String path) {
+		// LOAD
+		final XMLElement xml = new XMLElement();
+		try {
+			xml.parseFromReader(new InputStreamReader(getInStream(path)));
+		} catch (Exception e) {
+			throw new NullPointerException("FAIL loading: " + path);
+		}
+
+		// PARSE
 		final LevelResource lvl = new LevelResource();
 		lvl.name = xml.getStringAttribute("NAME");
+		for (XMLElement xGeom : xml.getChildren("MODEL")) {
+			lvl.geometryFiles.add(xGeom.getContent());
+		}
+
 		return lvl;
 	}
 
-	public Spatial getLevel(final String id) {
+	public Level loadLevel(final String id) {
 		log.info("Loading level: " + id);
-		final URL url = resource(id);
-		final ObjToJme objToJME = new ObjToJme();
-		final File temp = new File("temp");
+		LevelResource src = getLevelResource(id);
 
+		Level lvl = new Level();
+		for (String gFile : src.geometryFiles) {
+			lvl.node.attachChild(loadGeometry(levelPath(id) + gFile));
+		}
+
+		return lvl;
+
+	}
+
+	/**
+	 * @param path
+	 * @return
+	 */
+	private Spatial loadGeometry(String path) {
+		log.info("Loading geometry: " + path);
+		final File temp = new File("temp");
+		final ObjToJme objToJME = new ObjToJme();
 		try {
-			log.finer("Converting " + id + " to JME Binary.");
-			objToJME.convert(getStream(id), new FileOutputStream(temp));
+			log.finer("Converting " + path + " to JME Binary.");
+			objToJME.convert(getInStream(path), new FileOutputStream(temp));
 			log.finer("Loading JME Binary: " + temp.getAbsolutePath());
+			temp.delete();
 			final BinaryImporter importer = new BinaryImporter();
 			return (Spatial) importer.load(temp);
 		} catch (final Exception e) {
-			java.util.logging.Logger.getLogger(ResourceManager.class.getName())
-					.severe("FAIL! Cannot load: " + id + ". " + e.getMessage());
+			throw new NullPointerException("FAIL! Cannot load: '" + path + "'.");
 		}
-		return null;
 	}
 
-	public InputStream getStream(final String src) {
+	public InputStream getInStream(final String src) {
 		return getClass().getClassLoader().getResourceAsStream(src);
 	}
 
-	public URL resource(final String src) {
-		return getClass().getClassLoader().getResource(PATH_ASSET_ROOT + src);
+	private String levelPath(String id) {
+		return PATH_ASSET_ROOT + PATH_LEVELS + id + "/";
 	}
 
 	public static ResourceManager get() {
-		if (null == instance) instance = new ResourceManager();
+		if (null == instance)
+			instance = new ResourceManager();
 		return instance;
 	}
 }
