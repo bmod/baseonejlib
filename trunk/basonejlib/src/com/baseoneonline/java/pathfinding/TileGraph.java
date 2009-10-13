@@ -37,7 +37,7 @@ public class TileGraph implements Graph {
 	public TileNode[] getNodes(int[] a) {
 		TileNode[] nodes = new TileNode[a.length];
 		for (int i = 0; i < a.length; i++) {
-			nodes[i] = nodes[a[i]];
+			nodes[i] = this.nodes[a[i]];
 		}
 		return nodes;
 	}
@@ -80,27 +80,27 @@ public class TileGraph implements Graph {
 	public ArrayList<Integer> getNeighbors(int node) {
 		int x = nodes[node].x;
 		int y = nodes[node].y;
-		ArrayList<Integer> nodes = new ArrayList<Integer>();
+		ArrayList<Integer> neighbors = new ArrayList<Integer>();
 		TileNode n;
 		if (x > 0) {
 			n = data[x - 1][y];
 			if (n.walkable())
-				nodes.add(n.index);
+				neighbors.add(n.index);
 		}
 		if (y > 0) {
 			n = data[x][y - 1];
 			if (n.walkable())
-				nodes.add(n.index);
+				neighbors.add(n.index);
 		}
 		if (x < w - 1) {
 			n = data[x + 1][y];
 			if (n.walkable())
-				nodes.add(n.index);
+				neighbors.add(n.index);
 		}
 		if (y < h - 1) {
 			n = data[x][y + 1];
 			if (n.walkable())
-				nodes.add(n.index);
+				neighbors.add(n.index);
 		}
 
 		// Diagonal, no cutting corners
@@ -109,7 +109,7 @@ public class TileGraph implements Graph {
 			n = data[x - 1][y - 1];
 			if (n.walkable() && data[x - 1][y].walkable()
 				&& data[x][y - 1].walkable()) {
-				nodes.add(n.index);
+				neighbors.add(n.index);
 			}
 		}
 		// NE
@@ -117,7 +117,7 @@ public class TileGraph implements Graph {
 			n = data[x + 1][y - 1];
 			if (n.walkable() && data[x + 1][y].walkable()
 				&& data[x][y - 1].walkable()) {
-				nodes.add(n.index);
+				neighbors.add(n.index);
 			}
 		}
 		// SW
@@ -125,7 +125,7 @@ public class TileGraph implements Graph {
 			n = data[x - 1][y + 1];
 			if (n.walkable() && data[x - 1][y].walkable()
 				&& data[x][y + 1].walkable()) {
-				nodes.add(n.index);
+				neighbors.add(n.index);
 			}
 		}
 		// SE
@@ -133,11 +133,11 @@ public class TileGraph implements Graph {
 			n = data[x + 1][y + 1];
 			if (n.walkable() && data[x + 1][y].walkable()
 				&& data[x][y + 1].walkable()) {
-				nodes.add(n.index);
+				neighbors.add(n.index);
 			}
 		}
 
-		return nodes;
+		return neighbors;
 	}
 
 	public TileNode getNode(int x, int y) {

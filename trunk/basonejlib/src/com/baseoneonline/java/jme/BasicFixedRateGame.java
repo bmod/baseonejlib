@@ -23,6 +23,7 @@ import com.jme.util.GameTaskQueue;
 import com.jme.util.GameTaskQueueManager;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jmex.audio.AudioSystem;
 
 /**
  * <code>BasicFixedFramerateGame</code> attempts to run the game at a fixed
@@ -30,15 +31,14 @@ import com.jme.util.Timer;
  * however it is not guaranteed that the frame rate will not dip below the
  * desired value. Game logic is updated at the same rate as the rendering. For
  * example, if the rendering is running at 60 frames per second, the logic will
- * also be updated 60 times per second.
- * 
- * Note that <code>setFrameRate(int)</code> cannot be called prior to calling
- * <code>start()</code> or a <code>NullPointerException</code> will be thrown.
- * If no frame rate is specified, the game will run at 60 frames per second.
+ * also be updated 60 times per second. Note that <code>setFrameRate(int)</code>
+ * cannot be called prior to calling <code>start()</code> or a
+ * <code>NullPointerException</code> will be thrown. If no frame rate is
+ * specified, the game will run at 60 frames per second.
  */
 public abstract class BasicFixedRateGame extends AbstractGame {
-	private static final Logger logger = Logger
-			.getLogger(BasicFixedRateGame.class.getName());
+	private static final Logger logger =
+		Logger.getLogger(BasicFixedRateGame.class.getName());
 
 	// Frame-rate managing stuff
 	private Timer timer;
@@ -52,8 +52,6 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	private long frameStartTick;
 
 	private long frameDurationTicks;
-
-	private boolean updateRootNode = true;
 
 	/**
 	 * Alpha bits to use for the renderer. Any changes must be made prior to
@@ -96,7 +94,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	public void setFrameRate(final int fps) {
 		if (fps <= 0) {
 			throw new IllegalArgumentException(
-					"Frames per second cannot be less than one.");
+				"Frames per second cannot be less than one.");
 		}
 
 		logger.info("Attempting to run at " + fps + " fps.");
@@ -109,8 +107,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	 * @return the current number of frames rendering per second
 	 */
 	public float getFramesPerSecond() {
-		final float time = (timer.getTime() - startTime)
-				/ (float) timer.getResolution();
+		final float time =
+			(timer.getTime() - startTime) / (float) timer.getResolution();
 		final float fps = frames / time;
 
 		startTime = timer.getTime();
@@ -139,7 +137,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		frameDurationTicks = timer.getTime() - frameStartTick;
 
 		while (frameDurationTicks < preferredTicksPerFrame) {
-			sleepTime = ((preferredTicksPerFrame - frameDurationTicks) * 1000)
+			sleepTime =
+				((preferredTicksPerFrame - frameDurationTicks) * 1000)
 					/ timer.getResolution();
 
 			try {
@@ -194,7 +193,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 		} catch (final Throwable t) {
 			logger.logp(Level.SEVERE, this.getClass().toString(), "start()",
-					"Exception in game loop", t);
+				"Exception in game loop", t);
 		} finally {
 			cleanup();
 		}
@@ -203,18 +202,10 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		display.reset();
 		quit();
 	}
-	
-	public void setUpdateRootNode(boolean updateRootNode) {
-		this.updateRootNode = updateRootNode;
-	}
-	
-	public boolean isUpdateRootNode() {
-		return updateRootNode;
-	}
 
 	protected void cameraPerspective() {
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth()
-				/ (float) display.getHeight(), 1, 1000);
+			/ (float) display.getHeight(), 1, 1000);
 		cam.setParallelProjection(false);
 		cam.update();
 	}
@@ -229,6 +220,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		if (display != null) {
 			display.close();
 		}
+		AudioSystem.getSystem().cleanup();
 		System.exit(0);
 	}
 
@@ -243,9 +235,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		if (key.isValidCommand("exit")) {
 			finished = true;
 		}
-		if (updateRootNode) {
-			rootNode.updateGeometricState(t, true);
-		}
+		rootNode.updateGeometricState(t, true);
 	}
 
 	protected abstract void updateLoop(float t);
@@ -287,14 +277,15 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 			/** Create a window with the startup box's information. */
 			display.createWindow(settings.getWidth(), settings.getHeight(),
-					settings.getDepth(), settings.getFrequency(), settings
-							.isFullscreen());
+				settings.getDepth(), settings.getFrequency(), settings
+						.isFullscreen());
 
 			/**
 			 * Create a camera specific to the DisplaySystem that works with the
 			 * display's width and height
 			 */
-			cam = display.getRenderer().createCamera(display.getWidth(),
+			cam =
+				display.getRenderer().createCamera(display.getWidth(),
 					display.getHeight());
 
 		} catch (final JmeException e) {

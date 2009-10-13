@@ -1,10 +1,16 @@
 package com.baseoneonline.java.jme;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Logger;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
 import com.jme.input.MouseInput;
@@ -37,8 +43,8 @@ public class JMEUtil {
 		light.setLocation(new Vector3f(200, 300, 100));
 		light.setEnabled(true);
 		light.setDiffuse(ColorRGBA.white);
-		final LightState ls = DisplaySystem.getDisplaySystem().getRenderer()
-				.createLightState();
+		final LightState ls =
+			DisplaySystem.getDisplaySystem().getRenderer().createLightState();
 		ls.attach(light);
 		rootNode.setRenderState(ls);
 		rootNode.updateRenderState();
@@ -49,18 +55,19 @@ public class JMEUtil {
 	 * @return The position where the mouse pointer intersects with a plane
 	 */
 	public static Vector3f getMousePosition3D(final Plane p) {
-		final Vector2f mousePos = new Vector2f(MouseInput.get().getXAbsolute(),
-				MouseInput.get().getYAbsolute());
+		final Vector2f mousePos =
+			new Vector2f(MouseInput.get().getXAbsolute(), MouseInput.get()
+					.getYAbsolute());
 		return getPosition3D(mousePos, p);
 	}
 
 	public static Vector3f getPosition3D(Vector2f pos2d, Plane p) {
-		final Vector3f point1 = DisplaySystem.getDisplaySystem()
-				.getWorldCoordinates(pos2d, 0);
-		final Vector3f point2 = DisplaySystem.getDisplaySystem()
-				.getWorldCoordinates(pos2d, 1);
-		final Vector3f direction = point2.subtractLocal(point1)
-				.normalizeLocal();
+		final Vector3f point1 =
+			DisplaySystem.getDisplaySystem().getWorldCoordinates(pos2d, 0);
+		final Vector3f point2 =
+			DisplaySystem.getDisplaySystem().getWorldCoordinates(pos2d, 1);
+		final Vector3f direction =
+			point2.subtractLocal(point1).normalizeLocal();
 		final Ray ray = new Ray(point1, direction);
 		final Vector3f loc = new Vector3f();
 		ray.intersectsWherePlane(p, loc);
@@ -68,43 +75,56 @@ public class JMEUtil {
 	}
 
 	public static void applyTexture(final Spatial spatial, final String fname) {
-		final TextureState ts = DisplaySystem.getDisplaySystem().getRenderer()
-				.createTextureState();
+		final TextureState ts =
+			DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		ts.setTexture(TextureManager.loadTexture(fname,
-				MinificationFilter.Trilinear, MagnificationFilter.Bilinear));
+			MinificationFilter.Trilinear, MagnificationFilter.Bilinear));
 		ts.setEnabled(true);
 		spatial.setRenderState(ts);
 
 	}
 
 	public static void applyBlendState(final Spatial q) {
-		final BlendState bs = DisplaySystem.getDisplaySystem().getRenderer()
-				.createBlendState();
+		final BlendState bs =
+			DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
 		bs.setEnabled(true);
 		bs.setSourceFunction(SourceFunction.SourceAlpha);
 		bs.setDestinationFunction(DestinationFunction.OneMinusSourceAlpha);
 		q.setRenderState(bs);
 	}
 
-	public static Spatial loadObj(final String name, final String tempFile) {
-		final File f = new File(name);
-		final File temp = new File((tempFile == null) ? "temp" : tempFile);
+	public static Spatial loadObj(final URL model) {
 
+		final ObjToJme converter = new ObjToJme();
+
+		final ByteArrayOutputStream BO = new ByteArrayOutputStream();
 		try {
-			final ObjToJme objToJme = new ObjToJme();
+			final InputStream is = model.openStream();
+			converter.setProperty("mtllib", model);
+			final URI texDir = new File(model.toURI()).getParentFile().toURI();
 			ResourceLocatorTool.addResourceLocator(
-					ResourceLocatorTool.TYPE_TEXTURE,
-					new SimpleResourceLocator(f.getParentFile().toURI()));
-			final FileInputStream fin = new FileInputStream(f);
-			final FileOutputStream fout = new FileOutputStream(temp);
-			objToJme.convert(fin, fout);
-			final Spatial geom = (Spatial) BinaryImporter.getInstance().load(
-					temp);
-			return geom;
-		} catch (final Exception e) {
-			e.printStackTrace();
+				ResourceLocatorTool.TYPE_TEXTURE, new SimpleResourceLocator(
+					texDir));
+			converter.convert(is, BO);
+
+		} catch (final IOException e) {
+			throw new NullPointerException(e.getMessage());
+		} catch (final URISyntaxException e) {
+			Logger.getLogger(JMEUtil.class.getName()).warning(e.getMessage());
 		}
-		return null;
+
+		Spatial s = null;
+		try {
+			s =
+				(Spatial) BinaryImporter.getInstance().load(
+					new ByteArrayInputStream(BO.toByteArray()));
+		} catch (final IOException e) {
+			Logger.getLogger(JMEUtil.class.getName()).warning(e.getMessage());
+		}
+		s.setModelBound(new BoundingBox());
+		s.updateModelBound();
+		return s;
+
 	}
 
 	public static Line createLine(final Vector3f[] vtc, final ColorRGBA col) {

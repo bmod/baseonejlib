@@ -70,17 +70,19 @@ public class TestCedric extends BasicFixedRateGame {
 		cursor = new Cursor();
 		cursor.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		rootNode.attachChild(cursor);
-		
-		Spatial model = JMEUtil.loadObj("src/assets/models/rock.obj", null);
+
+		Spatial model =
+			JMEUtil.loadObj(getClass().getClassLoader().getResource(
+				"src/assets/models/rock.obj"));
 		rootNode.attachChild(model);
-//		try {
-//			URL url = getClass().getClassLoader().getResource("assets/models/rock.dae");
-//			ColladaImporter.load(url.openStream(), "rock");
-//			rootNode.attachChild(ColladaImporter.getModel());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
+		// try {
+		// URL url =
+		// getClass().getClassLoader().getResource("assets/models/rock.dae");
+		// ColladaImporter.load(url.openStream(), "rock");
+		// rootNode.attachChild(ColladaImporter.getModel());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 
 		initZBuffer();
 	}
@@ -111,8 +113,9 @@ public class TestCedric extends BasicFixedRateGame {
 		public void onPress(final MouseEvent ev) {
 			if (null != ev.getEntity()) {
 				cursor.setState(CursorState.Grab);
-				ctrl = new DragController(ev.getEntity(), boardCursor
-						.mouseOnPlanePosition());
+				ctrl =
+					new DragController(ev.getEntity(), boardCursor
+							.mouseOnPlanePosition());
 				grabPos = boardCursor.getGridPosition().clone();
 				System.out.println("Grab: " + grabPos);
 				ev.getEntity().addController(ctrl);
