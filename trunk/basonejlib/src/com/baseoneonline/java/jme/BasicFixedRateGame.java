@@ -53,6 +53,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 	private long frameDurationTicks;
 
+	private boolean updateRootNode = true;
+
 	/**
 	 * Alpha bits to use for the renderer. Any changes must be made prior to
 	 * call of start().
@@ -92,8 +94,10 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 	 *            the desired frame rate in frames per second
 	 */
 	public void setFrameRate(final int fps) {
-		if (fps <= 0) { throw new IllegalArgumentException(
-				"Frames per second cannot be less than one."); }
+		if (fps <= 0) {
+			throw new IllegalArgumentException(
+					"Frames per second cannot be less than one.");
+		}
 
 		logger.info("Attempting to run at " + fps + " fps.");
 		preferredTicksPerFrame = timer.getResolution() / fps;
@@ -199,6 +203,14 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		display.reset();
 		quit();
 	}
+	
+	public void setUpdateRootNode(boolean updateRootNode) {
+		this.updateRootNode = updateRootNode;
+	}
+	
+	public boolean isUpdateRootNode() {
+		return updateRootNode;
+	}
 
 	protected void cameraPerspective() {
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth()
@@ -231,7 +243,9 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		if (key.isValidCommand("exit")) {
 			finished = true;
 		}
-		rootNode.updateGeometricState(t, true);
+		if (updateRootNode) {
+			rootNode.updateGeometricState(t, true);
+		}
 	}
 
 	protected abstract void updateLoop(float t);
@@ -313,8 +327,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 
 		/** Sets the title of our display. */
 		String className = getClass().getName();
-		if (className.lastIndexOf('.') > 0) className = className
-				.substring(className.lastIndexOf('.') + 1);
+		if (className.lastIndexOf('.') > 0)
+			className = className.substring(className.lastIndexOf('.') + 1);
 		display.setTitle(className);
 
 		key = KeyBindingManager.getKeyBindingManager();
@@ -377,8 +391,8 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 		logger.info("Cleaning up resources.");
 
 		TextureManager.doTextureCleanup();
-		if (display != null && display.getRenderer() != null) display
-				.getRenderer().cleanup();
+		if (display != null && display.getRenderer() != null)
+			display.getRenderer().cleanup();
 		KeyInput.destroyIfInitalized();
 		MouseInput.destroyIfInitalized();
 		JoystickInput.destroyIfInitalized();
