@@ -94,7 +94,7 @@ public class JMEUtil {
 	}
 
 	public static Spatial loadObj(final URL model) {
-
+		Logger.getLogger(JMEUtil.class.getName()).info("Loading "+model);
 		final ObjToJme converter = new ObjToJme();
 
 		final ByteArrayOutputStream BO = new ByteArrayOutputStream();
