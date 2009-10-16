@@ -192,8 +192,7 @@ public abstract class BasicFixedRateGame extends AbstractGame {
 			}
 
 		} catch (final Throwable t) {
-			logger.logp(Level.SEVERE, this.getClass().toString(), "start()",
-				"Exception in game loop", t);
+			throw new RuntimeException(t);
 		} finally {
 			cleanup();
 		}
