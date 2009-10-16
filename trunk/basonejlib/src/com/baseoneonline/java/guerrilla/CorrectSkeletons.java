@@ -114,6 +114,11 @@ class FileSelector extends JPanel {
 	}
 
 	private Action browseAction = new AbstractAction("Browse...") {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			JFileChooser fc = new JFileChooser();
