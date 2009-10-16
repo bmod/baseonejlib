@@ -2,6 +2,7 @@ package com.baseoneonline.java.tools;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
@@ -144,6 +145,19 @@ public class StringUtils {
 	public static String addTrailingSlash(String targetPath) {
 		if (targetPath.endsWith("/") || targetPath.endsWith("\\")) return targetPath;
 		return targetPath+"/";
+	}
+	
+	public static URI parentOf(URI uri) {
+		try {
+			Pattern regex = Pattern.compile("(.+)/");
+			Matcher regexMatcher = regex.matcher(uri.getRawPath());
+			if (regexMatcher.find()) {
+				return new URI(regexMatcher.group(1));
+			}
+			return uri;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 }
