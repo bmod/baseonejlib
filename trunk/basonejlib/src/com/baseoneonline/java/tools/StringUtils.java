@@ -148,9 +148,10 @@ public class StringUtils {
 	}
 	
 	public static URI parentOf(URI uri) {
+		
 		try {
 			Pattern regex = Pattern.compile("(.+)/");
-			Matcher regexMatcher = regex.matcher(uri.getRawPath());
+			Matcher regexMatcher = regex.matcher(uri.toASCIIString());
 			if (regexMatcher.find()) {
 				return new URI(regexMatcher.group(1));
 			}
