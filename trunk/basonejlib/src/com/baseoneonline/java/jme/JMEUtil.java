@@ -2,7 +2,6 @@ package com.baseoneonline.java.jme;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -10,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import com.baseoneonline.java.tools.StringUtils;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
@@ -101,7 +101,7 @@ public class JMEUtil {
 		try {
 			final InputStream is = model.openStream();
 			converter.setProperty("mtllib", model);
-			final URI texDir = new File(model.toURI()).getParentFile().toURI();
+			final URI texDir = StringUtils.parentOf(model.toURI());
 			ResourceLocatorTool.addResourceLocator(
 				ResourceLocatorTool.TYPE_TEXTURE, new SimpleResourceLocator(
 					texDir));
