@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.library.items;
+package com.baseoneonline.java.test.media.library.items;
 
 import java.io.File;
 

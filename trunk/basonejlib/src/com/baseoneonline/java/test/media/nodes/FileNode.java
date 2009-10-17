@@ -1,9 +1,9 @@
-package com.baseoneonline.java.media.nodes;
+package com.baseoneonline.java.test.media.nodes;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import com.baseoneonline.java.media.Launcher;
+import com.baseoneonline.java.test.media.Launcher;
 
 public class FileNode implements INode {
 

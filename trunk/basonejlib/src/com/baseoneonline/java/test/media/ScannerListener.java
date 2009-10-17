@@ -1,6 +1,7 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
-import com.baseoneonline.java.media.Scanner.State;
+import com.baseoneonline.java.test.media.Scanner.State;
+
 
 public interface ScannerListener {
 	

@@ -101,7 +101,8 @@ public static Spatial loadObj(URL fileurl, URL pathurl) {
 		try {
 			final InputStream is = fileurl.openStream();
 			if (null == pathurl) pathurl = StringUtils.parentOf(fileurl.toURI()).toURL();
-			converter.setProperty("mtllib", pathurl);
+			converter.setProperty("mtllib", fileurl);
+			converter.setProperty("texdir", fileurl);
 			converter.convert(is, BO);
 
 		} catch (final Exception e) {

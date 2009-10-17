@@ -1,12 +1,12 @@
-package com.baseoneonline.java.media.ui;
+package com.baseoneonline.java.test.media.ui;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import com.baseoneonline.java.media.nodes.FileNode;
-import com.baseoneonline.java.media.nodes.INode;
+import com.baseoneonline.java.test.media.nodes.FileNode;
+import com.baseoneonline.java.test.media.nodes.INode;
 
 public class InfoPanel extends JPanel {
 

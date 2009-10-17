@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.ui;
+package com.baseoneonline.java.test.media.ui;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -11,8 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import com.baseoneonline.java.media.NodeTreeModel;
-import com.baseoneonline.java.media.nodes.INode;
+import com.baseoneonline.java.test.media.NodeTreeModel;
+import com.baseoneonline.java.test.media.nodes.INode;
 
 public class MediaTreePanel extends JPanel {
 

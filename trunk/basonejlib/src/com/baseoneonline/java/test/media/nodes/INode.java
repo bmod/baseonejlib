@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.nodes;
+package com.baseoneonline.java.test.media.nodes;
 
 public interface INode {
 
