@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
 	<classpathentry kind="lib" path="lib/vldocking_2.1.5.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
 	<classpathentry kind="lib" path="lib/filedrop.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
@@ -15,5 +14,19 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jbox2d-2.0.1-full.jar" sourcepath="lib/jbox2d-2.0.1-full.jar"/>
 	<classpathentry kind="lib" path="lib/jaudiotagger.jar" sourcepath="lib/jaudiotaggersrc.jar"/>
+	<classpathentry kind="lib" path="lib/jaudiotaggersrc.jar"/>
+	<classpathentry kind="lib" path="lib/jme-audio.jar"/>
+	<classpathentry kind="lib" path="lib/jme-awt.jar"/>
+	<classpathentry kind="lib" path="lib/jme-collada.jar"/>
+	<classpathentry kind="lib" path="lib/jme-editors.jar"/>
+	<classpathentry kind="lib" path="lib/jme-effects.jar"/>
+	<classpathentry kind="lib" path="lib/jme-font.jar"/>
+	<classpathentry kind="lib" path="lib/jme-gamestates.jar"/>
+	<classpathentry kind="lib" path="lib/jme-model.jar"/>
+	<classpathentry kind="lib" path="lib/jme-ogrexml.jar"/>
+	<classpathentry kind="lib" path="lib/jme-scene.jar"/>
+	<classpathentry kind="lib" path="lib/jme-swt.jar"/>
+	<classpathentry kind="lib" path="lib/jme-terrain.jar"/>
+	<classpathentry kind="lib" path="lib/jme.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
