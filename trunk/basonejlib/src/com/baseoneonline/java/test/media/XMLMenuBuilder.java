@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 import java.io.File;
 import java.io.FileReader;
@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.media.nodes.DefaultNode;
-import com.baseoneonline.java.media.nodes.FileNode;
-import com.baseoneonline.java.media.nodes.INode;
 import com.baseoneonline.java.nanoxml.XMLElement;
+import com.baseoneonline.java.test.media.nodes.DefaultNode;
+import com.baseoneonline.java.test.media.nodes.FileNode;
+import com.baseoneonline.java.test.media.nodes.INode;
 
 public class XMLMenuBuilder {
 

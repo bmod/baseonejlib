@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.library;
+package com.baseoneonline.java.test.media.library;
 
 import javax.swing.AbstractListModel;
 

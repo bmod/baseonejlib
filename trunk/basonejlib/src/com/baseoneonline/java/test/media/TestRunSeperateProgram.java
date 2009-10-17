@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -8,10 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 
-import com.baseoneonline.java.media.nodes.INode;
-import com.baseoneonline.java.media.ui.InfoPanel;
-import com.baseoneonline.java.media.ui.MediaTreePanel;
-import com.baseoneonline.java.media.ui.MediaTreePanel.TreePanelListener;
+import com.baseoneonline.java.test.media.nodes.INode;
+import com.baseoneonline.java.test.media.ui.InfoPanel;
+import com.baseoneonline.java.test.media.ui.MediaTreePanel;
+import com.baseoneonline.java.test.media.ui.MediaTreePanel.TreePanelListener;
 
 public class TestRunSeperateProgram {
 

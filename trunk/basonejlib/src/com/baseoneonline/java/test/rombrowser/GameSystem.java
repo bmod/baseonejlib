@@ -1,12 +1,12 @@
-package com.baseoneonline.java.rombrowser;
+package com.baseoneonline.java.test.rombrowser;
 import java.io.File;
 import java.io.FileFilter;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
-import com.baseoneonline.java.xmlatts.Attribute;
-import com.baseoneonline.java.xmlatts.FileAtt;
-import com.baseoneonline.java.xmlatts.StringArrayAtt;
-import com.baseoneonline.java.xmlatts.StringAtt;
+import com.baseoneonline.java.test.xmlatts.Attribute;
+import com.baseoneonline.java.test.xmlatts.FileAtt;
+import com.baseoneonline.java.test.xmlatts.StringArrayAtt;
+import com.baseoneonline.java.test.xmlatts.StringAtt;
 
 public class GameSystem {
 

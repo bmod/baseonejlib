@@ -1,4 +1,4 @@
-package com.baseoneonline.java.rombrowser;
+package com.baseoneonline.java.test.rombrowser;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

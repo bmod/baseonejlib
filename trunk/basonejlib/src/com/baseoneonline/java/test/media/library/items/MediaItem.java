@@ -1,11 +1,11 @@
-package com.baseoneonline.java.media.library.items;
+package com.baseoneonline.java.test.media.library.items;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.HashMap;
 
-import com.baseoneonline.java.media.Attribute;
+import com.baseoneonline.java.test.media.Attribute;
 
 public abstract class MediaItem {
 

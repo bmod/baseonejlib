@@ -1,12 +1,12 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.baseoneonline.java.media.library.SQLLibrary;
-import com.baseoneonline.java.media.library.items.MediaItem;
+import com.baseoneonline.java.test.media.library.SQLLibrary;
+import com.baseoneonline.java.test.media.library.items.MediaItem;
 
 public class SQLLibModel extends AbstractTableModel {
 

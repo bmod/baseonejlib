@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 public class MediaDesc {
 

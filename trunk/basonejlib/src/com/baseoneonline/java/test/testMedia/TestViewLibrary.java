@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import com.baseoneonline.java.media.library.SQLLibrary;
+import com.baseoneonline.java.test.media.library.SQLLibrary;
+
+
 
 public class TestViewLibrary extends JFrame {
 

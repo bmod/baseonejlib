@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media.library;
+package com.baseoneonline.java.test.media.library;
 
 import java.io.File;
 import java.net.URI;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.media.library.items.MediaItem;
+import com.baseoneonline.java.test.media.library.items.MediaItem;
 import com.baseoneonline.java.tools.StringUtils;
 
 public class SQLLibrary {
@@ -110,8 +110,8 @@ public class SQLLibrary {
 		return getItemsQuery("SELECT * FROM media;");
 	}
 
-	private final String[] filterFields = { MediaItem.FIELD_ALBUM,
-			MediaItem.FIELD_ARTIST, MediaItem.FIELD_TITLE };
+	private final String[] filterFields = { com.baseoneonline.java.test.media.library.items.MediaItem.FIELD_ALBUM,
+			com.baseoneonline.java.test.media.library.items.MediaItem.FIELD_ARTIST, com.baseoneonline.java.test.media.library.items.MediaItem.FIELD_TITLE };
 
 	/**
 	 * @param filterText
@@ -156,7 +156,7 @@ public class SQLLibrary {
 			while (rs.next()) {
 				final URI fname = new URI(rs.getString(1));
 
-				final MediaItem item = MediaItem.create(new File(fname));
+				final com.baseoneonline.java.test.media.library.items.MediaItem item = com.baseoneonline.java.test.media.library.items.MediaItem.create(new File(fname));
 				item.artist.value = rs.getString(2);
 				item.album.value = rs.getString(3);
 				item.title.value = rs.getString(4);

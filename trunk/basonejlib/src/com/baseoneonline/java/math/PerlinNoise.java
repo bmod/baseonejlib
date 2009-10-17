@@ -1,4 +1,4 @@
-package com.baseoneonline.java.tools;
+package com.baseoneonline.java.math;
 
 public final class PerlinNoise {
 

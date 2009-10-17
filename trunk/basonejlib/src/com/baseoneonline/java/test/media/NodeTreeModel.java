@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import com.baseoneonline.java.media.nodes.INode;
+import com.baseoneonline.java.test.media.nodes.INode;
 
 public class NodeTreeModel implements TreeModel {
 

@@ -1,4 +1,4 @@
-package com.baseoneonline.java.media;
+package com.baseoneonline.java.test.media;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.swing.Timer;
 
-import com.baseoneonline.java.media.library.SQLLibrary;
-import com.baseoneonline.java.media.library.items.MediaItem;
+import com.baseoneonline.java.test.media.library.SQLLibrary;
+import com.baseoneonline.java.test.media.library.items.MediaItem;
 import com.baseoneonline.java.tools.DirectoryWalker;
 import com.baseoneonline.java.tools.DirectoryWalker.Mode;
 

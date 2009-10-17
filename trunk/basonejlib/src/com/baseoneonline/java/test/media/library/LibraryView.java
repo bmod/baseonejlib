@@ -1,6 +1,7 @@
-package com.baseoneonline.java.media.library;
+package com.baseoneonline.java.test.media.library;
 
-import com.baseoneonline.java.media.library.items.MediaItem;
+import com.baseoneonline.java.test.media.library.items.MediaItem;
+
 
 public interface LibraryView {
 

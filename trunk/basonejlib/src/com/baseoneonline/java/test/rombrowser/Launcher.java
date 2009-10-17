@@ -1,4 +1,4 @@
-package com.baseoneonline.java.rombrowser;
+package com.baseoneonline.java.test.rombrowser;
 import java.io.IOException;
 import java.util.logging.Logger;
 

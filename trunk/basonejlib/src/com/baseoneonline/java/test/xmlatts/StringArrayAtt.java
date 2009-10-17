@@ -1,4 +1,4 @@
-package com.baseoneonline.java.xmlatts;
+package com.baseoneonline.java.test.xmlatts;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
 import com.baseoneonline.java.tools.StringUtils;
