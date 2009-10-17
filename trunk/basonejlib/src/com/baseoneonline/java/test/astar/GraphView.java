@@ -7,8 +7,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
+import com.baseoneonline.java.astar.TileGraph;
 import com.baseoneonline.java.math.Vec2i;
-import com.baseoneonline.java.pathfinding.TileGraph;
 
 public class GraphView extends JPanel {
 
