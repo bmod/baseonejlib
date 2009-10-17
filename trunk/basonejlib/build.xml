@@ -11,7 +11,7 @@
 
 	<path id="classpath">
 		<fileset id="test" dir="${dir.lib}">
-			<include name="/**/*.jar" />
+			<include name="**/*.jar" />
 		</fileset>
 	</path>
 
