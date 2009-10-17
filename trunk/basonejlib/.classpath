@@ -2,21 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/db4o-6.4.54.11278-java5.jar"/>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
-	<classpathentry kind="lib" path="lib/trove-2.0.4.jar" sourcepath="lib/trove-src-2.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/vldocking_2.1.5.jar"/>
-	<classpathentry kind="lib" path="lib/AppFramework-1.03.jar"/>
-	<classpathentry kind="lib" path="lib/swing-worker.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
 	<classpathentry kind="lib" path="lib/filedrop.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/golden_0_2_3.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://goldenstudios.or.id/products/GTGE/docs/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/piccolo.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/BaseOneJLib/doc/doc_piccolo2d.zip!/doc/api"/>

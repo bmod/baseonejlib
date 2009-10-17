@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -32,8 +30,6 @@ import com.jme.scene.state.BlendState.SourceFunction;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
-import com.jme.util.resource.ResourceLocatorTool;
-import com.jme.util.resource.SimpleResourceLocator;
 import com.jmex.model.converters.ObjToJme;
 
 public class JMEUtil {
@@ -92,25 +88,24 @@ public class JMEUtil {
 		bs.setDestinationFunction(DestinationFunction.OneMinusSourceAlpha);
 		q.setRenderState(bs);
 	}
+	
+	public static Spatial loadObj(final URL fileurl) {
+		return loadObj(fileurl, null);
+	}
 
-	public static Spatial loadObj(final URL model) {
-		Logger.getLogger(JMEUtil.class.getName()).info("Loading "+model);
+public static Spatial loadObj(URL fileurl, URL pathurl) {
+		Logger.getLogger(JMEUtil.class.getName()).info("Loading "+fileurl);
 		final ObjToJme converter = new ObjToJme();
 
 		final ByteArrayOutputStream BO = new ByteArrayOutputStream();
 		try {
-			final InputStream is = model.openStream();
-			converter.setProperty("mtllib", model);
-			final URI texDir = StringUtils.parentOf(model.toURI());
-			ResourceLocatorTool.addResourceLocator(
-				ResourceLocatorTool.TYPE_TEXTURE, new SimpleResourceLocator(
-					texDir));
+			final InputStream is = fileurl.openStream();
+			if (null == pathurl) pathurl = StringUtils.parentOf(fileurl.toURI()).toURL();
+			converter.setProperty("mtllib", pathurl);
 			converter.convert(is, BO);
 
-		} catch (final IOException e) {
-			throw new NullPointerException(e.getMessage());
-		} catch (final URISyntaxException e) {
-			Logger.getLogger(JMEUtil.class.getName()).warning(e.getMessage());
+		} catch (final Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 
 		Spatial s = null;
@@ -126,6 +121,7 @@ public class JMEUtil {
 		return s;
 
 	}
+
 
 	public static Line createLine(final Vector3f[] vtc, final ColorRGBA col) {
 		final Vector3f[] nml = new Vector3f[vtc.length];

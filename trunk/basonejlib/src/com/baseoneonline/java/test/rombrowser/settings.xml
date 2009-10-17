@@ -1,0 +1,23 @@
+<settings>
+	<RomList>
+		<Title>Nintendo SNES</Title>
+		<Extensions>zip,smc</Extensions>
+		<Path>M:\games\Roms\Nintendo SNES</Path>
+		<Emulator>M:\games\Emulators\ZSNES\zsnesw.exe</Emulator>
+		<Parameters>-f -m</Parameters>
+	</RomList>
+	<RomList>
+		<Title>Sega Mega Drive</Title>
+		<Extensions>zip</Extensions>
+		<Path>M:\games\Roms\Sega Mega Drive</Path>
+		<Emulator>M:\games\Emulators\Fusion\Fusion.exe</Emulator>
+		<Parameters>-fullscreen</Parameters>
+	</RomList>
+	<RomList>
+		<Title>Nintendo NES</Title>
+		<Extensions>zip</Extensions>
+		<Path>M:\games\Roms\Nintendo NES</Path>
+		<Emulator>M:\games\Emulators\NEStopia\nestopia.exe</Emulator>
+		<Parameters></Parameters>
+	</RomList>
+</settings>

@@ -12,9 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.baseoneonline.java.pathfinding.AStar;
-import com.baseoneonline.java.pathfinding.TileGraph;
-import com.baseoneonline.java.pathfinding.TileNode;
+import com.baseoneonline.java.astar.AStar;
+import com.baseoneonline.java.astar.TileGraph;
+import com.baseoneonline.java.astar.TileNode;
 import com.baseoneonline.java.swing.BaseFrame;
 import com.baseoneonline.java.tools.FileUtils;
 
