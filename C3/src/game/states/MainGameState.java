@@ -1,26 +1,25 @@
 package game.states;
 
+import game.Board;
 import game.Cursor;
 import game.Level;
+import game.PlayerController;
+import game.SurfMouseInputHandler;
 import game.managers.ResourceManager;
 
-import java.util.ArrayList;
-
+import com.baseoneonline.java.astar.TileGraph;
 import com.baseoneonline.java.jme.OrbitCamNode;
-import com.baseoneonline.java.math.Vec2i;
-import com.jme.input.MouseInput;
-import com.jme.intersection.PickData;
-import com.jme.intersection.TrianglePickResults;
+import com.jme.bounding.BoundingBox;
+import com.jme.input.InputHandler;
+import com.jme.input.action.InputAction;
+import com.jme.input.action.InputActionEvent;
 import com.jme.math.FastMath;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
 import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.BlendState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.scene.state.BlendState.DestinationFunction;
 import com.jme.scene.state.BlendState.SourceFunction;
@@ -31,11 +30,14 @@ public class MainGameState extends GameState {
 
 	private Node rootNode;
 	private OrbitCamNode camNode;
-	MouseToSurfaceTracker mouseScreenTracker;
-	VerticalSurfaceTracker cursorTracker;
-	Cursor pin;
-	private final float tileSize = 1;
+	private Cursor pin;
 	private Level lvl;
+	SurfMouseInputHandler mouseHandler;
+	private Board board;
+
+	private InputHandler input;
+
+	private PlayerController playerController;
 
 	public MainGameState() {
 		initInput();
@@ -47,6 +49,7 @@ public class MainGameState extends GameState {
 	}
 
 	private void initScene() {
+
 		rootNode = new Node();
 		initBlendMode();
 		initZBuffer();
@@ -54,13 +57,35 @@ public class MainGameState extends GameState {
 		lvl = ResourceManager.get().loadLevel("level1");
 		rootNode.attachChild(lvl.node);
 
-		mouseScreenTracker = new MouseToSurfaceTracker(lvl.node);
-		cursorTracker = new VerticalSurfaceTracker(lvl.node);
+		board = new Board(lvl.node, new TileGraph(10, 10));
+
+		mouseHandler = new SurfMouseInputHandler(lvl.node, board);
 
 		pin = new Cursor(ResourceManager.get().loadObj("models/mdl_pin.obj"));
 		rootNode.attachChild(pin);
 
 		rootNode.updateRenderState();
+
+		createPlayer();
+
+	}
+
+	private void createPlayer() {
+		final float r = .2f;
+		final Sphere sphere = new Sphere("sphere", 8, 8, r);
+		final Node nty = new Node();
+		sphere.setLocalTranslation(0, r, 0);
+		nty.attachChild(sphere);
+		rootNode.attachChild(nty);
+		nty.setModelBound(new BoundingBox());
+		nty.updateModelBound();
+		final MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+				.createMaterialState();
+		nty.setRenderState(ms);
+		nty.updateRenderState();
+		playerController = new PlayerController(nty, board);
+		nty.addController(playerController);
+		// n.setLocalTranslation(board.getSurfPos(new Vector2f(0, 0)));
 
 	}
 
@@ -108,110 +133,37 @@ public class MainGameState extends GameState {
 	public void update(final float tpf) {
 		handleInput();
 
-		mouseScreenTracker.update();
-		if (mouseScreenTracker.isIntersecting()) {
-			pin.setCullHint(CullHint.Dynamic);
-			final Vec2i gridPos = getBoardPosition(mouseScreenTracker
-					.getIntersection());
-			cursorTracker.setRayPos(getRealPosition(gridPos));
-			cursorTracker.update();
-			if (cursorTracker.isIntersecting()) {
-				pin.moveTo(cursorTracker.getIntersection());
-			}
-			// System.out.println(tracker.getSurfPoint());
-		} else {
-			pin.setCullHint(CullHint.Always);
-		}
+		mouseHandler.update(tpf);
+		movePin();
 
 		rootNode.updateGeometricState(tpf, true);
 	};
 
-	private Vector2f getRealPosition(final Vec2i v) {
-		return new Vector2f(v.x * tileSize + tileSize / 2, v.y * tileSize
-				+ tileSize / 2);
+	private void movePin() {
+		if (mouseHandler.isMouseOnSurface()) {
+			pin.moveTo(board.getSurfPos(mouseHandler.getGridPos()));
+			pin.setCullHint(CullHint.Dynamic);
+		} else {
+			pin.setCullHint(CullHint.Always);
+		}
+
 	}
 
-	private Vec2i getBoardPosition(final Vector3f vec) {
-		return new Vec2i((int) Math.floor(vec.x / tileSize), (int) Math
-				.floor(vec.z / tileSize));
-	}
+	private void initInput() {
+		input = new InputHandler();
+		input.addAction(new InputAction() {
 
-	private void initInput() {}
+			@Override
+			public void performAction(final InputActionEvent evt) {
+				if (evt.getTriggerPressed()) {
+					playerController.moveTo(mouseHandler.getGridPos());
+				}
+			}
+		}, InputHandler.DEVICE_MOUSE, 0, InputHandler.AXIS_NONE, false);
+	}
 
 	private void handleInput() {
-
+		input.update(0);
 	}
 
-}
-
-class VerticalSurfaceTracker extends SurfaceTracker {
-
-	public VerticalSurfaceTracker(final Spatial surface) {
-		super(surface);
-		ray.direction = new Vector3f(0, -1, 0);
-		ray.origin.y = 10;
-	}
-
-	public void setRayPos(final Vector2f pos) {
-		ray.origin.x = pos.x;
-		ray.origin.z = pos.y;
-	}
-
-}
-
-abstract class SurfaceTracker {
-
-	protected Ray ray = new Ray();
-	protected TrianglePickResults results = new TrianglePickResults();
-	protected Spatial surface;
-	protected Vector3f intersection = new Vector3f();
-
-	public SurfaceTracker(final Spatial surface) {
-		this.surface = surface;
-	}
-
-	public boolean isIntersecting() {
-		return intersection != null;
-	}
-
-	public Vector3f getIntersection() {
-		return intersection;
-	}
-
-	public void update() {
-		surface.findPick(ray, results);
-		final Vector3f[] tri = new Vector3f[3];
-
-		for (int i = 0; i < results.getNumber(); i++) {
-
-			final PickData pd = results.getPickData(i);
-			final TriMesh geo = (TriMesh) pd.getTargetMesh();
-			final ArrayList<Integer> tris = pd.getTargetTris();
-			if (tris.size() > 0) {
-				geo.getTriangle(tris.get(0), tri);
-				if (ray.intersectWhere(tri[0], tri[1], tri[2], intersection)) break;
-			}
-		}
-	}
-}
-
-class MouseToSurfaceTracker extends SurfaceTracker {
-
-	private final Vector2f mpos = new Vector2f();
-
-	public MouseToSurfaceTracker(final Node surface) {
-		super(surface);
-	}
-
-	@Override
-	public void update() {
-		mpos.x = MouseInput.get().getXAbsolute();
-		mpos.y = MouseInput.get().getYAbsolute();
-		ray.origin = DisplaySystem.getDisplaySystem().getWorldCoordinates(mpos,
-				0);
-		final Vector3f point2 = DisplaySystem.getDisplaySystem()
-				.getWorldCoordinates(mpos, 1);
-		ray.direction = point2.subtractLocal(ray.origin).normalizeLocal();
-		super.update();
-	}
 }

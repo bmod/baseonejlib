@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="C3" default="build" basedir="src">
+	<target name="build">
+		<javac srcdir="."/>
+	</target>
+</project>
