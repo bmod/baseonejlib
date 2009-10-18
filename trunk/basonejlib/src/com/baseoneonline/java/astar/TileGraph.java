@@ -13,8 +13,8 @@ public class TileGraph implements Graph {
 
 	private static float COST_DIAG = (float) Math.sqrt(2);
 
-	public TileGraph() {
-
+	public TileGraph(final int w, final int h) {
+		init(w, h);
 	}
 
 	public void init(final int w, final int h) {
@@ -26,26 +26,25 @@ public class TileGraph implements Graph {
 		int i = 0;
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
-				this.data[x][y] =
-					new TileNode(x, y, i, Math.random() < .3 ? -1 : 0);
+				this.data[x][y] = new TileNode(x, y, i, 0);
 				nodes[i] = this.data[x][y];
 				i++;
 			}
 		}
 	}
 
-	public TileNode[] getNodes(int[] a) {
-		TileNode[] nodes = new TileNode[a.length];
+	public TileNode[] getNodes(final int[] a) {
+		final TileNode[] nodes = new TileNode[a.length];
 		for (int i = 0; i < a.length; i++) {
 			nodes[i] = this.nodes[a[i]];
 		}
 		return nodes;
 	}
 
-	public Vec2i[] getPositions(ArrayList<Integer> a) {
-		Vec2i[] positions = new Vec2i[a.size()];
+	public Vec2i[] getPositions(final ArrayList<Integer> a) {
+		final Vec2i[] positions = new Vec2i[a.size()];
 		for (int i = 0; i < a.size(); i++) {
-			TileNode n = nodes[a.get(i)];
+			final TileNode n = nodes[a.get(i)];
 			positions[i] = new Vec2i(n.x, n.y);
 		}
 		return positions;
@@ -64,43 +63,40 @@ public class TileGraph implements Graph {
 	}
 
 	@Override
-	public float distance(int a, int b) {
-		TileNode n1 = nodes[a];
-		TileNode n2 = nodes[b];
-		float h_diag = Math.min(Math.abs(n1.x - n2.x), Math.abs(n1.y - n2.y));
-		float h_orth = (Math.abs(n1.x - n2.x) + Math.abs(n1.y - n2.y));
+	public float distance(final int a, final int b) {
+		final TileNode n1 = nodes[a];
+		final TileNode n2 = nodes[b];
+		final float h_diag = Math.min(Math.abs(n1.x - n2.x), Math.abs(n1.y
+				- n2.y));
+		final float h_orth = (Math.abs(n1.x - n2.x) + Math.abs(n1.y - n2.y));
 		return COST_DIAG * h_diag + h_orth - 2 * h_diag;
 	}
 
-	public float getCost(int x, int y) {
+	public float getCost(final int x, final int y) {
 		return data[x][y].cost;
 	}
 
 	@Override
-	public ArrayList<Integer> getNeighbors(int node) {
-		int x = nodes[node].x;
-		int y = nodes[node].y;
-		ArrayList<Integer> neighbors = new ArrayList<Integer>();
+	public ArrayList<Integer> getNeighbors(final int node) {
+		final int x = nodes[node].x;
+		final int y = nodes[node].y;
+		final ArrayList<Integer> neighbors = new ArrayList<Integer>();
 		TileNode n;
 		if (x > 0) {
 			n = data[x - 1][y];
-			if (n.walkable())
-				neighbors.add(n.index);
+			if (n.walkable()) neighbors.add(n.index);
 		}
 		if (y > 0) {
 			n = data[x][y - 1];
-			if (n.walkable())
-				neighbors.add(n.index);
+			if (n.walkable()) neighbors.add(n.index);
 		}
 		if (x < w - 1) {
 			n = data[x + 1][y];
-			if (n.walkable())
-				neighbors.add(n.index);
+			if (n.walkable()) neighbors.add(n.index);
 		}
 		if (y < h - 1) {
 			n = data[x][y + 1];
-			if (n.walkable())
-				neighbors.add(n.index);
+			if (n.walkable()) neighbors.add(n.index);
 		}
 
 		// Diagonal, no cutting corners
@@ -108,7 +104,7 @@ public class TileGraph implements Graph {
 		if (x > 0 && y > 0) {
 			n = data[x - 1][y - 1];
 			if (n.walkable() && data[x - 1][y].walkable()
-				&& data[x][y - 1].walkable()) {
+					&& data[x][y - 1].walkable()) {
 				neighbors.add(n.index);
 			}
 		}
@@ -116,7 +112,7 @@ public class TileGraph implements Graph {
 		if (x < w - 1 && y > 0) {
 			n = data[x + 1][y - 1];
 			if (n.walkable() && data[x + 1][y].walkable()
-				&& data[x][y - 1].walkable()) {
+					&& data[x][y - 1].walkable()) {
 				neighbors.add(n.index);
 			}
 		}
@@ -124,7 +120,7 @@ public class TileGraph implements Graph {
 		if (x > 0 && y < h - 1) {
 			n = data[x - 1][y + 1];
 			if (n.walkable() && data[x - 1][y].walkable()
-				&& data[x][y + 1].walkable()) {
+					&& data[x][y + 1].walkable()) {
 				neighbors.add(n.index);
 			}
 		}
@@ -132,7 +128,7 @@ public class TileGraph implements Graph {
 		if (x < w - 1 && y < h - 1) {
 			n = data[x + 1][y + 1];
 			if (n.walkable() && data[x + 1][y].walkable()
-				&& data[x][y + 1].walkable()) {
+					&& data[x][y + 1].walkable()) {
 				neighbors.add(n.index);
 			}
 		}
@@ -140,7 +136,7 @@ public class TileGraph implements Graph {
 		return neighbors;
 	}
 
-	public TileNode getNode(int x, int y) {
+	public TileNode getNode(final int x, final int y) {
 		return data[x][y];
 	}
 

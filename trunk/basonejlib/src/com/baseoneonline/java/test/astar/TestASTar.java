@@ -38,8 +38,7 @@ public class TestASTar extends BaseFrame {
 	@Override
 	protected void initFrame() {
 
-		graph = new TileGraph();
-		graph.init(50, 40);
+		graph = new TileGraph(50, 40);
 		finder = new AStar(graph);
 		initComponents();
 	}
@@ -50,8 +49,9 @@ public class TestASTar extends BaseFrame {
 		final MapModel mdl = new MapModel();
 		final JList list = new JList(mdl);
 		list.addListSelectionListener(new ListSelectionListener() {
+
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
+			public void valueChanged(final ListSelectionEvent e) {
 				loadMap(mdl.getURL(list.getSelectedIndex()));
 				view.repaint();
 			}
@@ -59,21 +59,22 @@ public class TestASTar extends BaseFrame {
 		add(new JScrollPane(list), BorderLayout.EAST);
 
 		view.addPropertyChangeListener("mapChange",
-			new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent arg0) {
-					solve(graph, view, finder);
-				}
-			});
+				new PropertyChangeListener() {
+
+					@Override
+					public void propertyChange(final PropertyChangeEvent arg0) {
+						solve(graph, view, finder);
+					}
+				});
 	}
 
-	public void loadMap(URL url) {
-		String str = FileUtils.readFile(url);
-		char block = "#".charAt(0);
+	public void loadMap(final URL url) {
+		final String str = FileUtils.readFile(url);
+		final char block = "#".charAt(0);
 		int i = 0;
 		int w = -1;
 		int h = -1;
-		String[] rows = str.split("\n");
+		final String[] rows = str.split("\n");
 		h = rows.length;
 		for (int y = 0; y < h; y++) {
 
@@ -82,7 +83,7 @@ public class TestASTar extends BaseFrame {
 				graph.init(w, h);
 			}
 			for (int x = 0; x < w; x++) {
-				char d = rows[y].charAt(x);
+				final char d = rows[y].charAt(x);
 				if (d == block) {
 					graph.setCost(x, y, -1);
 				} else {
@@ -93,12 +94,15 @@ public class TestASTar extends BaseFrame {
 		}
 	}
 
-	private void solve(TileGraph graph, GraphView view, AStar finder) {
-		TileNode strt = graph.getNode(view.getStart().x, view.getStart().y);
-		TileNode goal = graph.getNode(view.getGoal().x, view.getGoal().y);
+	private void solve(final TileGraph graph, final GraphView view,
+			final AStar finder) {
+		final TileNode strt = graph.getNode(view.getStart().x,
+				view.getStart().y);
+		final TileNode goal = graph.getNode(view.getGoal().x, view.getGoal().y);
 
 		// Call solver
-		ArrayList<Integer> solution = finder.solve(strt.index, goal.index);
+		final ArrayList<Integer> solution = finder
+				.solve(strt.index, goal.index);
 		view.markPath(graph.getPositions(solution));
 
 		view.repaint();
@@ -112,12 +116,12 @@ class MapModel extends AbstractListModel {
 
 	public MapModel() {}
 
-	public URL getURL(int i) {
+	public URL getURL(final int i) {
 		return getClass().getResource("maps/" + maps[i] + ".txt");
 	}
 
 	@Override
-	public Object getElementAt(int arg0) {
+	public Object getElementAt(final int arg0) {
 		return maps[arg0];
 	}
 
