@@ -1,6 +1,7 @@
 package game;
 
 import game.managers.ResourceManager;
+import game.states.DebugState;
 import game.states.MainGameState;
 
 import java.net.URL;
@@ -33,12 +34,7 @@ public class Main {
 		game.setBackgroundColor(ColorRGBA.blue);
 		game.start();
 
-		final URL cursor = ResourceManager.get().getAsset(
-				"images/handCursor.png");
-		System.out.println(cursor);
-		Mouse.setGrabbed(false);
-		MouseInput.get().setHardwareCursor(cursor, 3, 28);
-		// MouseInput.get().setCursorVisible(true);
+		initMouse();
 
 		final GameStateManager gsm = GameStateManager.getInstance();
 
@@ -49,6 +45,20 @@ public class Main {
 		final MainGameState mainState = new MainGameState();
 		mainState.setActive(true);
 		gsm.attachChild(mainState);
+
+		final DebugState debugState = new DebugState();
+		debugState.setActive(true);
+		gsm.attachChild(debugState);
+
+	}
+
+	private void initMouse() {
+		final URL cursor = ResourceManager.get().getAsset(
+				"images/handCursor.png");
+		System.out.println(cursor);
+		Mouse.setGrabbed(false);
+		MouseInput.get().setHardwareCursor(cursor, 3, 28);
+		// MouseInput.get().setCursorVisible(true);
 
 	}
 

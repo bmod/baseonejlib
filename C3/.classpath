@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BaseOneJLib"/>
 	<classpathentry kind="lib" path="/jme/lib/lwjgl/lwjgl.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/baseonejlib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
