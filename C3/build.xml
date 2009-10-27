@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="C3" default="build" basedir="src">
+<project name="C3" default="build">
+
+
+
+	<path id="classpath">
+		<fileset dir="../baseonejlib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="../baseonejlib/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="../jme/lib/lwjgl">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
 	<target name="build">
-		<javac srcdir="."/>
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build" classpathref="classpath" />
+		<jar destfile="C3.jar" basedir="build" includes="**/*.class">
+		</jar>
 	</target>
 </project>

@@ -1,6 +1,5 @@
 package game;
 
-import game.util.Util;
 
 import com.baseoneonline.java.math.Vec2i;
 import com.jme.input.InputHandler;

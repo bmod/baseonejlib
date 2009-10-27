@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.astar.AStar;
-import com.baseoneonline.java.astar.TileGraph;
 import com.baseoneonline.java.math.Vec2i;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
@@ -32,9 +31,9 @@ public class PlayerController extends Controller {
 
 	public void moveTo(final Vec2i pos) {
 		Logger.getLogger(getClass().getName()).info("Moving to: " + pos);
-		final TileGraph graph = board.getGraph();
-		final int start = graph.getNode(boardPos.x, boardPos.y).index;
-		final int goal = graph.getNode(pos.x, pos.y).index;
+		final NavGraph graph = board.getGraph();
+		final int start = graph.getNode(boardPos.x, boardPos.y);
+		final int goal = graph.getNode(pos.x, pos.y);
 		path = astar.solve(start, goal);
 	}
 
