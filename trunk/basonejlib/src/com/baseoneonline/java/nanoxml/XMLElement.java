@@ -1013,11 +1013,9 @@ public class XMLElement {
 			name = name.toUpperCase();
 		}
 		final Object value = this.attributes.get(name);
-		// if (value == null) {
-		// Logger.getLogger(getClass().getName()).warning(
-		// "Attribute not found: " + name);
-		// value = defaultValue;
-		// }
+
+		assert value != null : "Attribute not found: " + name + " on "
+				+ getName();
 		return value;
 	}
 

@@ -113,7 +113,7 @@ public class JMEUtil {
 			converter.convert(is, BO);
 
 		} catch (final Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
 		}
 
 		Spatial s = null;
