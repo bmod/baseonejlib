@@ -1,8 +1,6 @@
 package game;
 
-import game.util.Util;
 
-import com.baseoneonline.java.astar.TileGraph;
 import com.baseoneonline.java.math.Vec2i;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
@@ -18,14 +16,14 @@ public class Board {
 
 	public float tileSize = 1;
 
-	private final TileGraph graph;
+	private final NavGraph graph;
 
-	public Board(final Spatial surface, final TileGraph graph) {
+	public Board(final Spatial surface, final NavGraph graph) {
 		this.surface = surface;
 		this.graph = graph;
 	}
 
-	public TileGraph getGraph() {
+	public NavGraph getGraph() {
 		return graph;
 	}
 
