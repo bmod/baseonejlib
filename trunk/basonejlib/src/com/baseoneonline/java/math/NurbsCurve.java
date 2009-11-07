@@ -15,8 +15,8 @@ public class NurbsCurve implements Curve {
 	private final int degree;
 	private final int order;
 	private final int num_knots;
+	private float maxKnotValue;
 	private float[] knots;
-	private float largestKnot;
 
 	public NurbsCurve(Vec2f[] pts) {
 		this(pts, 3);
@@ -38,9 +38,8 @@ public class NurbsCurve implements Curve {
 			if (i >= degree && i < num_knots - degree - 1) {
 				v += 1;
 			}
-
 		}
-		largestKnot = v;
+		maxKnotValue = v;
 	}
 
 	public Vec2f getCV(final int i) {
@@ -50,52 +49,56 @@ public class NurbsCurve implements Curve {
 	public Vec2f getPoint(float t, Vec2f store) {
 		if (null == store)
 			store = new Vec2f();
-		if (t >= 1) {
-			store.set(pts[pts.length - 1]);
-			return store;
-		}
-		// if (t == .5f)
-		// t = .5000001f;
-		if (t <= 0) {
-			store.set(pts[0]);
-			return store;
-		}
-		store.zero();
-		float tot = 0;
-		for (int i = 0; i < pts.length; i++) {
-			final float v = coxDeBoor(t * largestKnot, i, order);
-			tot += v;
 
-			if (v > 0.001f)
-				store.addLocal(pts[i].mult(v));
+		if (t <= 0)
+			return store.set(pts[0]);
+		if (t >= 1)
+			return store.set(pts[pts.length - 1]);
+
+		store.zero();
+		float valSum = 0;
+		int len = pts.length;
+		for (int i = 0; i < len; i++) {
+			float v = coxDeBoor(t * maxKnotValue, i, degree);
+			valSum += v;
+			Vec2f p = pts[i];
+			store.addLocal(p.mult(v));
 		}
-		System.out.println(tot);
+		store.divideLocal(valSum);
+		// System.out.println(store);
 		return store;
 	}
 
-	private float coxDeBoor(final float t, final int i, final int k) {
-		if (k == 1) {
-			if (knots[i] <= t && t <= knots[i + 1]) {
+	private float coxDeBoor(final float t, final int k, final int deg) {
+		float b1;
+		float b2;
+
+		if (deg == 0) {
+			if (knots[k] <= t && t <= knots[k + 1]) {
 				return 1.0f;
 			}
 			return 0.0f;
 		}
-		final float Den1 = knots[i + k - 1] - knots[i];
-		final float Den2 = knots[i + k] - knots[i + 1];
-		float Eq1 = 0, Eq2 = 0;
-		if (Den1 > 0) {
-			Eq1 = ((t - knots[i]) / Den1) * coxDeBoor(t, i, k - 1);
-		}
-		if (Den2 > 0) {
-			Eq2 = (knots[i + k] - t) / Den2 * coxDeBoor(t, i + 1, k - 1);
-		}
-		return Eq1 + Eq2;
+
+		if (knots[k + deg] != knots[k])
+			b1 = ((t - knots[k]) / (knots[k + deg] - knots[k]))
+					* coxDeBoor(t, k, deg - 1);
+		else
+			b1 = 0.0f;
+
+		if (knots[k + deg + 1] != knots[k + 1])
+			b2 = ((knots[k + deg + 1] - t) / (knots[k + deg + 1] - knots[k + 1]))
+					* coxDeBoor(t, k + 1, deg - 1);
+		else
+			b2 = 0.0f;
+
+		return b1 + b2;
+
 	}
 
 	@Override
 	public int getNumCVs() {
-		// TODO Auto-generated method stub
-		return 0;
+		return pts.length;
 	}
 
 }
