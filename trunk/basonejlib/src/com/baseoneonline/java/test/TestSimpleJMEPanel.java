@@ -5,7 +5,12 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.baseoneonline.java.jme.NavInputHandler;
 import com.baseoneonline.java.jme.SimpleJMEPanel;
+import com.jme.math.Vector3f;
+import com.jme.scene.shape.Box;
+import com.jme.scene.state.WireframeState;
+import com.jme.system.DisplaySystem;
 
 public class TestSimpleJMEPanel extends JFrame {
 
@@ -25,15 +30,26 @@ public class TestSimpleJMEPanel extends JFrame {
 
 		final SimpleJMEPanel canvas = new SimpleJMEPanel() {
 
+			Box box;
+			NavInputHandler input;
+
 			@Override
 			protected void initJME() {
+				box = new Box("box", new Vector3f(), 3, 3, 3);
+				getRootNode().attachChild(box);
+				WireframeState ws = DisplaySystem.getDisplaySystem()
+						.getRenderer().createWireframeState();
+				box.setRenderState(ws);
+				box.updateRenderState();
+
+				input = new NavInputHandler(DisplaySystem.getDisplaySystem()
+						.getRenderer().getCamera());
 
 			}
 
 			@Override
 			protected void updateJME(final float t) {
-			// TODO Auto-generated method stub
-
+				input.update(t);
 			}
 		};
 		add(canvas);
