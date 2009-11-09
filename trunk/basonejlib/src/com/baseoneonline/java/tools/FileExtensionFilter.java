@@ -28,13 +28,18 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 	}
 
 	public FileExtensionFilter(final String extensionsString) {
-		extensions = extensionsString.split("[,| |;]");
+		this(extensionsString,null);
 	}
 
 	public FileExtensionFilter(final String extensionsString,
 			final boolean includeDirs) {
 		this(extensionsString);
 		this.includeDirectories = includeDirs;
+	}
+
+	public FileExtensionFilter(String extensionsString, String description) {
+		extensions = extensionsString.split("[,| |;]");
+		this.description = description;
 	}
 
 	@Override
@@ -48,6 +53,8 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 
 	@Override
 	public String getDescription() {
-		return description + " (" + StringUtils.join(extensions, ", ") + ")";
+		String ext = "(" + StringUtils.join(extensions, ", ") + ")";
+		if (null == description) return ext;
+		return description + " " + ext;
 	}
 }
