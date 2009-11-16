@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import com.baseoneonline.java.tools.StringUtils;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture.MagnificationFilter;
 import com.jme.image.Texture.MinificationFilter;
@@ -96,18 +95,15 @@ public class JMEUtil {
 	}
 
 	public static Spatial loadObj(final URL fileurl) {
-		return loadObj(fileurl, null);
-	}
-
-	public static Spatial loadObj(final URL fileurl, URL pathurl) {
+		assert null != fileurl : "FileURL is null";
 		Logger.getLogger(JMEUtil.class.getName()).info("Loading " + fileurl);
 		final ObjToJme converter = new ObjToJme();
 
 		final ByteArrayOutputStream BO = new ByteArrayOutputStream();
 		try {
 			final InputStream is = fileurl.openStream();
-			if (null == pathurl) pathurl = StringUtils
-					.parentOf(fileurl.toURI()).toURL();
+			assert null != is : "Could not get inputstream";
+
 			converter.setProperty("mtllib", fileurl);
 			converter.setProperty("texdir", fileurl);
 			converter.convert(is, BO);

@@ -1,4 +1,4 @@
-package com.baseoneonline.java.test.testEditor.core;
+package com.baseoneonline.java.test.testEditor.tools;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;

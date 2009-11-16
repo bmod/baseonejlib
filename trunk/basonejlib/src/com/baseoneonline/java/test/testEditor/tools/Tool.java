@@ -8,7 +8,9 @@ public abstract class Tool extends PBasicInputEventHandler {
 
 	protected EditPanel editor;
 
-	public Tool(EditPanel canvas) {
+	public Tool(final EditPanel canvas) {
 		this.editor = canvas;
 	}
+
+	public abstract void cleanup();
 }

@@ -18,11 +18,11 @@ public class NurbsCurve implements Curve {
 	private float maxKnotValue;
 	private float[] knots;
 
-	public NurbsCurve(Vec2f[] pts) {
+	public NurbsCurve(final Vec2f[] pts) {
 		this(pts, 3);
 	}
 
-	public NurbsCurve(final Vec2f[] pts, int degree) {
+	public NurbsCurve(final Vec2f[] pts, final int degree) {
 		this.pts = pts;
 		this.degree = degree;
 		order = degree + 1;
@@ -46,22 +46,19 @@ public class NurbsCurve implements Curve {
 		return pts[i];
 	}
 
-	public Vec2f getPoint(float t, Vec2f store) {
-		if (null == store)
-			store = new Vec2f();
+	public Vec2f getPoint(final float t, Vec2f store) {
+		if (null == store) store = new Vec2f();
 
-		if (t <= 0)
-			return store.set(pts[0]);
-		if (t >= 1)
-			return store.set(pts[pts.length - 1]);
+		if (t <= 0) return store.set(pts[0]);
+		if (t >= 1) return store.set(pts[pts.length - 1]);
 
 		store.zero();
 		float valSum = 0;
-		int len = pts.length;
+		final int len = pts.length;
 		for (int i = 0; i < len; i++) {
-			float v = coxDeBoor(t * maxKnotValue, i, degree);
+			final float v = coxDeBoor(t * maxKnotValue, i, degree);
 			valSum += v;
-			Vec2f p = pts[i];
+			final Vec2f p = pts[i];
 			store.addLocal(p.mult(v));
 		}
 		store.divideLocal(valSum);
@@ -69,26 +66,36 @@ public class NurbsCurve implements Curve {
 		return store;
 	}
 
+	public float getAngle(final float t) {
+		final float precision = .00001f;
+		float t1 = t;
+		float t2 = t + precision;
+		if (t2 > 1) {
+			t1 = t - precision;
+			t2 = t;
+		}
+		final Vec2f p1 = getPoint(t1, null);
+		final Vec2f p2 = getPoint(t2, null);
+		return BMath.atan2(p2.y - p1.y, p2.x - p1.x);
+	}
+
 	private float coxDeBoor(final float t, final int k, final int deg) {
 		float b1;
 		float b2;
 
 		if (deg == 0) {
-			if (knots[k] <= t && t <= knots[k + 1]) {
-				return 1.0f;
-			}
+			if (knots[k] <= t && t <= knots[k + 1]) { return 1.0f; }
 			return 0.0f;
 		}
 
-		if (knots[k + deg] != knots[k])
-			b1 = ((t - knots[k]) / (knots[k + deg] - knots[k]))
-					* coxDeBoor(t, k, deg - 1);
+		if (knots[k + deg] != knots[k]) b1 = ((t - knots[k]) / (knots[k + deg] - knots[k]))
+				* coxDeBoor(t, k, deg - 1);
 		else
 			b1 = 0.0f;
 
-		if (knots[k + deg + 1] != knots[k + 1])
-			b2 = ((knots[k + deg + 1] - t) / (knots[k + deg + 1] - knots[k + 1]))
-					* coxDeBoor(t, k + 1, deg - 1);
+		if (knots[k + deg + 1] != knots[k + 1]) b2 = ((knots[k + deg + 1] - t) / (knots[k
+				+ deg + 1] - knots[k + 1]))
+				* coxDeBoor(t, k + 1, deg - 1);
 		else
 			b2 = 0.0f;
 

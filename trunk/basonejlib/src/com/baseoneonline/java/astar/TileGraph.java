@@ -24,8 +24,8 @@ public class TileGraph implements Graph {
 		this.data = new TileNode[w][h];
 		nodes = new TileNode[w * h];
 		int i = 0;
-		for (int x = 0; x < w; x++) {
-			for (int y = 0; y < h; y++) {
+		for (int y = 0; y < h; y++) {
+			for (int x = 0; x < w; x++) {
 				this.data[x][y] = new TileNode(x, y, i, 0);
 				nodes[i] = this.data[x][y];
 				i++;
@@ -62,6 +62,10 @@ public class TileGraph implements Graph {
 		return h;
 	}
 
+	public TileNode getNode(final int index) {
+		return nodes[index];
+	}
+
 	@Override
 	public float distance(final int a, final int b) {
 		final TileNode n1 = nodes[a];
@@ -84,51 +88,51 @@ public class TileGraph implements Graph {
 		TileNode n;
 		if (x > 0) {
 			n = data[x - 1][y];
-			if (n.walkable()) neighbors.add(n.index);
+			if (n.isWalkable()) neighbors.add(n.index);
 		}
 		if (y > 0) {
 			n = data[x][y - 1];
-			if (n.walkable()) neighbors.add(n.index);
+			if (n.isWalkable()) neighbors.add(n.index);
 		}
 		if (x < w - 1) {
 			n = data[x + 1][y];
-			if (n.walkable()) neighbors.add(n.index);
+			if (n.isWalkable()) neighbors.add(n.index);
 		}
 		if (y < h - 1) {
 			n = data[x][y + 1];
-			if (n.walkable()) neighbors.add(n.index);
+			if (n.isWalkable()) neighbors.add(n.index);
 		}
 
 		// Diagonal, no cutting corners
 		// NW
 		if (x > 0 && y > 0) {
 			n = data[x - 1][y - 1];
-			if (n.walkable() && data[x - 1][y].walkable()
-					&& data[x][y - 1].walkable()) {
+			if (n.isWalkable() && data[x - 1][y].isWalkable()
+					&& data[x][y - 1].isWalkable()) {
 				neighbors.add(n.index);
 			}
 		}
 		// NE
 		if (x < w - 1 && y > 0) {
 			n = data[x + 1][y - 1];
-			if (n.walkable() && data[x + 1][y].walkable()
-					&& data[x][y - 1].walkable()) {
+			if (n.isWalkable() && data[x + 1][y].isWalkable()
+					&& data[x][y - 1].isWalkable()) {
 				neighbors.add(n.index);
 			}
 		}
 		// SW
 		if (x > 0 && y < h - 1) {
 			n = data[x - 1][y + 1];
-			if (n.walkable() && data[x - 1][y].walkable()
-					&& data[x][y + 1].walkable()) {
+			if (n.isWalkable() && data[x - 1][y].isWalkable()
+					&& data[x][y + 1].isWalkable()) {
 				neighbors.add(n.index);
 			}
 		}
 		// SE
 		if (x < w - 1 && y < h - 1) {
 			n = data[x + 1][y + 1];
-			if (n.walkable() && data[x + 1][y].walkable()
-					&& data[x][y + 1].walkable()) {
+			if (n.isWalkable() && data[x + 1][y].isWalkable()
+					&& data[x][y + 1].isWalkable()) {
 				neighbors.add(n.index);
 			}
 		}
