@@ -19,9 +19,18 @@ public class Vec2i {
 		y = pos.y;
 	}
 
+	public boolean equals(final Vec2i p) {
+		return p.x == x && p.y == y;
+	}
+
 	@Override
 	public String toString() {
 		return "[" + getClass().getName() + " x: " + x + " y:" + y + " ]";
+	}
+
+	public void set(final int x, final int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 }

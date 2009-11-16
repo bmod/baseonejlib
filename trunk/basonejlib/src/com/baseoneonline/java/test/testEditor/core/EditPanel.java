@@ -1,6 +1,7 @@
 package com.baseoneonline.java.test.testEditor.core;
 
-import java.awt.geom.AffineTransform;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -10,15 +11,14 @@ import com.baseoneonline.java.test.testEditor.tools.Tool;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolo.event.PPanEventHandler;
+import edu.umd.cs.piccolo.event.PZoomEventHandler;
 
 public class EditPanel extends PCanvas implements SceneModelListener {
 
 	private static final String GNODE = "gnode";
 
 	private final Logger log = Logger.getLogger(getClass().getName());
-
-	private final RubberBand rubberBand;
 
 	private Tool currentTool;
 	private final SelectionTool selectionTool;
@@ -27,37 +27,46 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 	private final HashMap<GNode, PNode> nodeMap = new HashMap<GNode, PNode>();
 
 	private SceneModel model;
+	private final PPanEventHandler panEventHandler;
+	private final PZoomEventHandler zoomEventHandler;
 
 	public EditPanel() {
+		panEventHandler = getPanEventHandler();
 		setPanEventHandler(null);
+		zoomEventHandler = getZoomEventHandler();
 		setZoomEventHandler(null);
 
 		// Create selection handle / rubber band
-		rubberBand = new RubberBand();
-		rubberBand.setVisible(false);
-		getLayer().addChild(rubberBand);
+		getCamera().setPickable(false);
 
 		selectionTool = new SelectionTool(this);
 		setTool(selectionTool);
 
+		addKeyListener(new MyKeyAdapter());
 	}
 
-	public void setRubberBand(PBounds bounds, AffineTransform xf) {
-		rubberBand.setBounds(bounds);
-		rubberBand.setTransform(xf);
-		rubberBand.setVisible(true);
-	}
+	private class MyKeyAdapter extends KeyAdapter {
 
-	public void hideRubberBand() {
-		rubberBand.setVisible(false);
-	}
-
-	public void setModel(SceneModel m) {
-		// Ignore setting twice or more
-		if (m == model) {
-			log.warning("Trying to set same model twice or more, skipping...");
-			return;
+		@Override
+		public void keyPressed(final KeyEvent e) {
+			if (e.isAltDown()) {
+				setPanEventHandler(panEventHandler);
+				setZoomEventHandler(zoomEventHandler);
+			}
 		}
+
+		@Override
+		public void keyReleased(final KeyEvent e) {
+			if (!e.isAltDown()) {
+				setPanEventHandler(null);
+				setZoomEventHandler(null);
+			}
+		}
+	}
+
+	public void setModel(final SceneModel m) {
+		// Ignore setting twice or more
+		if (m == model) return;
 
 		// Swap listeners
 		if (null != model) {
@@ -72,7 +81,7 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 		}
 	}
 
-	private void setTool(Tool t) {
+	private void setTool(final Tool t) {
 		if (t == currentTool) {
 			log.warning("Setting the same tool twice or more: skipping...");
 			return;
@@ -85,15 +94,9 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 		addInputEventListener(currentTool);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.baseoneonline.java.test.testEditor.SceneModelListener#nodeAdded(com
-	 * .baseoneonline.java.test.testEditor.gnodes.GNode)
-	 */
 	@Override
-	public void nodeAdded(GNode gn) {
-		PNode pn = factory.createNode(gn);
+	public void nodeAdded(final GNode gn) {
+		final PNode pn = factory.createNode(gn);
 		nodeMap.put(gn, pn);
 		pn.addAttribute(GNODE, gn);
 		getLayer().addChild(pn);
@@ -101,18 +104,18 @@ public class EditPanel extends PCanvas implements SceneModelListener {
 	}
 
 	@Override
-	public void nodeRemoved(GNode gn) {
-		PNode pn = nodeMap.remove(gn);
+	public void nodeRemoved(final GNode gn) {
+		final PNode pn = nodeMap.remove(gn);
 		getLayer().removeChild(pn);
 	}
 
 	@Override
-	public void nodeTransformed(GNode gn) {
-		PNode pn = nodeMap.get(gn);
+	public void nodeTransformed(final GNode gn) {
+		final PNode pn = nodeMap.get(gn);
 		pn.setTransform(gn.getTransform());
 	}
 
-	public GNode getGNode(PNode n) {
+	public GNode getGNode(final PNode n) {
 		return (GNode) n.getAttribute(GNODE);
 	}
 
