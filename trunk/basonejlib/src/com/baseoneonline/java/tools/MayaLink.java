@@ -8,6 +8,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 public class MayaLink {
 
 	public enum ReturnType {
@@ -114,8 +116,7 @@ public class MayaLink {
 			try {
 				sock.connect(host);
 			} catch (final IOException e) {
-				throw new RuntimeException(
-						"Error connecting to maya, try: commandPort -n \"localhost:"
+				JOptionPane.showMessageDialog(null, "Error connecting to maya, try: commandPort -n \"localhost:"
 								+ port + "\";");
 			}
 		}

@@ -14,14 +14,13 @@ import com.jme.scene.Spatial;
 public class JMETreeModel implements TreeModel {
 
 	private Node rootNode;
-	
+
 	List<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
-	
+
 	public JMETreeModel(Node rootNode) {
 		this.rootNode = rootNode;
 	}
-	
-	
+
 	@Override
 	public void addTreeModelListener(TreeModelListener l) {
 		listeners.add(l);
@@ -29,20 +28,22 @@ public class JMETreeModel implements TreeModel {
 
 	@Override
 	public Object getChild(Object parent, int index) {
-		return ((Node)parent).getChild(index);
+		return ((Node) parent).getChild(index);
 	}
 
 	@Override
 	public int getChildCount(Object parent) {
 		if (parent instanceof Node) {
-			return ((Node)parent).getChildren().size();
+			List<Spatial> children = ((Node) parent).getChildren();
+			if (null != children)
+				return children.size();
 		}
 		return 0;
 	}
 
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
-		return ((Node)parent).getChildIndex((Spatial) child);
+		return ((Node) parent).getChildIndex((Spatial) child);
 	}
 
 	@Override
@@ -52,8 +53,7 @@ public class JMETreeModel implements TreeModel {
 
 	@Override
 	public boolean isLeaf(Object node) {
-		if (node instanceof Node) return false;
-		return true;
+		return getChildCount(node) <= 0;
 	}
 
 	@Override
@@ -65,10 +65,10 @@ public class JMETreeModel implements TreeModel {
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		// no editing!
 	}
-	
+
 	public void fireStructureChanged() {
 		TreePath path = new TreePath(rootNode);
-		TreeModelEvent ev = new TreeModelEvent(this,path);
+		TreeModelEvent ev = new TreeModelEvent(this, path);
 		for (TreeModelListener l : listeners) {
 			l.treeStructureChanged(ev);
 		}
