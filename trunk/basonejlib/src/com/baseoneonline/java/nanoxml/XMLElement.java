@@ -1014,8 +1014,8 @@ public class XMLElement {
 		}
 		final Object value = this.attributes.get(name);
 
-		assert value != null : "Attribute not found: " + name + " on "
-				+ getName();
+		// assert value != null : "Attribute not found: " + name + " on "
+		// + getName();
 		return value;
 	}
 
