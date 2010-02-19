@@ -1,0 +1,2 @@
+C genre == "film"
+T Artists/<albumartist>/<album>/<artist> - <album>(<track>) <title>

@@ -1,0 +1,9 @@
+<level>
+	<road>
+		<segment length="200" curve="0"/>
+		<segment length="100" curve="30"/>
+		<segment length="100" curve="60"/>
+		<segment length="100" curve="-10"/>
+		<segment length="200" curve="0"/>
+	</road>
+</level>

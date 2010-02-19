@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BaseOneJLib" default="build">
+
+	<property name="dir.build" value="build" />
+	<property name="dir.lib" value="lib" />
+	<property name="dir.src" value="src" />
+	<property name="dir.deploy" value="." />
+
+	<property name="jar.deploy" value="${dir.deploy}/${ant.project.name}.jar" />
+
+
+	<path id="classpath">
+		<fileset id="test" dir="${dir.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="build">
+		<delete file="${jar.deploy}" />
+		<mkdir dir="${dir.build}" />
+
+		<javac srcdir="${dir.src}"
+		       destdir="${dir.build}"
+		       classpathref="classpath" />
+
+		<jar jarfile="${jar.deploy}"
+		     basedir="${dir.build}"
+		     includes="**/*.class" />
+
+		<delete dir="${dir.build}" />
+	</target>
+
+
+
+	<target name="clean">
+		<delete dir="${dir.build}" />
+		<delete file="${jar.deploy}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${dir.build}" />
+	</target>
+
+
+</project>
