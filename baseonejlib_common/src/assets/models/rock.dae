@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Administrator</author>
+      <authoring_tool>COLLADA Maya2009</authoring_tool>
+      <comments>ColladaMaya export options: bakeTransforms=0;exportPolygonMeshes=1;bakeLighting=0;isSampling=0;
+curveConstrainSampling=0;removeStaticCurves=1;exportCameraAsLookat=0;
+exportLights=1;exportCameras=1;exportJointsAndSkin=1;
+exportAnimations=1;exportTriangles=1;exportInvisibleNodes=0;
+exportNormals=1;exportTexCoords=1;
+exportVertexColors=1;exportVertexColorsAnimation=0;exportTangents=0;
+exportTexTangents=0;exportConstraints=1;exportPhysics=1;exportXRefs=1;
+dereferenceXRefs=1;cameraXFov=0;cameraYFov=1</comments>
+      <source_data>file:///S:/workspace/java/BaseOneJLib/src/assets/models/rock.mb</source_data>
+    </contributor>
+    <created>2009-05-21T15:42:07Z</created>
+    <modified>2009-05-21T15:42:07Z</modified>
+    <unit name="centimeter" meter="0.01"/>
+    <up_axis>Y_UP</up_axis>
+  </asset>
+  <library_materials>
+    <material id="phong1" name="phong1">
+      <instance_effect url="#phong1-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="phong1-fx">
+      <profile_COMMON>
+        <newparam sid="file1-surface">
+          <surface type="2D">
+            <init_from>file1</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </newparam>
+        <newparam sid="file1-sampler">
+          <sampler2D>
+            <source>file1-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="file1-sampler" texcoord="CHANNEL2">
+                <extra>
+                  <technique profile="MAYA">
+                    <blend_mode>NONE</blend_mode>
+                    <coverageU>1</coverageU>
+                    <coverageV>1</coverageV>
+                    <fast>0</fast>
+                    <mirrorU>0</mirrorU>
+                    <mirrorV>0</mirrorV>
+                    <noiseU>0</noiseU>
+                    <noiseV>0</noiseV>
+                    <offsetU>0</offsetU>
+                    <offsetV>0</offsetV>
+                    <repeatU>1</repeatU>
+                    <repeatV>1</repeatV>
+                    <rotateFrame>0</rotateFrame>
+                    <rotateUV>0</rotateUV>
+                    <stagger>0</stagger>
+                    <translateFrameU>0</translateFrameU>
+                    <translateFrameV>0</translateFrameV>
+                    <wrapU>1</wrapU>
+                    <wrapV>1</wrapV>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color>0 0 0 1</color>
+            </specular>
+            <shininess>
+              <float>20</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <reflectivity>
+              <float>0.5</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color>0 0 0 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images>
+    <image id="file1" name="file1">
+      <init_from>./rock.jpg</init_from>
+      <extra>
+        <technique profile="MAYA">
+          <dgnode_type>kFile</dgnode_type>
+          <image_sequence>0</image_sequence>
+        </technique>
+      </extra>
+    </image>
+  </library_images>
+  <library_geometries>
+    <geometry id="pCubeShape1" name="pCubeShape1">
+      <mesh>
+        <source id="pCubeShape1-positions" name="pCubeShape1-positions">
+          <float_array id="pCubeShape1-positions-array" count="81">-0.315924 0.106629 0.304633 0.328666 0.152159 0.318427 -0.298993 0.45238 0.340397 0.349382 0.32952 0.356099 -0.323186 0.444553 -0.139276 0.332569 0.484 -0.205534 -0.306658 0.147373 -0.26285 0.337932 0.192902 -0.249056 0.0101001 0.0638101 0.353746 0.043672 0.458724 0.443431 0.0506091 0.510106 -0.315798 0.0215781 0.114279 -0.349204 -0.377457 0.22403 0.364027 -0.406298 0.453623 0.0749498 0.302595 0.470725 0.179278 -0.366503 0.272195 -0.306834 0.381463 0.325026 -0.290828 -0.356423 0.0639823 -0.023136 0.451221 0.121029 -0.00585278 -0.00550938 0.241495 0.496692 -0.0684642 0.584385 -0.0147522 0.00969324 0.308342 -0.434365 0.0218999 0.0102319 -0.0208177 0.501277 0.312517 0.00871272 -0.496011 0.242076 -0.0126288 0.166811 0.533393 0.0402754 -0.00715033 0.556235 0.235774</float_array>
+          <technique_common>
+            <accessor source="#pCubeShape1-positions-array" count="27" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="pCubeShape1-normals" name="pCubeShape1-normals">
+          <float_array id="pCubeShape1-normals-array" count="81">-0.430386 -0.801679 0.414823 0.573253 -0.620878 0.534688 -0.434368 0.696689 0.570919 0.669996 0.208741 0.712413 -0.542679 0.706845 -0.45373 0.538908 0.806851 -0.242011 -0.432006 -0.694467 -0.575402 0.557008 -0.577296 -0.597053 0.0629279 -0.836793 0.543891 0.151601 0.693231 0.704591 0.020386 0.763371 -0.645639 0.0618031 -0.73748 -0.672535 -0.773288 -0.0892672 0.62774 -0.750421 0.658256 0.0597213 0.521389 0.818164 0.242408 -0.69186 0.0825141 -0.717302 0.636444 0.172272 -0.751838 -0.516263 -0.850729 -0.0986567 0.695855 -0.715602 -0.0608199 -0.0405487 -0.0840258 0.995638 -0.163737 0.9852 -0.0507106 -0.0800933 0.215628 -0.973185 0.0634417 -0.99372 -0.0921687 0.952668 0.303987 0.00401428 -0.991847 0.0301426 -0.123818 0.265846 0.961769 0.0657676 0.0188636 0.968934 0.2466</float_array>
+          <technique_common>
+            <accessor source="#pCubeShape1-normals-array" count="27" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="pCubeShape1-map1" name="pCubeShape1-map1">
+          <float_array id="pCubeShape1-map1-array" count="66">0.505802 0.255838 0.711808 0.374344 0.704154 0.526381 0.49566 0.453499 0.524789 0.644806 0.307106 0.634338 0.287489 0.44386 0.777603 0.686406 0.87824 0.875129 0.4881 0.851377 1.0474 0.667971 1.24984 0.712795 -0.0123219 0.64846 -0.0351505 1.00051 1.06791 0.521708 1.06583 0.408586 -0.0817366 0.368303 -0.0770722 0.480459 0.912627 0.354508 0.0705102 0.277399 0.903308 0.511873 0.0861078 0.457165 0.134595 0.641572 1.55589 0.64846 1.48648 0.368303 1.49114 0.480459 0.285027 0.333832 1.27171 0.325381 1.19554 -0.0379015 1.63872 0.277399 1.53306 1.00051 2.05631 0.851377 1.28035 0.509235</float_array>
+          <technique_common>
+            <accessor source="#pCubeShape1-map1-array" count="33" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="pCubeShape1-vertices" name="pCubeShape1-vertices">
+          <input semantic="POSITION" source="#pCubeShape1-positions"/>
+          <input semantic="NORMAL" source="#pCubeShape1-normals"/>
+        </vertices>
+        <triangles material="phong1SG" count="50">
+          <input semantic="VERTEX" source="#pCubeShape1-vertices" offset="0"/>
+          <input semantic="TEXCOORD" source="#pCubeShape1-map1" offset="1" set="0"/>
+          <p>8 0 1 1 19 3 19 3 1 1 3 2 3 2 9 4 19 3 9 4 2 5 19 3 12 6 0 26 19 3 19 3 0 26 8 0 9 4 14 7 26 9 26 9 14 7 25 8 14 7 5 10 25 8 10 11 4 23 20 30 26 9 2 5 9 4 10 11 16 14 21 32 16 14 7 15 21 32 21 32 7 15 11 27 11 27 6 24 21 32 21 32 6 24 15 25 15 25 4 23 21 32 11 27 7 15 22 28 22 28 7 15 18 18 18 18 1 1 22 28 22 28 1 1 8 0 8 0 0 26 22 28 22 28 0 26 17 29 17 29 6 24 22 28 22 28 6 24 11 27 18 18 7 15 23 20 23 20 7 15 16 14 16 14 5 10 23 20 14 7 3 2 23 20 3 2 1 1 23 20 23 20 1 1 18 18 17 19 0 26 24 21 24 21 0 26 12 6 12 6 2 5 13 22 13 22 4 12 24 21 15 17 6 16 24 21 24 21 6 16 17 19 20 13 4 12 13 22 5 10 10 11 25 8 25 8 10 11 20 30 26 31 25 8 20 30 20 13 2 5 26 9 9 4 3 2 14 7 23 20 5 10 14 7 10 11 5 10 16 14 21 32 4 23 10 11 12 6 13 22 24 21 19 3 2 5 12 6 13 22 2 5 20 13 24 21 4 12 15 17</p>
+        </triangles>
+      </mesh>
+      <extra>
+        <technique profile="MAYA">
+          <double_sided>1</double_sided>
+        </technique>
+      </extra>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="VisualSceneNode" name="rock">
+      <node id="pCube1" name="pCube1" type="NODE">
+        <translate sid="translate">0 -0.160711 0</translate>
+        <translate sid="rotatePivot">0 0.160711 0</translate>
+        <rotate sid="rotateZ">0 0 1 0</rotate>
+        <rotate sid="rotateY">0 1 0 0</rotate>
+        <rotate sid="rotateX">1 0 0 0</rotate>
+        <translate sid="rotatePivotInverse">0 -0.160711 0</translate>
+        <translate sid="scalePivot">0 0.160711 0</translate>
+        <translate sid="scalePivotInverse">0 -0.160711 0</translate>
+        <instance_geometry url="#pCubeShape1">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="phong1SG" target="#phong1"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#VisualSceneNode"/>
+  </scene>
+</COLLADA>
