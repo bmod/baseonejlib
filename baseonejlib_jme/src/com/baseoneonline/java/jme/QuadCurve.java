@@ -35,7 +35,7 @@ public class QuadCurve extends Curve {
 	 *            the name of the scene element. This is required for
 	 *            identification and comparision purposes.
 	 */
-	public QuadCurve(String name) {
+	public QuadCurve(final String name) {
 		super(name);
 	}
 
@@ -49,7 +49,7 @@ public class QuadCurve extends Curve {
 	 * @param controlPoints
 	 *            the points that define the curve.
 	 */
-	public QuadCurve(String name, Vector3f[] controlPoints) {
+	public QuadCurve(final String name, final Vector3f[] controlPoints) {
 		super(name, controlPoints);
 	}
 
@@ -63,16 +63,18 @@ public class QuadCurve extends Curve {
 	 * @see com.jme.curve.Curve#getPoint(float)
 	 */
 	@Override
-	public Vector3f getPoint(float time, Vector3f point) {
+	public Vector3f getPoint(final float time, final Vector3f point) {
 		// first point
 		if (time < 0) {
 			BufferUtils.populateFromBuffer(point, getVertexBuffer(), 0);
 			return point;
 		}
 		// last point.
-		if (time > 1) {
+		if (time >= 1) {
+
 			BufferUtils.populateFromBuffer(point, getVertexBuffer(),
-				getVertexCount() - 1);
+					getVertexCount() - 1);
+
 			return point;
 		}
 
@@ -87,7 +89,7 @@ public class QuadCurve extends Curve {
 			int diff = count - iCount;
 			float blend = muk * munk;
 			muk *= time;
-			munk /= (1 - time);
+			munk /= 1 - time;
 			while (count >= 1) {
 				blend *= count;
 				count--;
@@ -111,7 +113,7 @@ public class QuadCurve extends Curve {
 	}
 
 	@Override
-	public Vector3f getPoint(float time) {
+	public Vector3f getPoint(final float time) {
 		return getPoint(time, new Vector3f());
 	}
 
@@ -127,18 +129,23 @@ public class QuadCurve extends Curve {
 	 * @see com.jme.curve.Curve#getOrientation(float, float)
 	 */
 	@Override
-	public Matrix3f getOrientation(float time, float precision) {
-		Matrix3f rotation = new Matrix3f();
+	public Matrix3f getOrientation(final float time, final float precision) {
+		final Matrix3f rotation = new Matrix3f();
 
 		// calculate tangent
-		Vector3f point = getPoint(time);
-		Vector3f tangent =
-			point.subtract(getPoint(time + precision)).normalizeLocal();
+		final Vector3f point = getPoint(time);
+		Vector3f tangent;
+		if (time + precision > 1)
+			tangent = point.subtract(getPoint(time - precision))
+					.normalizeLocal().negateLocal();
+		else
+			tangent = point.subtract(getPoint(time + precision))
+					.normalizeLocal();
 		// calculate normal
-		Vector3f tangent2 = getPoint(time - precision).subtract(point);
-		Vector3f normal = tangent.cross(tangent2).normalizeLocal();
+		final Vector3f tangent2 = getPoint(time - precision).subtract(point);
+		final Vector3f normal = tangent.cross(tangent2).normalizeLocal();
 		// calculate binormal
-		Vector3f binormal = tangent.cross(normal).normalizeLocal();
+		final Vector3f binormal = tangent.cross(normal).normalizeLocal();
 
 		rotation.setColumn(0, tangent);
 		rotation.setColumn(1, normal);
@@ -160,22 +167,28 @@ public class QuadCurve extends Curve {
 	 * @see com.jme.curve.Curve#getOrientation(float, float)
 	 */
 	@Override
-	public Matrix3f getOrientation(float time, float precision, Vector3f up) {
+	public Matrix3f getOrientation(final float time, final float precision,
+			final Vector3f up) {
 		if (up == null) {
 			return getOrientation(time, precision);
 		}
-		Matrix3f rotation = new Matrix3f();
+		final Matrix3f rotation = new Matrix3f();
 
+		final Vector3f point = getPoint(time);
 		// calculate tangent
-		Vector3f tangent =
-			getPoint(time).subtract(getPoint(time + precision))
+		Vector3f tangent;
+		if (time + precision > 1)
+			tangent = point.subtract(getPoint(time - precision))
+					.normalizeLocal().negateLocal();
+		else
+			tangent = point.subtract(getPoint(time + precision))
 					.normalizeLocal();
 
 		// calculate binormal
-		Vector3f binormal = tangent.cross(up).normalizeLocal();
+		final Vector3f binormal = tangent.cross(up).normalizeLocal();
 
 		// calculate normal
-		Vector3f normal = binormal.cross(tangent).normalizeLocal();
+		final Vector3f normal = binormal.cross(tangent).normalizeLocal();
 
 		rotation.setColumn(0, tangent);
 		rotation.setColumn(1, normal);
@@ -185,15 +198,15 @@ public class QuadCurve extends Curve {
 	}
 
 	@Override
-	public void findCollisions(Spatial scene, CollisionResults results,
-			int requiredOnBits) {
-	// TODO Auto-generated method stub
+	public void findCollisions(final Spatial scene,
+			final CollisionResults results, final int requiredOnBits) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean hasCollision(Spatial scene, boolean checkTriangles,
-			int requiredOnBits) {
+	public boolean hasCollision(final Spatial scene,
+			final boolean checkTriangles, final int requiredOnBits) {
 		// TODO Auto-generated method stub
 		return false;
 	}
