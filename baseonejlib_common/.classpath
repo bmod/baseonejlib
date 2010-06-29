@@ -15,6 +15,5 @@
 	<classpathentry kind="lib" path="lib/jbox2d-2.0.1-full.jar" sourcepath="lib/jbox2d-2.0.1-full.jar"/>
 	<classpathentry kind="lib" path="lib/jaudiotagger.jar" sourcepath="lib/jaudiotaggersrc.jar"/>
 	<classpathentry kind="lib" path="lib/jaudiotaggersrc.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

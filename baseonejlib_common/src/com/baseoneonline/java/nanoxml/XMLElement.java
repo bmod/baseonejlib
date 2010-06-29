@@ -42,8 +42,6 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import com.jme.renderer.ColorRGBA;
-
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
  * XML code.
@@ -534,14 +532,14 @@ public class XMLElement {
 	protected XMLElement(final Hashtable<String, char[]> entities,
 			final boolean skipLeadingWhitespace,
 			final boolean fillBasicConversionTable, final boolean ignoreCase) {
-		this.ignoreWhitespace = skipLeadingWhitespace;
+		ignoreWhitespace = skipLeadingWhitespace;
 		this.ignoreCase = ignoreCase;
-		this.name = null;
-		this.contents = "";
-		this.attributes = new Hashtable<String, String>();
-		this.children = new Vector<XMLElement>();
+		name = null;
+		contents = "";
+		attributes = new Hashtable<String, String>();
+		children = new Vector<XMLElement>();
 		this.entities = entities;
-		this.lineNr = 0;
+		lineNr = 0;
 		final Enumeration<String> enu = this.entities.keys();
 		while (enu.hasMoreElements()) {
 			final String key = enu.nextElement();
@@ -589,7 +587,7 @@ public class XMLElement {
 	 *      removeChild(XMLElement)
 	 */
 	public void addChild(final XMLElement child) {
-		this.children.add(child);
+		children.add(child);
 	}
 
 	/**
@@ -641,14 +639,14 @@ public class XMLElement {
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
 	public void setAttribute(String name, final Object value) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
 		if (value == null) {
 			Logger.getLogger(getClass().getName()).severe(
 					"Value is null: " + name);
 		}
-		this.attributes.put(name, value.toString());
+		attributes.put(name, value.toString());
 	}
 
 	/**
@@ -694,17 +692,17 @@ public class XMLElement {
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
 	public void setIntAttribute(String name, final int value) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		this.attributes.put(name, Integer.toString(value));
+		attributes.put(name, Integer.toString(value));
 	}
 
 	public void setBooleanAttribute(String name, final boolean value) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		this.attributes.put(name, value ? TRUE_VALUE : FALSE_VALUE);
+		attributes.put(name, value ? TRUE_VALUE : FALSE_VALUE);
 	}
 
 	/**
@@ -750,17 +748,17 @@ public class XMLElement {
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
 	public void setDoubleAttribute(String name, final double value) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		this.attributes.put(name, Double.toString(value));
+		attributes.put(name, Double.toString(value));
 	}
 
 	public void setFloatAttribute(String name, final float value) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		this.attributes.put(name, Float.toString(value));
+		attributes.put(name, Float.toString(value));
 	}
 
 	/**
@@ -782,7 +780,7 @@ public class XMLElement {
 	 *      removeChild(XMLElement)
 	 */
 	public int countChildren() {
-		return this.children.size();
+		return children.size();
 	}
 
 	/**
@@ -837,7 +835,7 @@ public class XMLElement {
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
 	public Enumeration<String> enumerateAttributeNames() {
-		return this.attributes.keys();
+		return attributes.keys();
 	}
 
 	/**
@@ -859,7 +857,7 @@ public class XMLElement {
 	 *      removeChild(XMLElement)
 	 */
 	public Enumeration<XMLElement> enumerateChildren() {
-		return this.children.elements();
+		return children.elements();
 	}
 
 	/**
@@ -914,10 +912,12 @@ public class XMLElement {
 
 	public XMLElement getChild(final String name) {
 		for (final XMLElement x : getChildren()) {
-			if (x.getName().equalsIgnoreCase(name)) { return x; }
+			if (x.getName().equalsIgnoreCase(name)) {
+				return x;
+			}
 		}
 		Logger.getLogger(getClass().getName()).severe(
-				"Child of " + this.getName() + " not found: " + name);
+				"Child of " + getName() + " not found: " + name);
 		return null;
 	}
 
@@ -929,7 +929,7 @@ public class XMLElement {
 	 *      setContent(String)
 	 */
 	public String getContent() {
-		return this.contents;
+		return contents;
 	}
 
 	/**
@@ -945,7 +945,7 @@ public class XMLElement {
 	 * </dl>
 	 */
 	public int getLineNr() {
-		return this.lineNr;
+		return lineNr;
 	}
 
 	/**
@@ -1009,10 +1009,10 @@ public class XMLElement {
 	 *      Hashtable, String, boolean)
 	 */
 	public Object getAttribute(String name, final Object defaultValue) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		final Object value = this.attributes.get(name);
+		final Object value = attributes.get(name);
 
 		// assert value != null : "Attribute not found: " + name + " on "
 		// + getName();
@@ -1059,10 +1059,10 @@ public class XMLElement {
 	public String getAttribute(String name,
 			final Hashtable<String, String> valueSet, final String defaultKey,
 			final boolean allowLiterals) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		String key = this.attributes.get(name);
+		String key = attributes.get(name);
 		String result;
 		if (key == null) {
 			key = defaultKey;
@@ -1072,7 +1072,7 @@ public class XMLElement {
 			if (allowLiterals) {
 				result = key;
 			} else {
-				throw this.invalidValue(name, key);
+				throw invalidValue(name, key);
 			}
 		}
 		return result;
@@ -1244,50 +1244,18 @@ public class XMLElement {
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
 	public int getIntAttribute(String name, final int defaultValue) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		final String value = this.attributes.get(name);
+		final String value = attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else {
 			try {
 				return Integer.parseInt(value);
 			} catch (final NumberFormatException e) {
-				throw this.invalidValue(name, value);
+				throw invalidValue(name, value);
 			}
-		}
-	}
-
-	public ColorRGBA getColorAttribute(String name, final ColorRGBA defaultValue) {
-		name = name.toUpperCase();
-		final String c = this.attributes.get(name);
-		if (c == null) {
-			Logger.getLogger(getClass().getName()).warning(
-					"Attribute not found: " + name);
-			return defaultValue;
-		}
-		final String[] col = c.split(",");
-		if (col.length > 0 && col.length <= 4 && col.length != 2) {
-			final float[] colf = new float[col.length];
-			for (int i = 0; i < col.length; i++) {
-				colf[i] = Float.parseFloat(col[i]);
-			}
-
-			if (colf.length == 1) {
-				return new ColorRGBA(colf[0], colf[0], colf[0], 1);
-			} else {
-				final float a = colf.length == 4 ? colf[3] : 1;
-				final ColorRGBA color = new ColorRGBA(colf[0], colf[1],
-						colf[2], a);
-				return color;
-
-			}
-
-		} else {
-			Logger.getLogger(getClass().getName())
-					.warning("Faulty color value");
-			return defaultValue;
 		}
 	}
 
@@ -1332,10 +1300,10 @@ public class XMLElement {
 	public int getIntAttribute(String name,
 			final Hashtable<String, Object> valueSet, final String defaultKey,
 			final boolean allowLiteralNumbers) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		Object key = this.attributes.get(name);
+		Object key = attributes.get(name);
 		Integer result;
 		if (key == null) {
 			key = defaultKey;
@@ -1343,15 +1311,16 @@ public class XMLElement {
 		try {
 			result = (Integer) valueSet.get(key);
 		} catch (final ClassCastException e) {
-			throw this.invalidValueSet(name);
+			throw invalidValueSet(name);
 		}
 		if (result == null) {
-			if (!allowLiteralNumbers) { throw this.invalidValue(name,
-					(String) key); }
+			if (!allowLiteralNumbers) {
+				throw invalidValue(name, (String) key);
+			}
 			try {
 				result = Integer.valueOf((String) key);
 			} catch (final NumberFormatException e) {
-				throw this.invalidValue(name, (String) key);
+				throw invalidValue(name, (String) key);
 			}
 		}
 		return result.intValue();
@@ -1418,33 +1387,33 @@ public class XMLElement {
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
 	public double getDoubleAttribute(String name, final double defaultValue) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		final String value = this.attributes.get(name);
+		final String value = attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else {
 			try {
 				return Double.valueOf(value).doubleValue();
 			} catch (final NumberFormatException e) {
-				throw this.invalidValue(name, value);
+				throw invalidValue(name, value);
 			}
 		}
 	}
 
 	public float getFloatAttribute(String name, final float defaultValue) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		final String value = this.attributes.get(name);
+		final String value = attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else {
 			try {
 				return Float.valueOf(value).floatValue();
 			} catch (final NumberFormatException e) {
-				throw this.invalidValue(name, value);
+				throw invalidValue(name, value);
 			}
 		}
 	}
@@ -1491,10 +1460,10 @@ public class XMLElement {
 	public double getDoubleAttribute(String name,
 			final Hashtable<String, Object> valueSet, final String defaultKey,
 			final boolean allowLiteralNumbers) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		Object key = this.attributes.get(name);
+		Object key = attributes.get(name);
 		Double result;
 		if (key == null) {
 			key = defaultKey;
@@ -1502,15 +1471,16 @@ public class XMLElement {
 		try {
 			result = (Double) valueSet.get(key);
 		} catch (final ClassCastException e) {
-			throw this.invalidValueSet(name);
+			throw invalidValueSet(name);
 		}
 		if (result == null) {
-			if (!allowLiteralNumbers) { throw this.invalidValue(name,
-					(String) key); }
+			if (!allowLiteralNumbers) {
+				throw invalidValue(name, (String) key);
+			}
 			try {
 				result = Double.valueOf((String) key);
 			} catch (final NumberFormatException e) {
-				throw this.invalidValue(name, (String) key);
+				throw invalidValue(name, (String) key);
 			}
 		}
 		return result.doubleValue();
@@ -1557,10 +1527,10 @@ public class XMLElement {
 
 	public boolean getBooleanAttribute(String name, final String trueValue,
 			final String falseValue, final boolean defaultValue) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		final Object value = this.attributes.get(name);
+		final Object value = attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else if (value.equals(trueValue)) {
@@ -1568,7 +1538,7 @@ public class XMLElement {
 		} else if (value.equals(falseValue)) {
 			return false;
 		} else {
-			throw this.invalidValue(name, (String) value);
+			throw invalidValue(name, (String) value);
 		}
 	}
 
@@ -1583,7 +1553,7 @@ public class XMLElement {
 	 *      setName(String)
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -1657,26 +1627,28 @@ public class XMLElement {
 	 */
 	public void parseFromReader(final Reader reader, final int startingLineNr)
 			throws IOException, XMLParseException {
-		this.name = null;
-		this.contents = "";
-		this.attributes = new Hashtable<String, String>();
-		this.children = new Vector<XMLElement>();
-		this.charReadTooMuch = '\0';
+		name = null;
+		contents = "";
+		attributes = new Hashtable<String, String>();
+		children = new Vector<XMLElement>();
+		charReadTooMuch = '\0';
 		this.reader = reader;
-		this.parserLineNr = startingLineNr;
+		parserLineNr = startingLineNr;
 
 		for (;;) {
 			char ch = this.scanWhitespace();
 
-			if (ch != '<') { throw this.expectedInput("<"); }
+			if (ch != '<') {
+				throw expectedInput("<");
+			}
 
-			ch = this.readChar();
+			ch = readChar();
 
-			if ((ch == '!') || (ch == '?')) {
-				this.skipSpecialTag(0);
+			if (ch == '!' || ch == '?') {
+				skipSpecialTag(0);
 			} else {
-				this.unreadChar(ch);
-				this.scanElement(this);
+				unreadChar(ch);
+				scanElement(this);
 				return;
 			}
 		}
@@ -1955,7 +1927,7 @@ public class XMLElement {
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#getChildren()
 	 */
 	public void removeChild(final XMLElement child) {
-		this.children.removeElement(child);
+		children.removeElement(child);
 	}
 
 	/**
@@ -2023,10 +1995,10 @@ public class XMLElement {
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
 	public void removeAttribute(String name) {
-		if (this.ignoreCase) {
+		if (ignoreCase) {
 			name = name.toUpperCase();
 		}
-		this.attributes.remove(name);
+		attributes.remove(name);
 	}
 
 	/**
@@ -2035,8 +2007,7 @@ public class XMLElement {
 	 * You should override this method when subclassing XMLElement.
 	 */
 	protected XMLElement createAnotherElement() {
-		return new XMLElement(this.entities, this.ignoreWhitespace, false,
-				this.ignoreCase);
+		return new XMLElement(entities, ignoreWhitespace, false, ignoreCase);
 	}
 
 	/**
@@ -2046,7 +2017,7 @@ public class XMLElement {
 	 *            The new content string.
 	 */
 	public void setContent(final String content) {
-		this.contents = content;
+		contents = content;
 	}
 
 	/**
@@ -2080,7 +2051,7 @@ public class XMLElement {
 		try {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			final OutputStreamWriter writer = new OutputStreamWriter(out);
-			this.write(writer);
+			write(writer);
 			writer.flush();
 			return new String(out.toByteArray());
 		} catch (final IOException e) {
@@ -2108,45 +2079,45 @@ public class XMLElement {
 	 * @see com.baseoneonline.java.nanoxml.XMLElement#toString()
 	 */
 	public void write(final Writer writer) throws IOException {
-		if (this.name == null) {
-			this.writeEncoded(writer, this.contents);
+		if (name == null) {
+			writeEncoded(writer, contents);
 			return;
 		}
 		writer.write('<');
-		writer.write(this.name);
-		if (!this.attributes.isEmpty()) {
-			final Enumeration<String> enu = this.attributes.keys();
+		writer.write(name);
+		if (!attributes.isEmpty()) {
+			final Enumeration<String> enu = attributes.keys();
 			while (enu.hasMoreElements()) {
 				writer.write(' ');
 				final String key = enu.nextElement();
-				final String value = this.attributes.get(key);
+				final String value = attributes.get(key);
 				writer.write(key);
 				writer.write('=');
 				writer.write('"');
-				this.writeEncoded(writer, value);
+				writeEncoded(writer, value);
 				writer.write('"');
 			}
 		}
-		if ((this.contents != null) && (this.contents.length() > 0)) {
+		if (contents != null && contents.length() > 0) {
 			writer.write('>');
-			this.writeEncoded(writer, this.contents);
+			writeEncoded(writer, contents);
 			writer.write('<');
 			writer.write('/');
-			writer.write(this.name);
+			writer.write(name);
 			writer.write('>');
-		} else if (this.children.isEmpty()) {
+		} else if (children.isEmpty()) {
 			writer.write('/');
 			writer.write('>');
 		} else {
 			writer.write('>');
-			final Enumeration<XMLElement> enu = this.enumerateChildren();
+			final Enumeration<XMLElement> enu = enumerateChildren();
 			while (enu.hasMoreElements()) {
 				final XMLElement child = enu.nextElement();
 				child.write(writer);
 			}
 			writer.write('<');
 			writer.write('/');
-			writer.write(this.name);
+			writer.write(name);
 			writer.write('>');
 		}
 	}
@@ -2211,7 +2182,7 @@ public class XMLElement {
 				break;
 			default:
 				final int unicode = ch;
-				if ((unicode < 32) || (unicode > 126)) {
+				if (unicode < 32 || unicode > 126) {
 					writer.write('&');
 					writer.write('#');
 					writer.write('x');
@@ -2253,11 +2224,11 @@ public class XMLElement {
 	 */
 	protected void scanIdentifier(final StringBuffer result) throws IOException {
 		for (;;) {
-			final char ch = this.readChar();
-			if (((ch < 'A') || (ch > 'Z')) && ((ch < 'a') || (ch > 'z'))
-					&& ((ch < '0') || (ch > '9')) && (ch != '_') && (ch != '.')
-					&& (ch != ':') && (ch != '-') && (ch <= '\u007E')) {
-				this.unreadChar(ch);
+			final char ch = readChar();
+			if ((ch < 'A' || ch > 'Z') && (ch < 'a' || ch > 'z')
+					&& (ch < '0' || ch > '9') && ch != '_' && ch != '.'
+					&& ch != ':' && ch != '-' && ch <= '\u007E') {
+				unreadChar(ch);
 				return;
 			}
 			result.append(ch);
@@ -2271,7 +2242,7 @@ public class XMLElement {
 	 */
 	protected char scanWhitespace() throws IOException {
 		for (;;) {
-			final char ch = this.readChar();
+			final char ch = readChar();
 			switch (ch) {
 			case ' ':
 			case '\t':
@@ -2300,7 +2271,7 @@ public class XMLElement {
 	 */
 	protected char scanWhitespace(final StringBuffer result) throws IOException {
 		for (;;) {
-			final char ch = this.readChar();
+			final char ch = readChar();
 			switch (ch) {
 			case ' ':
 			case '\t':
@@ -2328,15 +2299,16 @@ public class XMLElement {
 	 * </dl>
 	 */
 	protected void scanString(final StringBuffer string) throws IOException {
-		final char delimiter = this.readChar();
-		if ((delimiter != '\'') && (delimiter != '"')) { throw this
-				.expectedInput("' or \""); }
+		final char delimiter = readChar();
+		if (delimiter != '\'' && delimiter != '"') {
+			throw expectedInput("' or \"");
+		}
 		for (;;) {
-			final char ch = this.readChar();
+			final char ch = readChar();
 			if (ch == delimiter) {
 				return;
 			} else if (ch == '&') {
-				this.resolveEntity(string);
+				resolveEntity(string);
 			} else {
 				string.append(ch);
 			}
@@ -2358,17 +2330,17 @@ public class XMLElement {
 	 */
 	protected void scanPCData(final StringBuffer data) throws IOException {
 		for (;;) {
-			char ch = this.readChar();
+			char ch = readChar();
 			if (ch == '<') {
-				ch = this.readChar();
+				ch = readChar();
 				if (ch == '!') {
-					this.checkCDATA(data);
+					checkCDATA(data);
 				} else {
-					this.unreadChar(ch);
+					unreadChar(ch);
 					return;
 				}
 			} else if (ch == '&') {
-				this.resolveEntity(data);
+				resolveEntity(data);
 			} else {
 				data.append(ch);
 			}
@@ -2389,18 +2361,18 @@ public class XMLElement {
 	 * </dl>
 	 */
 	protected boolean checkCDATA(final StringBuffer buf) throws IOException {
-		char ch = this.readChar();
+		char ch = readChar();
 		if (ch != '[') {
-			this.unreadChar(ch);
-			this.skipSpecialTag(0);
+			unreadChar(ch);
+			skipSpecialTag(0);
 			return false;
-		} else if (!this.checkLiteral("CDATA[")) {
-			this.skipSpecialTag(1); // one [ has already been read
+		} else if (!checkLiteral("CDATA[")) {
+			skipSpecialTag(1); // one [ has already been read
 			return false;
 		} else {
 			int delimiterCharsSkipped = 0;
 			while (delimiterCharsSkipped < 3) {
-				ch = this.readChar();
+				ch = readChar();
 				switch (ch) {
 				case ']':
 					if (delimiterCharsSkipped < 2) {
@@ -2448,14 +2420,16 @@ public class XMLElement {
 	protected void skipComment() throws IOException {
 		int dashesToRead = 2;
 		while (dashesToRead > 0) {
-			final char ch = this.readChar();
+			final char ch = readChar();
 			if (ch == '-') {
 				dashesToRead -= 1;
 			} else {
 				dashesToRead = 2;
 			}
 		}
-		if (this.readChar() != '>') { throw this.expectedInput(">"); }
+		if (readChar() != '>') {
+			throw expectedInput(">");
+		}
 	}
 
 	/**
@@ -2478,25 +2452,25 @@ public class XMLElement {
 		int tagLevel = 1; // <
 		char stringDelimiter = '\0';
 		if (bracketLevel == 0) {
-			char ch = this.readChar();
+			char ch = readChar();
 			if (ch == '[') {
 				bracketLevel += 1;
 			} else if (ch == '-') {
-				ch = this.readChar();
+				ch = readChar();
 				if (ch == '[') {
 					bracketLevel += 1;
 				} else if (ch == ']') {
 					bracketLevel -= 1;
 				} else if (ch == '-') {
-					this.skipComment();
+					skipComment();
 					return;
 				}
 			}
 		}
 		while (tagLevel > 0) {
-			final char ch = this.readChar();
+			final char ch = readChar();
 			if (stringDelimiter == '\0') {
-				if ((ch == '"') || (ch == '\'')) {
+				if (ch == '"' || ch == '\'') {
 					stringDelimiter = ch;
 				} else if (bracketLevel <= 0) {
 					if (ch == '<') {
@@ -2536,7 +2510,9 @@ public class XMLElement {
 	protected boolean checkLiteral(final String literal) throws IOException {
 		final int length = literal.length();
 		for (int i = 0; i < length; i += 1) {
-			if (this.readChar() != literal.charAt(i)) { return false; }
+			if (readChar() != literal.charAt(i)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -2545,16 +2521,16 @@ public class XMLElement {
 	 * Reads a character from a reader.
 	 */
 	protected char readChar() throws IOException {
-		if (this.charReadTooMuch != '\0') {
-			final char ch = this.charReadTooMuch;
-			this.charReadTooMuch = '\0';
+		if (charReadTooMuch != '\0') {
+			final char ch = charReadTooMuch;
+			charReadTooMuch = '\0';
 			return ch;
 		} else {
-			final int i = this.reader.read();
+			final int i = reader.read();
 			if (i < 0) {
-				throw this.unexpectedEndOfData();
+				throw unexpectedEndOfData();
 			} else if (i == 10) {
-				this.parserLineNr += 1;
+				parserLineNr += 1;
 				return '\n';
 			} else {
 				return (char) i;
@@ -2579,54 +2555,58 @@ public class XMLElement {
 	 */
 	protected void scanElement(final XMLElement elt) throws IOException {
 		final StringBuffer buf = new StringBuffer();
-		this.scanIdentifier(buf);
+		scanIdentifier(buf);
 		final String name = buf.toString();
 		elt.setName(name);
 		char ch = this.scanWhitespace();
-		while ((ch != '>') && (ch != '/')) {
+		while (ch != '>' && ch != '/') {
 			buf.setLength(0);
-			this.unreadChar(ch);
-			this.scanIdentifier(buf);
+			unreadChar(ch);
+			scanIdentifier(buf);
 			final String key = buf.toString();
 			ch = this.scanWhitespace();
-			if (ch != '=') { throw this.expectedInput("="); }
-			this.unreadChar(this.scanWhitespace());
+			if (ch != '=') {
+				throw expectedInput("=");
+			}
+			unreadChar(this.scanWhitespace());
 			buf.setLength(0);
-			this.scanString(buf);
+			scanString(buf);
 			elt.setAttribute(key, buf);
 			ch = this.scanWhitespace();
 		}
 		if (ch == '/') {
-			ch = this.readChar();
-			if (ch != '>') { throw this.expectedInput(">"); }
+			ch = readChar();
+			if (ch != '>') {
+				throw expectedInput(">");
+			}
 			return;
 		}
 		buf.setLength(0);
 		ch = this.scanWhitespace(buf);
 		if (ch != '<') {
-			this.unreadChar(ch);
-			this.scanPCData(buf);
+			unreadChar(ch);
+			scanPCData(buf);
 		} else {
 			for (;;) {
-				ch = this.readChar();
+				ch = readChar();
 				if (ch == '!') {
-					if (this.checkCDATA(buf)) {
-						this.scanPCData(buf);
+					if (checkCDATA(buf)) {
+						scanPCData(buf);
 						break;
 					} else {
 						ch = this.scanWhitespace(buf);
 						if (ch != '<') {
-							this.unreadChar(ch);
-							this.scanPCData(buf);
+							unreadChar(ch);
+							scanPCData(buf);
 							break;
 						}
 					}
 				} else {
-					if ((ch != '/') || this.ignoreWhitespace) {
+					if (ch != '/' || ignoreWhitespace) {
 						buf.setLength(0);
 					}
 					if (ch == '/') {
-						this.unreadChar(ch);
+						unreadChar(ch);
 					}
 					break;
 				}
@@ -2635,36 +2615,46 @@ public class XMLElement {
 		if (buf.length() == 0) {
 			while (ch != '/') {
 				if (ch == '!') {
-					ch = this.readChar();
-					if (ch != '-') { throw this
-							.expectedInput("Comment or Element"); }
-					ch = this.readChar();
-					if (ch != '-') { throw this
-							.expectedInput("Comment or Element"); }
-					this.skipComment();
+					ch = readChar();
+					if (ch != '-') {
+						throw expectedInput("Comment or Element");
+					}
+					ch = readChar();
+					if (ch != '-') {
+						throw expectedInput("Comment or Element");
+					}
+					skipComment();
 				} else {
-					this.unreadChar(ch);
-					final XMLElement child = this.createAnotherElement();
-					this.scanElement(child);
+					unreadChar(ch);
+					final XMLElement child = createAnotherElement();
+					scanElement(child);
 					elt.addChild(child);
 				}
 				ch = this.scanWhitespace();
-				if (ch != '<') { throw this.expectedInput("<"); }
-				ch = this.readChar();
+				if (ch != '<') {
+					throw expectedInput("<");
+				}
+				ch = readChar();
 			}
-			this.unreadChar(ch);
+			unreadChar(ch);
 		} else {
-			if (this.ignoreWhitespace) {
+			if (ignoreWhitespace) {
 				elt.setContent(buf.toString().trim());
 			} else {
 				elt.setContent(buf.toString());
 			}
 		}
-		ch = this.readChar();
-		if (ch != '/') { throw this.expectedInput("/"); }
-		this.unreadChar(this.scanWhitespace());
-		if (!this.checkLiteral(name)) { throw this.expectedInput(name); }
-		if (this.scanWhitespace() != '>') { throw this.expectedInput(">"); }
+		ch = readChar();
+		if (ch != '/') {
+			throw expectedInput("/");
+		}
+		unreadChar(this.scanWhitespace());
+		if (!checkLiteral(name)) {
+			throw expectedInput(name);
+		}
+		if (this.scanWhitespace() != '>') {
+			throw expectedInput(">");
+		}
 	}
 
 	/**
@@ -2687,7 +2677,7 @@ public class XMLElement {
 		char ch = '\0';
 		final StringBuffer keyBuf = new StringBuffer();
 		for (;;) {
-			ch = this.readChar();
+			ch = readChar();
 			if (ch == ';') {
 				break;
 			}
@@ -2702,12 +2692,14 @@ public class XMLElement {
 					ch = (char) Integer.parseInt(key.substring(1), 10);
 				}
 			} catch (final NumberFormatException e) {
-				throw this.unknownEntity(key);
+				throw unknownEntity(key);
 			}
 			buf.append(ch);
 		} else {
-			final char[] value = this.entities.get(key);
-			if (value == null) { throw this.unknownEntity(key); }
+			final char[] value = entities.get(key);
+			if (value == null) {
+				throw unknownEntity(key);
+			}
 			buf.append(value);
 		}
 	}
@@ -2728,7 +2720,7 @@ public class XMLElement {
 	 *            </dl>
 	 */
 	protected void unreadChar(final char ch) {
-		this.charReadTooMuch = ch;
+		charReadTooMuch = ch;
 	}
 
 	/**
@@ -2748,7 +2740,7 @@ public class XMLElement {
 	 */
 	protected XMLParseException invalidValueSet(final String name) {
 		final String msg = "Invalid value set (entity name = \"" + name + "\")";
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 	/**
@@ -2772,7 +2764,7 @@ public class XMLElement {
 			final String value) {
 		final String msg = "Attribute \"" + name
 				+ "\" does not contain a valid " + "value (\"" + value + "\")";
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 	/**
@@ -2781,7 +2773,7 @@ public class XMLElement {
 	 */
 	protected XMLParseException unexpectedEndOfData() {
 		final String msg = "Unexpected end of data reached";
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 	/**
@@ -2801,7 +2793,7 @@ public class XMLElement {
 	 */
 	protected XMLParseException syntaxError(final String context) {
 		final String msg = "Syntax error while parsing " + context;
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 	/**
@@ -2823,7 +2815,7 @@ public class XMLElement {
 	 */
 	protected XMLParseException expectedInput(final String charSet) {
 		final String msg = "Expected: " + charSet;
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 	/**
@@ -2843,7 +2835,7 @@ public class XMLElement {
 	 */
 	protected XMLParseException unknownEntity(final String name) {
 		final String msg = "Unknown or invalid entity: &" + name + ";";
-		return new XMLParseException(this.getName(), this.parserLineNr, msg);
+		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
 }
