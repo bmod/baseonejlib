@@ -10,11 +10,13 @@ public class MediaScanner {
 
 	private final ArrayList<Listener> listeners = new ArrayList<MediaScanner.Listener>();
 
-	SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
+	private SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
 	private ArrayList<MediaFile> mediaFiles;
 
-	public MediaScanner() {
+	private final Database db;
 
+	public MediaScanner(final Database db) {
+		this.db = db;
 	}
 
 	public void scan(final String[] dirs) {
@@ -26,7 +28,28 @@ public class MediaScanner {
 	}
 
 	public void scan(final File[] dirs) {
+		validateDatabase();
+		scanFilesFromDisk(dirs);
 
+	}
+
+	private void validateDatabase() {
+		final ArrayList<MediaFile> removeFiles = new ArrayList<MediaFile>();
+		final ArrayList<MediaFile> updateFiles = new ArrayList<MediaFile>();
+		for (final MediaFile mf : db.getMediaFiles()) {
+			final File f = new File(mf.file);
+			if (!f.exists()) {
+				removeFiles.add(mf);
+				continue;
+			}
+			if (f.lastModified() != mf.lastModified) {
+				updateFiles.add(mf);
+				continue;
+			}
+		}
+	}
+
+	private void scanFilesFromDisk(final File[] dirs) {
 		// Validate
 		for (final File dir : dirs) {
 			if (!dir.exists())
@@ -38,7 +61,6 @@ public class MediaScanner {
 		}
 
 		worker = new SwingWorker<ArrayList<MediaFile>, MediaFile>() {
-
 
 			@Override
 			protected ArrayList<MediaFile> doInBackground() throws Exception {
