@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import com.baseoneonline.java.mediabrowser.Database;
 import com.baseoneonline.java.mediabrowser.MediaFile;
 import com.baseoneonline.java.mediabrowser.MediaScanner;
+import com.baseoneonline.java.mediabrowser.SQLiteDatabase;
+import com.baseoneonline.java.mediabrowser.Settings;
 import com.baseoneonline.java.mediabrowser.SimpleListModel;
 
 public class TestScanner extends JFrame {
@@ -24,9 +26,7 @@ public class TestScanner extends JFrame {
 	JButton btStart;
 
 	public TestScanner() {
-		final String[] dirs = {"S:/music", "S:/Pictures_Backup"};
 
-		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle("Scanner");
 		setSize(800, 600);
@@ -37,9 +37,8 @@ public class TestScanner extends JFrame {
 		listScroll = new JScrollPane(list);
 		add(listScroll);
 
-		final Database db = Database.get();
-		
-		final MediaScanner scanner = new MediaScanner();
+		final Database db = new SQLiteDatabase("media.db");
+		final MediaScanner scanner = new MediaScanner(db);
 		scanner.addListener(new MediaScanner.Listener() {
 
 			@Override
@@ -55,9 +54,8 @@ public class TestScanner extends JFrame {
 				System.out.println("Done");
 			}
 		});
-		
-		
-		scanner.scan(dirs);
+
+		scanner.scan(Settings.get().getMediaSources());
 
 	}
 }
