@@ -10,17 +10,16 @@ import java.util.List;
 
 import org.sqlite.JDBC;
 
-
 public class SQLiteDatabase implements Database {
 
-	Connection con;
+	private final String dbFile;
 
-	public SQLiteDatabase(final String dbfile) {
+	public SQLiteDatabase(final String dbFile) {
+		this.dbFile = dbFile;
 		try {
 
 			Class.forName(JDBC.class.getName());
-			con = DriverManager.getConnection("jdbc:sqlite:" + dbfile);
-
+			final Connection con = getConnection();
 			final Statement stat = con.createStatement();
 			stat.executeUpdate("CREATE TABLE IF NOT EXISTS media (file);");
 			con.close();
@@ -30,10 +29,22 @@ public class SQLiteDatabase implements Database {
 		}
 	}
 
+	private Connection getConnection() {
+		Connection con;
+		try {
+			con = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
+			return con;
+		} catch (final SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Override
 	public List<MediaFile> getMediaFiles() {
+		final Connection con = getConnection();
 		try {
 			final ArrayList<MediaFile> files = new ArrayList<MediaFile>();
+			System.out.println(con.isClosed());
 			final Statement stat = con.createStatement();
 			final ResultSet rs = stat.executeQuery("SELECT * FROM media");
 			while (rs.next()) {

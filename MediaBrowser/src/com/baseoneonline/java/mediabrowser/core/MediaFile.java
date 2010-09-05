@@ -1,6 +1,6 @@
 package com.baseoneonline.java.mediabrowser.core;
 
-public class MediaFile {
+public class MediaFile implements MediaNode {
 
 	final public String file;
 	public long lastModified;

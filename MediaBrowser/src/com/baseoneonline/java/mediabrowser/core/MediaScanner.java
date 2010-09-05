@@ -3,13 +3,14 @@ package com.baseoneonline.java.mediabrowser.core;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
-
 public class MediaScanner {
 
-	private final ArrayList<Listener> listeners = new ArrayList<MediaScanner.Listener>();
+	private final ArrayList<Listener> listeners =
+			new ArrayList<MediaScanner.Listener>();
 
 	private SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
 	private ArrayList<MediaFile> mediaFiles;
@@ -29,7 +30,7 @@ public class MediaScanner {
 	}
 
 	public void scan(final File[] dirs) {
-		validateDatabase();
+		// validateDatabase();
 		scanFilesFromDisk(dirs);
 
 	}
@@ -52,53 +53,66 @@ public class MediaScanner {
 
 	private void scanFilesFromDisk(final File[] dirs) {
 		// Validate
-		for (final File dir : dirs) {
-			if (!dir.exists())
-				throw new RuntimeException("Directory doesn't exists: "
-						+ dir.getAbsolutePath());
-			if (!dir.isDirectory())
-				throw new RuntimeException("Must be directory: "
-						+ dir.getAbsolutePath());
-		}
+		fireStatusChanged(Status.GatherFiles);
 
 		worker = new SwingWorker<ArrayList<MediaFile>, MediaFile>() {
 
 			@Override
 			protected ArrayList<MediaFile> doInBackground() throws Exception {
+
 				mediaFiles = new ArrayList<MediaFile>();
 				for (final File dir : dirs) {
-					scanDir(dir);
+					if (dir.exists()) {
+						scanDir(dir);
+					} else {
+						Logger.getLogger(getClass().getName()).warning(
+								"Dir not found: " + dir.getAbsolutePath());
+					}
 				}
 				return mediaFiles;
 			}
 
 			private void scanDir(final File dir) {
-
 				for (final File f : dir.listFiles()) {
 					if (f.isDirectory()) {
 						scanDir(f);
 					} else {
-						publish(addMediaFile(f));
+						final MediaFile mf = new MediaFile(f.getAbsolutePath());
+						publish(mf);
 					}
 				}
 			}
 
 			@Override
 			protected void process(final List<MediaFile> chunks) {
-				for (final Listener l : listeners) {
-					l.process(chunks);
-				}
+				mediaFiles.addAll(chunks);
+				fireProgress(chunks);
 			}
+
+			@Override
+			protected void done() {
+				fireStatusChanged(Status.Done);
+			};
 
 		};
 		worker.execute();
 
 	}
 
-	private MediaFile addMediaFile(final File f) {
-		final MediaFile mf = new MediaFile(f.getAbsolutePath());
-		mediaFiles.add(mf);
-		return mf;
+	private void fireStatusChanged(final Status msg) {
+		for (final Listener l : listeners) {
+			l.statusChanged(msg);
+		}
+	}
+
+	private void fireProgress(final List<MediaFile> chunk) {
+		for (final Listener l : listeners) {
+			l.process(chunk);
+		}
+	}
+
+	public ArrayList<MediaFile> getMediaFiles() {
+		return mediaFiles;
 	}
 
 	public void addListener(final Listener l) {
@@ -110,10 +124,15 @@ public class MediaScanner {
 		listeners.remove(l);
 	}
 
+	public static enum Status {
+		GatherFiles, Done
+	}
+
 	public static interface Listener {
 		public void process(List<MediaFile> files);
 
-		public void done(List<MediaFile> files);
+		public void statusChanged(Status msg);
+
 	}
 
 }
