@@ -1,0 +1,11 @@
+<settings>
+    <mediasources>
+        <dir path="C:/Users/bmod/Pictures/JPEG"/>
+        <dir path="D:/music/Game"/>
+    </mediasources>
+    <filetypes>
+        <type name="Music" extensions="mp3, mp4, mpa, flac, wma"/>
+        <type name="Picture" extensions="gif, jpg, jpeg, tif, tiff, tga, png"/>
+        <type name="Document" extensions="pdf, txt, doc"/>
+    </filetypes>
+</settings>

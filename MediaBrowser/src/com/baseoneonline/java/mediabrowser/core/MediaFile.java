@@ -1,4 +1,4 @@
-package com.baseoneonline.java.mediabrowser;
+package com.baseoneonline.java.mediabrowser.core;
 
 public class MediaFile {
 

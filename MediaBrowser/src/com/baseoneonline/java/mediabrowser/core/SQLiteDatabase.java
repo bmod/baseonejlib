@@ -1,4 +1,4 @@
-package com.baseoneonline.java.mediabrowser;
+package com.baseoneonline.java.mediabrowser.core;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sqlite.JDBC;
+
 
 public class SQLiteDatabase implements Database {
 

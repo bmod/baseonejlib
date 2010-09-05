@@ -1,80 +1,146 @@
 package com.baseoneonline.java.mediabrowser;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import javax.swing.Timer;
+
+import com.baseoneonline.java.mediabrowser.core.FileType;
+import com.baseoneonline.java.mediabrowser.util.Util;
+import com.baseoneonline.java.mediabrowser.util.XMLElement;
+
 public class Settings {
+
+	private final String settingsFile = "settings.xml";
 
 	private static Settings instance;
 
 	private File[] mediaSources;
-	private MediaFileType[] types;
+	private FileType[] fileTypes;
+
+	private final int flushDelay = 200;
+
+	private final Timer timer = new Timer(flushDelay, new ActionListener() {
+
+		@Override
+		public void actionPerformed(final ActionEvent e) {
+			flush();
+		}
+	});
+
+	private static String SETTINGS = "settings", MEDIASOURCES = "mediasources",
+			DIR = "dir", PATH = "path", FILETYPES = "filetypes", TYPE = "type",
+			NAME = "name", EXTENSIONS = "extensions", SEPARATOR = ",";
 
 	private Settings() {
+		timer.setRepeats(false);
 		try {
 
 			final XMLElement xml = new XMLElement();
-			xml.parseFromReader(new FileReader("settings.xml"));
+			xml.parseFromReader(new FileReader(settingsFile));
 
-			mediaSources = parseMediaSources(xml);
-			types = parseMediaFileTypes(xml);
+			mediaSources = deserializeMediaSources(xml);
+			fileTypes = deserializeFileTypes(xml);
 
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	public void setMediaSources(final File[] mediaSources) {
+		this.mediaSources = mediaSources;
+		flushDelayed();
+	}
+
 	public File[] getMediaSources() {
 		return mediaSources;
 	}
 
-	public MediaFileType[] getMediaFileTypes() {
-		return types;
+	public void setFileTypes(final FileType[] fileTypes) {
+		this.fileTypes = fileTypes;
+		flushDelayed();
 	}
 
-	private File[] parseMediaSources(final XMLElement xml) {
+	public FileType[] getMediaFileTypes() {
+		return fileTypes;
+	}
+
+	/* SERIALIZE / DESERIALIZE */
+
+	private File[] deserializeMediaSources(final XMLElement xml) {
 		// Get directories to scan
 		final ArrayList<File> dirs = new ArrayList<File>();
-		for (final XMLElement xDir : xml.getChild("MEDIASOURCES").getChildren(
-				"DIR")) {
+		for (final XMLElement xDir : xml.getChild(MEDIASOURCES)
+				.getChildren(DIR)) {
 
-			final File dir = new File(xDir.getStringAttribute("PATH"));
+			final File dir = new File(xDir.getStringAttribute(PATH));
 
-			if (dir.exists()) {
-				dirs.add(dir);
-			} else {
-				Logger.getLogger(getClass().getName()).warning(
-						"Media path not found: " + dir.getAbsolutePath());
-			}
+			dirs.add(dir);
 
 		}
-		if (dirs.size() < 1)
-			Logger.getLogger(getClass().getName()).warning(
-					"No media dirs to scan!");
 		return dirs.toArray(new File[dirs.size()]);
 	}
 
-	private MediaFileType[] parseMediaFileTypes(final XMLElement xml) {
-		final ArrayList<MediaFileType> types = new ArrayList<MediaFileType>();
-		for (final XMLElement xType : xml.getChild("FILETYPES").getChildren(
-				"TYPE")) {
-			final String name = xType.getStringAttribute("NAME");
-			final String exts = xType.getStringAttribute("EXTENSIONS");
-			final String[] extensions = trim(exts.split(","));
-			final MediaFileType type = new MediaFileType(name, extensions);
-			types.add(type);
+	private XMLElement serializeMediaSources(final File[] mediaSources) {
+		final XMLElement xml = new XMLElement(MEDIASOURCES);
+		for (final File f : mediaSources) {
+			final XMLElement xDir = new XMLElement(DIR);
+			xDir.setAttribute(PATH, f.getAbsolutePath());
+			xml.addChild(xDir);
 		}
-		return types.toArray(new MediaFileType[types.size()]);
+		return xml;
 	}
 
-	private static String[] trim(final String[] a) {
-		final String[] b = new String[a.length];
-		for (int i = 0; i < a.length; i++) {
-			b[i] = a[i].trim();
+	private FileType[] deserializeFileTypes(final XMLElement xml) {
+		final ArrayList<FileType> types = new ArrayList<FileType>();
+		for (final XMLElement xType : xml.getChild(FILETYPES).getChildren(TYPE)) {
+			final String name = xType.getStringAttribute(NAME);
+			final String[] extensions =
+					Util.split(xType.getStringAttribute(EXTENSIONS), SEPARATOR);
+			final FileType type = new FileType(name, extensions);
+			types.add(type);
 		}
-		return b;
+		return types.toArray(new FileType[types.size()]);
+	}
+
+	private XMLElement serializeFileTypes(final FileType[] types) {
+		final XMLElement xml = new XMLElement(FILETYPES);
+		for (final FileType type : types) {
+			final XMLElement xType = new XMLElement(TYPE);
+			xType.setAttribute(NAME, type.getName());
+			xType.setAttribute(EXTENSIONS,
+					Util.join(type.getExtensions(), SEPARATOR));
+			xml.addChild(xType);
+		}
+		return xml;
+	}
+
+	private void flushDelayed() {
+		timer.restart();
+	}
+
+	public void flush() {
+
+		final XMLElement xml = new XMLElement(SETTINGS);
+
+		xml.addChild(serializeMediaSources(mediaSources));
+		xml.addChild(serializeFileTypes(fileTypes));
+
+		try {
+			final FileWriter writer = new FileWriter(settingsFile);
+			xml.write(writer);
+			writer.flush();
+			writer.close();
+			Logger.getLogger(getClass().getName()).info("Settings written.");
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static Settings get() {
