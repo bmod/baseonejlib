@@ -7,12 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import com.baseoneonline.java.mediabrowser.Database;
-import com.baseoneonline.java.mediabrowser.MediaFile;
-import com.baseoneonline.java.mediabrowser.MediaScanner;
-import com.baseoneonline.java.mediabrowser.SQLiteDatabase;
 import com.baseoneonline.java.mediabrowser.Settings;
-import com.baseoneonline.java.mediabrowser.SimpleListModel;
+import com.baseoneonline.java.mediabrowser.core.Database;
+import com.baseoneonline.java.mediabrowser.core.MediaFile;
+import com.baseoneonline.java.mediabrowser.core.MediaScanner;
+import com.baseoneonline.java.mediabrowser.core.SQLiteDatabase;
+import com.baseoneonline.java.mediabrowser.core.SimpleListModel;
 
 public class TestScanner extends JFrame {
 

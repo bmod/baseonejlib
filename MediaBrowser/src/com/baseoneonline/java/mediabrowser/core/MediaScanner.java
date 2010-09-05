@@ -1,10 +1,11 @@
-package com.baseoneonline.java.mediabrowser;
+package com.baseoneonline.java.mediabrowser.core;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingWorker;
+
 
 public class MediaScanner {
 

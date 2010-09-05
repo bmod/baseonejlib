@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 
-package com.baseoneonline.java.mediabrowser;
+package com.baseoneonline.java.mediabrowser.util;
 
 
 /**
@@ -37,7 +37,7 @@ package com.baseoneonline.java.mediabrowser;
  * $Revision: 1.4 $<BR>
  * $Date: 2002/03/24 10:27:59 $<P>
  *
- * @see com.baseoneonline.java.mediabrowser.XMLElement
+ * @see com.baseoneonline.java.mediabrowser.util.XMLElement
  *
  * @author Marc De Scheemaecker
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.4 $
@@ -120,7 +120,7 @@ public class XMLParseException
      * Where the error occurred, or <code>NO_LINE</code> if the line number is
      * unknown.
      *
-     * @see com.baseoneonline.java.mediabrowser.XMLParseException#NO_LINE
+     * @see com.baseoneonline.java.mediabrowser.util.XMLParseException#NO_LINE
      */
     public int getLineNr()
     {

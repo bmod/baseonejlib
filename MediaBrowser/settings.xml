@@ -1,11 +1,13 @@
 <settings>
-    <mediasources>
-        <dir path="C:/Users/bmod/Pictures/JPEG"/>
-        <dir path="D:/music/Game"/>
-    </mediasources>
-    <filetypes>
-        <type name="Music" extensions="mp3, mp4, mpa, flac, wma"/>
-        <type name="Picture" extensions="gif, jpg, jpeg, tif, tiff, tga, png"/>
-        <type name="Document" extensions="pdf, txt, doc"/>
-    </filetypes>
+	<mediasources>
+		<dir PATH="C:\Users\bmod\Pictures"/>
+		<dir PATH="D:\music\Game"/>
+		<dir PATH="C:\Users\bmod\Music"/>
+	</mediasources>
+	<filetypes>
+		<type EXTENSIONS="flac,m4a,mp3,mp4,mpa,wma" NAME="Music"/>
+		<type EXTENSIONS="jpeg,png,tga,tif,tiff" NAME="Picture"/>
+		<type EXTENSIONS="pdf,sdc" NAME="Document"/>
+		<type EXTENSIONS="otf,pfb,ttf" NAME="Font"/>
+	</filetypes>
 </settings>

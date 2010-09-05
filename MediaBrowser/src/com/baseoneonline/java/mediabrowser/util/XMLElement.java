@@ -26,7 +26,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
 
-package com.baseoneonline.java.mediabrowser;
+package com.baseoneonline.java.mediabrowser.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
@@ -103,7 +103,7 @@ import java.util.logging.Logger;
  * </DL>
  * <P>
  * 
- * @see com.baseoneonline.java.mediabrowser.XMLParseException
+ * @see com.baseoneonline.java.mediabrowser.util.XMLParseException
  * @author Marc De Scheemaecker &lt;<A
  *         href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.4 $
@@ -125,7 +125,7 @@ public class XMLElement {
 	 * compatible. If the major version is different, you may need to modify the
 	 * client source code.
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#NANOXML_MINOR_VERSION
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#NANOXML_MINOR_VERSION
 	 */
 	public static final int NANOXML_MAJOR_VERSION = 2;
 
@@ -135,7 +135,7 @@ public class XMLElement {
 	 * compatible. If the major version is different, you may need to modify the
 	 * client source code.
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#NANOXML_MAJOR_VERSION
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#NANOXML_MAJOR_VERSION
 	 */
 	public static final int NANOXML_MINOR_VERSION = 2;
 
@@ -304,10 +304,10 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable,boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement() {
@@ -352,9 +352,9 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable,boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement(final Hashtable<String, char[]> entities) {
@@ -387,10 +387,10 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable,boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement(final boolean skipLeadingWhitespace) {
@@ -433,9 +433,9 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
 	 */
 	public XMLElement(final Hashtable<String, char[]> entities,
@@ -477,11 +477,11 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#XMLElement(java.util.Hashtable,boolean)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement(final Hashtable<String, char[]> entities,
@@ -529,7 +529,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#createAnotherElement()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#createAnotherElement()
 	 */
 	protected XMLElement(final Hashtable<String, char[]> entities,
 			final boolean skipLeadingWhitespace,
@@ -590,10 +590,10 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#countChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#countChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
 	public void addChild(final XMLElement child) {
@@ -628,23 +628,23 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.lang.Object) getAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String)
 	 *      getStringAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.lang.String) getStringAttribute(String, String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
@@ -686,18 +686,18 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      int) getIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
@@ -742,18 +742,18 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      double) getDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
@@ -782,11 +782,11 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#addChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#addChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      addChild(XMLElement)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
 	public int countChildren() {
@@ -804,43 +804,43 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.lang.Object) getAttribute(String, String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String)
 	 *      getStringAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.lang.String) getStringAttribute(String, String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      int) getIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      double) getDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getBooleanAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getBooleanAttribute(java.lang.String,
 	 *      java.lang.String, java.lang.String, boolean)
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
@@ -859,11 +859,11 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#addChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#addChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      addChild(XMLElement)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#countChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#countChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
 	public Enumeration<XMLElement> enumerateChildren() {
@@ -881,11 +881,11 @@ public class XMLElement {
 	 * </dd>
 	 * </dl>
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#addChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#addChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      addChild(XMLElement)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#countChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#countChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
 	@SuppressWarnings("unchecked")
@@ -904,7 +904,7 @@ public class XMLElement {
 			if (name.equalsIgnoreCase(x.getName())) {
 				lst.add(x);
 			}
-			if (recursive && x.getChildren().size() > 0) {
+			if (recursive && (x.getChildren().size() > 0)) {
 				lst.addAll(x.getChildren(name, recursive));
 			}
 		}
@@ -936,7 +936,7 @@ public class XMLElement {
 	 * Returns the PCDATA content of the object. If there is no such content,
 	 * <CODE>null</CODE> is returned.
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setContent(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setContent(java.lang.String)
 	 *      setContent(String)
 	 */
 	public String getContent() {
@@ -975,14 +975,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.lang.Object) getAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
 	 */
@@ -1008,14 +1008,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
 	 */
@@ -1025,7 +1025,7 @@ public class XMLElement {
 		}
 		final Object value = attributes.get(name);
 
-		if (exceptMissingData && null == value)
+		if (exceptMissingData && (null == value))
 			throw new RuntimeException("Attribute not found on '" + getName()
 					+ "': " + name);
 		// assert value != null : "Attribute not found: " + name + " on "
@@ -1060,14 +1060,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.lang.Object) getAttribute(String, Object)
 	 */
 	public String getAttribute(String name,
@@ -1108,14 +1108,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.lang.String) getStringAttribute(String, String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1141,14 +1141,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String)
 	 *      getStringAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1185,14 +1185,14 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String)
 	 *      getStringAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.lang.String) getStringAttribute(String, String)
 	 */
 	public String getStringAttribute(final String name,
@@ -1217,12 +1217,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      int) getIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1248,12 +1248,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1303,12 +1303,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      int) getIntAttribute(String, int)
 	 */
 	public int getIntAttribute(String name,
@@ -1356,12 +1356,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      double) getDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1391,12 +1391,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
@@ -1463,12 +1463,12 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      double) getDoubleAttribute(String, double)
 	 */
 	public double getDoubleAttribute(String name,
@@ -1529,11 +1529,11 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#removeAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#removeAttribute(java.lang.String)
 	 *      removeAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
 	 */
 	public boolean getBooleanAttribute(final String name) {
 		return getBooleanAttribute(name, TRUE_VALUE, FALSE_VALUE, false);
@@ -1563,7 +1563,7 @@ public class XMLElement {
 	/**
 	 * Returns the name of the element.
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setName(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setName(java.lang.String)
 	 *      setName(String)
 	 */
 	public String getName() {
@@ -1598,7 +1598,7 @@ public class XMLElement {
 	 *            <dl>
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the read data.
 	 */
 	public void parseFromReader(final Reader reader) throws IOException,
@@ -1636,7 +1636,7 @@ public class XMLElement {
 	 *            <dl>
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the read data.
 	 */
 	public void parseFromReader(final Reader reader, final int startingLineNr)
@@ -1692,7 +1692,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseString(final String string) throws XMLParseException {
@@ -1731,7 +1731,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseString(final String string, final int offset)
@@ -1770,7 +1770,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseString(final String string, final int offset, final int end)
@@ -1811,7 +1811,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseString(String string, final int offset, final int end,
@@ -1855,7 +1855,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseCharArray(final char[] input, final int offset,
@@ -1896,7 +1896,7 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @throws com.baseoneonline.java.mediabrowser.XMLParseException
+	 * @throws com.baseoneonline.java.mediabrowser.util.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
 	public void parseCharArray(final char[] input, final int offset,
@@ -1934,11 +1934,11 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#addChild(com.baseoneonline.java.mediabrowser.XMLElement)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#addChild(com.baseoneonline.java.mediabrowser.util.XMLElement)
 	 *      addChild(XMLElement)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#countChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateChildren()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#countChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateChildren()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getChildren()
 	 */
 	public void removeChild(final XMLElement child) {
 		children.removeElement(child);
@@ -1969,42 +1969,42 @@ public class XMLElement {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#enumerateAttributeNames()
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#enumerateAttributeNames()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setDoubleAttribute(java.lang.String,
 	 *      double) setDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setIntAttribute(java.lang.String,
 	 *      int) setIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#setAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#setAttribute(java.lang.String,
 	 *      java.lang.Object) setAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String)
 	 *      getAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.lang.Object) getAttribute(String, Object)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String)
 	 *      getStringAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.lang.String) getStringAttribute(String, String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getStringAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getStringAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String)
 	 *      getIntAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      int) getIntAttribute(String, int)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getIntAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getIntAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String)
 	 *      getDoubleAttribute(String)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      double) getDoubleAttribute(String, double)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getDoubleAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getDoubleAttribute(java.lang.String,
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getBooleanAttribute(java.lang.String,
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getBooleanAttribute(java.lang.String,
 	 *      java.lang.String, java.lang.String, boolean)
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
@@ -2048,7 +2048,7 @@ public class XMLElement {
 	 *            </ul>
 	 *            </dd>
 	 *            </dl>
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#getName()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#getName()
 	 */
 	public void setName(final String name) {
 		this.name = name;
@@ -2057,7 +2057,7 @@ public class XMLElement {
 	/**
 	 * Writes the XML element to a string.
 	 * 
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#write(java.io.Writer)
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#write(java.io.Writer)
 	 *      write(Writer)
 	 */
 	@Override
@@ -2090,13 +2090,20 @@ public class XMLElement {
 	 *            </dl>
 	 * @throws java.io.IOException
 	 *             If the data could not be written to the writer.
-	 * @see com.baseoneonline.java.mediabrowser.XMLElement#toString()
+	 * @see com.baseoneonline.java.mediabrowser.util.XMLElement#toString()
 	 */
 	public void write(final Writer writer) throws IOException {
+		write(writer, 0);
+	}
+
+	public void write(final Writer writer, final int indents)
+			throws IOException {
+
 		if (name == null) {
 			writeEncoded(writer, contents);
 			return;
 		}
+		indent(writer, indents);
 		writer.write('<');
 		writer.write(name);
 		if (!attributes.isEmpty()) {
@@ -2114,25 +2121,38 @@ public class XMLElement {
 		}
 		if ((contents != null) && (contents.length() > 0)) {
 			writer.write('>');
+			writer.write('\n');
 			writeEncoded(writer, contents);
+			indent(writer, indents);
 			writer.write('<');
 			writer.write('/');
 			writer.write(name);
 			writer.write('>');
+			writer.write('\n');
 		} else if (children.isEmpty()) {
 			writer.write('/');
 			writer.write('>');
+			writer.write('\n');
 		} else {
 			writer.write('>');
+			writer.write('\n');
 			final Enumeration<XMLElement> enu = enumerateChildren();
 			while (enu.hasMoreElements()) {
 				final XMLElement child = enu.nextElement();
-				child.write(writer);
+				child.write(writer, indents + 1);
 			}
+			indent(writer, indents);
 			writer.write('<');
 			writer.write('/');
 			writer.write(name);
 			writer.write('>');
+			writer.write('\n');
+		}
+	}
+
+	private void indent(final Writer writer, final int num) throws IOException {
+		for (int i = 0; i < num; i++) {
+			writer.write('\t');
 		}
 	}
 
@@ -2776,8 +2796,9 @@ public class XMLElement {
 	 */
 	protected XMLParseException invalidValue(final String name,
 			final String value) {
-		final String msg = "Attribute \"" + name
-				+ "\" does not contain a valid " + "value (\"" + value + "\")";
+		final String msg =
+				"Attribute \"" + name + "\" does not contain a valid "
+						+ "value (\"" + value + "\")";
 		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
