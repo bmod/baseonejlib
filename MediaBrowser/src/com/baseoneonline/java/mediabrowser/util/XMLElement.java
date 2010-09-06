@@ -1025,7 +1025,7 @@ public class XMLElement {
 		}
 		final Object value = attributes.get(name);
 
-		if (exceptMissingData && (null == value))
+		if (exceptMissingData && (null == value) && null == defaultValue)
 			throw new RuntimeException("Attribute not found on '" + getName()
 					+ "': " + name);
 		// assert value != null : "Attribute not found: " + name + " on "

@@ -36,7 +36,7 @@ public class Settings {
 
 	private static String SETTINGS = "settings", MEDIASOURCES = "mediasources",
 			DIR = "dir", PATH = "path", FILETYPES = "filetypes", TYPE = "type",
-			NAME = "name", EXTENSIONS = "extensions", SEPARATOR = ",";
+			NAME = "name", EXTENSIONS = "extensions", SEPARATOR = ",", UID = "uid";
 
 	private Settings() {
 		timer.setRepeats(false);
@@ -99,11 +99,17 @@ public class Settings {
 
 	private FileType[] deserializeFileTypes(final XMLElement xml) {
 		final ArrayList<FileType> types = new ArrayList<FileType>();
+		
+		
+		
 		for (final XMLElement xType : xml.getChild(FILETYPES).getChildren(TYPE)) {
-			final String name = xType.getStringAttribute(NAME);
-			final String[] extensions =
+			
+			final FileType type = new FileType();
+			
+			type.name = xType.getStringAttribute(NAME);
+			type.extensions =
 					Util.split(xType.getStringAttribute(EXTENSIONS), SEPARATOR);
-			final FileType type = new FileType(name, extensions);
+			
 			types.add(type);
 		}
 		return types.toArray(new FileType[types.size()]);
@@ -113,9 +119,10 @@ public class Settings {
 		final XMLElement xml = new XMLElement(FILETYPES);
 		for (final FileType type : types) {
 			final XMLElement xType = new XMLElement(TYPE);
-			xType.setAttribute(NAME, type.getName());
+			xType.setAttribute(NAME, type.name);
 			xType.setAttribute(EXTENSIONS,
-					Util.join(type.getExtensions(), SEPARATOR));
+					Util.join(type.extensions, SEPARATOR));
+			xType.setAttribute(UID, type.uid);
 			xml.addChild(xType);
 		}
 		return xml;

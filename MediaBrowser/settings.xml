@@ -1,10 +1,8 @@
 <settings>
 	<mediasources>
-		<dir PATH="C:\Users\bmod\Pictures"/>
-		<dir PATH="D:\music\Game"/>
-		<dir PATH="C:\Users\bmod\Music"/>
-		<dir PATH="C:\Backup_Android"/>
-		<dir PATH="C:\Backup_SDB1"/>
+		<dir PATH="D:\_music_transfer"/>
+		<dir PATH="S:\music"/>
+		<dir PATH="C:\Documents and Settings\bask\My Documents"/>
 	</mediasources>
 	<filetypes>
 		<type EXTENSIONS="flac,m4a,mp3,mp4,mpa,wma" NAME="Music"/>

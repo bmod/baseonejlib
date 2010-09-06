@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
+import com.baseoneonline.java.mediabrowser.Settings;
+import com.baseoneonline.java.mediabrowser.util.Util;
+
 public class MediaScanner {
 
-	private final ArrayList<Listener> listeners =
-			new ArrayList<MediaScanner.Listener>();
+	private final ArrayList<Listener> listeners = new ArrayList<MediaScanner.Listener>();
 
 	private SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
 	private ArrayList<MediaFile> mediaFiles;
@@ -85,6 +87,13 @@ public class MediaScanner {
 
 			@Override
 			protected void process(final List<MediaFile> chunks) {
+				
+				for (final MediaFile mf : chunks) {
+					mf.type = getTypeByExtension(mf.file);
+				}
+				
+				db.storeMediaFiles(chunks);
+				
 				mediaFiles.addAll(chunks);
 				fireProgress(chunks);
 			}
@@ -97,6 +106,17 @@ public class MediaScanner {
 		};
 		worker.execute();
 
+	}
+
+	private FileType getTypeByExtension(final String filename) {
+
+		final String extension = Util.extension(filename);
+
+		for (final FileType t : Settings.get().getMediaFileTypes()) {
+			if (Util.contains(t.extensions, extension))
+				return t;
+		}
+		return null;
 	}
 
 	private void fireStatusChanged(final Status msg) {
