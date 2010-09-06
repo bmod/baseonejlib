@@ -11,9 +11,10 @@
 
 package com.baseoneonline.java.mediabrowser.gui;
 
+import java.util.ArrayList;
+
 import com.baseoneonline.java.mediabrowser.core.FileType;
 import com.baseoneonline.java.mediabrowser.util.ArrayListModel;
-import java.util.ArrayList;
 
 /**
  *
@@ -21,9 +22,9 @@ import java.util.ArrayList;
  */
 public class FileTypeListEditor extends javax.swing.JPanel {
 
-	private ArrayListModel<FileType> fileTypes = new ArrayListModel<FileType>();
+	private final ArrayListModel<FileType> fileTypes = new ArrayListModel<FileType>();
 
-	private ArrayList<Listener> listeners = new ArrayList<Listener>();
+	private final ArrayList<Listener> listeners = new ArrayList<Listener>();
 
     /** Creates new form FileTypeEditor */
     public FileTypeListEditor() {
@@ -40,18 +41,18 @@ public class FileTypeListEditor extends javax.swing.JPanel {
 		});
     }
 
-	public void addListener(Listener l) {
+	public void addListener(final Listener l) {
 		if (!listeners.contains(l))
 			listeners.add(l);
 	}
 
-	public void removeListener(Listener l) {
+	public void removeListener(final Listener l) {
 		listeners.remove(l);
 	}
 
-	public void setFileTypes(FileType[] types) {
+	public void setFileTypes(final FileType[] types) {
 		fileTypes.clear();
-		for (FileType t : types) {
+		for (final FileType t : types) {
 			fileTypes.add(t);
 		}
 	}
@@ -77,7 +78,8 @@ public class FileTypeListEditor extends javax.swing.JPanel {
 
         listFileTypes.setModel(fileTypes);
         listFileTypes.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+            @Override
+			public void valueChanged(final javax.swing.event.ListSelectionEvent evt) {
                 listFileTypesValueChanged(evt);
             }
         });
@@ -85,7 +87,8 @@ public class FileTypeListEditor extends javax.swing.JPanel {
 
         btAdd.setText("Add");
         btAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btAddActionPerformed(evt);
             }
         });
@@ -93,7 +96,8 @@ public class FileTypeListEditor extends javax.swing.JPanel {
         btRemove.setText("Remove");
         btRemove.setEnabled(false);
         btRemove.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            @Override
+			public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btRemoveActionPerformed(evt);
             }
         });
@@ -101,7 +105,7 @@ public class FileTypeListEditor extends javax.swing.JPanel {
         fileTypeEditor.setBorder(javax.swing.BorderFactory.createTitledBorder("File Type Properties"));
         fileTypeEditor.setEnabled(false);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,28 +135,28 @@ public class FileTypeListEditor extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-	private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
-		String[] extensions = {};
-		FileType type = new FileType("New Media File Type", extensions);
+	private void btAddActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
+		final FileType type = new FileType();
+		type.name = "New Filetype";
 		fileTypes.add(type);
 		listFileTypes.setSelectedValue(type, true);
 		fireDataChanged();
 
 	}//GEN-LAST:event_btAddActionPerformed
 
-	private void listFileTypesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFileTypesValueChanged
-		int idx = listFileTypes.getSelectedIndex();
-		boolean enable = idx != -1;
+	private void listFileTypesValueChanged(final javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFileTypesValueChanged
+		final int idx = listFileTypes.getSelectedIndex();
+		final boolean enable = idx != -1;
 		btRemove.setEnabled(enable);
 		fileTypeEditor.setEnabled(enable);
 		if (!enable)
 			return;
-		FileType type = fileTypes.get(idx);
+		final FileType type = fileTypes.get(idx);
 		fileTypeEditor.setFileType(type);
 	}//GEN-LAST:event_listFileTypesValueChanged
 
-	private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
-		for (int idx : listFileTypes.getSelectedIndices()) {
+	private void btRemoveActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
+		for (final int idx : listFileTypes.getSelectedIndices()) {
 			fileTypes.remove(idx);
 		}
 		fireDataChanged();
@@ -168,7 +172,7 @@ public class FileTypeListEditor extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
 	private void fireDataChanged() {
-		for (Listener l : listeners) {
+		for (final Listener l : listeners) {
 			l.dataChanged();
 		}
 	}

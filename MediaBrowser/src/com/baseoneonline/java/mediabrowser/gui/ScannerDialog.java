@@ -46,10 +46,12 @@ public class ScannerDialog extends javax.swing.JDialog {
 					lbCurrentFile.setText(files.get(files.size() - 1).file);
 
 				lbFilesFound.setText("" + scanner.getMediaFiles().size());
+				pack();
 			}
 
 			@Override
 			public void statusChanged(final Status msg) {
+				System.out.println(msg);
 				lbStatus.setText(msg.toString());
 				switch (msg) {
 				case Done:
@@ -62,6 +64,7 @@ public class ScannerDialog extends javax.swing.JDialog {
 				default:
 					break;
 				}
+				pack();
 			}
 		});
 	}
@@ -74,102 +77,68 @@ public class ScannerDialog extends javax.swing.JDialog {
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
 	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		progressBar = new javax.swing.JProgressBar();
-		jLabel1 = new javax.swing.JLabel();
-		lbFilesFound = new javax.swing.JLabel();
-		lbStatus = new javax.swing.JLabel();
-		jLabel4 = new javax.swing.JLabel();
-		lbCurrentFile = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
+        lbFilesFound = new javax.swing.JLabel();
+        lbStatus = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lbCurrentFile = new javax.swing.JLabel();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle("Media Scanner");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Media Scanner");
 
-		jLabel1.setText("Files found:");
+        jLabel1.setText("Files found:");
 
-		lbFilesFound.setText("0");
+        lbFilesFound.setText("0");
 
-		lbStatus.setText("Idle");
+        lbStatus.setText("Idle");
 
-		jLabel4.setText("Current file:");
+        jLabel4.setText("Current file:");
 
-		lbCurrentFile.setText("...");
+        lbCurrentFile.setText("...");
 
-		final javax.swing.GroupLayout layout =
-				new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(
-														lbStatus,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														380, Short.MAX_VALUE)
-												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(
-																		jLabel1)
-																.addGap(18, 18,
-																		18)
-																.addComponent(
-																		lbFilesFound,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		306,
-																		Short.MAX_VALUE))
-												.addComponent(
-														progressBar,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														380, Short.MAX_VALUE)
-												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(
-																		jLabel4)
-																.addGap(18, 18,
-																		18)
-																.addComponent(
-																		lbCurrentFile,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		304,
-																		Short.MAX_VALUE)))
-								.addContainerGap()));
-		layout.setVerticalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(lbStatus)
-								.addPreferredGap(
-										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(progressBar,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(
-										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.BASELINE)
-												.addComponent(jLabel4)
-												.addComponent(lbCurrentFile))
-								.addGap(8, 8, 8)
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.BASELINE)
-												.addComponent(jLabel1)
-												.addComponent(lbFilesFound))
-								.addContainerGap(
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbFilesFound, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbCurrentFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lbCurrentFile))
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lbFilesFound))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
 	/**
 	 * @param args
@@ -191,15 +160,14 @@ public class ScannerDialog extends javax.swing.JDialog {
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JLabel jLabel1;
-	private javax.swing.JLabel jLabel4;
-	private javax.swing.JLabel lbCurrentFile;
-	private javax.swing.JLabel lbFilesFound;
-	private javax.swing.JLabel lbStatus;
-	private javax.swing.JProgressBar progressBar;
-
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lbCurrentFile;
+    private javax.swing.JLabel lbFilesFound;
+    private javax.swing.JLabel lbStatus;
+    private javax.swing.JProgressBar progressBar;
+    // End of variables declaration//GEN-END:variables
 
 	public static ScannerDialog get(final MediaScanner scanner) {
 		if (null == instance)

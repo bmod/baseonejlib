@@ -71,6 +71,6 @@ class TypeNode implements MediaNode {
 
 	@Override
 	public String toString() {
-		return type.getName();
+		return type.name;
 	}
 }

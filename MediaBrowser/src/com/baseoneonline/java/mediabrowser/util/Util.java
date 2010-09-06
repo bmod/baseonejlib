@@ -37,4 +37,20 @@ public class Util {
 		}
 		return out.toArray(new String[out.size()]);
 	}
+
+	public static boolean contains(final String[] arr, final String n) {
+		for (final String a : arr) {
+			if (n.equalsIgnoreCase(a))
+				return true;
+		}
+		return false;
+	}
+
+	public static String extension(final String filename) {
+		final int idx = filename.lastIndexOf('.');
+		if (-1 == idx)
+			return "";
+		return filename.substring(idx+1);
+	}
+
 }

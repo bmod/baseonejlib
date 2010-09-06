@@ -27,8 +27,7 @@ public class FileTypeEditor extends javax.swing.JPanel {
 
 	private FileType type;
 
-	private final ArrayListModel<String> extensions =
-			new ArrayListModel<String>();
+	private final ArrayListModel<String> extensions = new ArrayListModel<String>();
 
 	private final ArrayList<Listener> listeners = new ArrayList<Listener>();
 
@@ -48,9 +47,9 @@ public class FileTypeEditor extends javax.swing.JPanel {
 
 	public void setFileType(final FileType type) {
 		this.type = type;
-		tfName.setText(type.getName());
+		tfName.setText(type.name);
 		extensions.clear();
-		for (final String ext : type.getExtensions()) {
+		for (final String ext : type.extensions) {
 			extensions.add(ext);
 		}
 		listExtensions.setSelectedIndex(-1);
@@ -77,92 +76,137 @@ public class FileTypeEditor extends javax.swing.JPanel {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	// <editor-fold defaultstate="collapsed"
+	// desc="Generated Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        tfName = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listExtensions = new javax.swing.JList();
-        btAdd = new javax.swing.JButton();
-        btRemove = new javax.swing.JButton();
+		jLabel1 = new javax.swing.JLabel();
+		tfName = new javax.swing.JTextField();
+		jLabel2 = new javax.swing.JLabel();
+		jScrollPane1 = new javax.swing.JScrollPane();
+		listExtensions = new javax.swing.JList();
+		btAdd = new javax.swing.JButton();
+		btRemove = new javax.swing.JButton();
 
-        jLabel1.setText("Name (confirm with enter key)");
+		jLabel1.setText("Name (confirm with enter key)");
 
-        tfName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfNameActionPerformed(evt);
-            }
-        });
+		tfName.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(final java.awt.event.ActionEvent evt) {
+				tfNameActionPerformed(evt);
+			}
+		});
 
-        jLabel2.setText("Extensions");
+		jLabel2.setText("Extensions");
 
-        listExtensions.setModel(extensions);
-        listExtensions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                listExtensionsValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(listExtensions);
+		listExtensions.setModel(extensions);
+		listExtensions
+				.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+					@Override
+					public void valueChanged(
+							final javax.swing.event.ListSelectionEvent evt) {
+						listExtensionsValueChanged(evt);
+					}
+				});
+		jScrollPane1.setViewportView(listExtensions);
 
-        btAdd.setText("Add...");
-        btAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAddActionPerformed(evt);
-            }
-        });
+		btAdd.setText("Add...");
+		btAdd.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(final java.awt.event.ActionEvent evt) {
+				btAddActionPerformed(evt);
+			}
+		});
 
-        btRemove.setText("Remove");
-        btRemove.setEnabled(false);
-        btRemove.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRemoveActionPerformed(evt);
-            }
-        });
+		btRemove.setText("Remove");
+		btRemove.setEnabled(false);
+		btRemove.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(final java.awt.event.ActionEvent evt) {
+				btRemoveActionPerformed(evt);
+			}
+		});
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                            .addComponent(btAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btRemove))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-    }// </editor-fold>//GEN-END:initComponents
+		final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+		this.setLayout(layout);
+		layout.setHorizontalGroup(layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						layout.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(
+										layout.createParallelGroup(
+												javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(
+														tfName,
+														javax.swing.GroupLayout.DEFAULT_SIZE,
+														199, Short.MAX_VALUE)
+												.addComponent(jLabel1)
+												.addComponent(jLabel2)
+												.addGroup(
+														javax.swing.GroupLayout.Alignment.TRAILING,
+														layout.createSequentialGroup()
+																.addGroup(
+																		layout.createParallelGroup(
+																				javax.swing.GroupLayout.Alignment.LEADING)
+																				.addComponent(
+																						btRemove,
+																						javax.swing.GroupLayout.DEFAULT_SIZE,
+																						71,
+																						Short.MAX_VALUE)
+																				.addComponent(
+																						btAdd,
+																						javax.swing.GroupLayout.Alignment.TRAILING,
+																						javax.swing.GroupLayout.DEFAULT_SIZE,
+																						71,
+																						Short.MAX_VALUE))
+																.addPreferredGap(
+																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																.addComponent(
+																		jScrollPane1,
+																		javax.swing.GroupLayout.PREFERRED_SIZE,
+																		122,
+																		javax.swing.GroupLayout.PREFERRED_SIZE)))
+								.addContainerGap()));
+		layout.setVerticalGroup(layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						layout.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(jLabel1)
+								.addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(tfName,
+										javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGap(18, 18, 18)
+								.addComponent(jLabel2)
+								.addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(
+										layout.createParallelGroup(
+												javax.swing.GroupLayout.Alignment.LEADING)
+												.addGroup(
+														layout.createSequentialGroup()
+																.addComponent(
+																		btAdd)
+																.addPreferredGap(
+																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																.addComponent(
+																		btRemove))
+												.addComponent(
+														jScrollPane1,
+														javax.swing.GroupLayout.DEFAULT_SIZE,
+														200, Short.MAX_VALUE))
+								.addContainerGap()));
+	}// </editor-fold>//GEN-END:initComponents
 
-	private void listExtensionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listExtensionsValueChanged
-		boolean enable = listExtensions.getSelectedIndices().length > 0;
+	private void listExtensionsValueChanged(
+			final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_listExtensionsValueChanged
+		final boolean enable = listExtensions.getSelectedIndices().length > 0;
 		btRemove.setEnabled(enable);
-	}//GEN-LAST:event_listExtensionsValueChanged
+	}// GEN-LAST:event_listExtensionsValueChanged
 
 	private void btRemoveActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRemoveActionPerformed
 		for (final int i : listExtensions.getSelectedIndices()) {
@@ -182,20 +226,21 @@ public class FileTypeEditor extends javax.swing.JPanel {
 		fireDataChanged();
 	}// GEN-LAST:event_tfNameActionPerformed
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btAdd;
-    private javax.swing.JButton btRemove;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList listExtensions;
-    private javax.swing.JTextField tfName;
-    // End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JButton btAdd;
+	private javax.swing.JButton btRemove;
+	private javax.swing.JLabel jLabel1;
+	private javax.swing.JLabel jLabel2;
+	private javax.swing.JScrollPane jScrollPane1;
+	private javax.swing.JList listExtensions;
+	private javax.swing.JTextField tfName;
+
+	// End of variables declaration//GEN-END:variables
 
 	private void fireDataChanged() {
 		Collections.sort(extensions);
-		type.setName(tfName.getText().trim());
-		type.setExtensions(extensions.toArray(new String[extensions.size()]));
+		type.name = tfName.getText().trim();
+		type.extensions = extensions.toArray(new String[extensions.size()]);
 
 		for (final Listener l : listeners) {
 			l.dataChanged();
