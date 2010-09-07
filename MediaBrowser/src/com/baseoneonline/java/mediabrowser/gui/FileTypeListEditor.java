@@ -70,116 +70,84 @@ public class FileTypeListEditor extends javax.swing.JPanel {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+	// desc="Generated Code">
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		jScrollPane1 = new javax.swing.JScrollPane();
-		listFileTypes = new javax.swing.JList();
-		btAdd = new javax.swing.JButton();
-		btRemove = new javax.swing.JButton();
-		fileTypeEditor =
-				new com.baseoneonline.java.mediabrowser.gui.FileTypeEditor();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listFileTypes = new javax.swing.JList();
+        btAdd = new javax.swing.JButton();
+        btRemove = new javax.swing.JButton();
+        fileTypeEditor = new com.baseoneonline.java.mediabrowser.gui.FileTypeEditor();
 
-		listFileTypes.setModel(fileTypes);
-		listFileTypes
-				.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-					@Override
-					public void valueChanged(
-							final javax.swing.event.ListSelectionEvent evt) {
-						listFileTypesValueChanged(evt);
-					}
-				});
-		jScrollPane1.setViewportView(listFileTypes);
+        listFileTypes.setModel(fileTypes);
+        listFileTypes.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listFileTypesValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(listFileTypes);
 
-		btAdd.setText("Add");
-		btAdd.addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(final java.awt.event.ActionEvent evt) {
-				btAddActionPerformed(evt);
-			}
-		});
+        btAdd.setText("Add");
+        btAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAddActionPerformed(evt);
+            }
+        });
 
-		btRemove.setText("Remove");
-		btRemove.setEnabled(false);
-		btRemove.addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(final java.awt.event.ActionEvent evt) {
-				btRemoveActionPerformed(evt);
-			}
-		});
+        btRemove.setText("Remove");
+        btRemove.setEnabled(false);
+        btRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoveActionPerformed(evt);
+            }
+        });
 
-		fileTypeEditor.setBorder(javax.swing.BorderFactory
-				.createTitledBorder("File Type Properties"));
-		fileTypeEditor.setEnabled(false);
+        fileTypeEditor.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        fileTypeEditor.setEnabled(false);
 
-		final javax.swing.GroupLayout layout =
-				new javax.swing.GroupLayout(this);
-		this.setLayout(layout);
-		layout.setHorizontalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(btRemove)
-												.addComponent(
-														btAdd,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														71, Short.MAX_VALUE))
-								.addPreferredGap(
-										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jScrollPane1,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										145,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(
-										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(fileTypeEditor,
-										javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addContainerGap()));
-		layout.setVerticalGroup(layout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addContainerGap()
-								.addGroup(
-										layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(
-														fileTypeEditor,
-														javax.swing.GroupLayout.PREFERRED_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addComponent(
-														jScrollPane1,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														327, Short.MAX_VALUE)
-												.addGroup(
-														layout.createSequentialGroup()
-																.addComponent(
-																		btAdd)
-																.addPreferredGap(
-																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-																.addComponent(
-																		btRemove)))
-								.addContainerGap()));
-	}// </editor-fold>//GEN-END:initComponents
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btRemove))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileTypeEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fileTypeEditor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btRemove)
+                    .addComponent(btAdd))
+                .addContainerGap())
+        );
+    }// </editor-fold>//GEN-END:initComponents
 
-	private void btAddActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btAddActionPerformed
+	private void btAddActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
 		final FileType type = new FileType();
 		type.name = "New Filetype";
 		fileTypes.add(type);
 		listFileTypes.setSelectedValue(type, true);
 		fireDataChanged();
 
-	}// GEN-LAST:event_btAddActionPerformed
+	}//GEN-LAST:event_btAddActionPerformed
 
 	private void listFileTypesValueChanged(
-			final javax.swing.event.ListSelectionEvent evt) {// GEN-FIRST:event_listFileTypesValueChanged
+			final javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFileTypesValueChanged
 		final int idx = listFileTypes.getSelectedIndex();
 		final boolean enable = idx != -1;
 		btRemove.setEnabled(enable);
@@ -188,23 +156,23 @@ public class FileTypeListEditor extends javax.swing.JPanel {
 			return;
 		final FileType type = fileTypes.get(idx);
 		fileTypeEditor.setFileType(type);
-	}// GEN-LAST:event_listFileTypesValueChanged
+	}//GEN-LAST:event_listFileTypesValueChanged
 
-	private void btRemoveActionPerformed(final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRemoveActionPerformed
+	private void btRemoveActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
 		for (final int idx : listFileTypes.getSelectedIndices()) {
 			fileTypes.remove(idx);
 		}
 		fireDataChanged();
-	}// GEN-LAST:event_btRemoveActionPerformed
+	}//GEN-LAST:event_btRemoveActionPerformed
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JButton btAdd;
-	private javax.swing.JButton btRemove;
-	private com.baseoneonline.java.mediabrowser.gui.FileTypeEditor fileTypeEditor;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JList listFileTypes;
-
-	// End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAdd;
+    private javax.swing.JButton btRemove;
+    private com.baseoneonline.java.mediabrowser.gui.FileTypeEditor fileTypeEditor;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList listFileTypes;
+    // End of variables declaration//GEN-END:variables
 
 	private void fireDataChanged() {
 		for (final Listener l : listeners) {
