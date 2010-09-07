@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.baseoneonline.java.mediabrowser.Settings;
-
 /*
  * Simply show all elements, categorized by type
  */
@@ -20,11 +18,11 @@ public class SimpleDataView implements DataView {
 
 	private final ArrayList<TypeNode> types = new ArrayList<TypeNode>();
 
-	public SimpleDataView(final Database db, final Settings settings) {
+	public SimpleDataView(final Database db) {
 		this.db = db;
 		final List<MediaFile> files = db.getMediaFiles();
 
-		for (final FileType t : settings.getMediaFileTypes()) {
+		for (final FileType t : db.getFileTypes()) {
 			types.add(new TypeNode(t));
 
 		}

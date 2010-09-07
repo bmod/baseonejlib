@@ -5,9 +5,6 @@
 		<dir PATH="C:\Documents and Settings\bask\My Documents"/>
 	</mediasources>
 	<filetypes>
-		<type EXTENSIONS="flac,m4a,mp3,mp4,mpa,wma" NAME="Music"/>
-		<type EXTENSIONS="jpeg,png,tga,tif,tiff" NAME="Picture"/>
-		<type EXTENSIONS="pdf,sdc" NAME="Document"/>
-		<type EXTENSIONS="otf,pfb,ttf" NAME="Font"/>
+		<type UID="1" EXTENSIONS="mp3,m4a,mp4,wma" NAME="Music"/>
 	</filetypes>
 </settings>

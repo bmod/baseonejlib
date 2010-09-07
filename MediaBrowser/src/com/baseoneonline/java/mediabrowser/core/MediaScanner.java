@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
-import com.baseoneonline.java.mediabrowser.Settings;
 import com.baseoneonline.java.mediabrowser.util.Util;
 
 public class MediaScanner {
 
-	private final ArrayList<Listener> listeners = new ArrayList<MediaScanner.Listener>();
+	private final ArrayList<Listener> listeners =
+			new ArrayList<MediaScanner.Listener>();
 
 	private SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
 	private ArrayList<MediaFile> mediaFiles;
@@ -23,18 +23,8 @@ public class MediaScanner {
 		this.db = db;
 	}
 
-	public void scan(final String[] dirs) {
-		final File[] files = new File[dirs.length];
-		for (int i = 0; i < files.length; i++) {
-			files[i] = new File(dirs[i]);
-		}
-		scan(files);
-	}
-
-	public void scan(final File[] dirs) {
-		// validateDatabase();
+	public void scan(final ArrayList<File> dirs) {
 		scanFilesFromDisk(dirs);
-
 	}
 
 	private void validateDatabase() {
@@ -53,7 +43,7 @@ public class MediaScanner {
 		}
 	}
 
-	private void scanFilesFromDisk(final File[] dirs) {
+	private void scanFilesFromDisk(final ArrayList<File> dirs) {
 		// Validate
 		fireStatusChanged(Status.GatherFiles);
 
@@ -87,13 +77,13 @@ public class MediaScanner {
 
 			@Override
 			protected void process(final List<MediaFile> chunks) {
-				
+
 				for (final MediaFile mf : chunks) {
 					mf.type = getTypeByExtension(mf.file);
 				}
-				
+
 				db.storeMediaFiles(chunks);
-				
+
 				mediaFiles.addAll(chunks);
 				fireProgress(chunks);
 			}
@@ -112,7 +102,7 @@ public class MediaScanner {
 
 		final String extension = Util.extension(filename);
 
-		for (final FileType t : Settings.get().getMediaFileTypes()) {
+		for (final FileType t : db.getFileTypes()) {
 			if (Util.contains(t.extensions, extension))
 				return t;
 		}
