@@ -61,35 +61,33 @@ public class SettingsDialog extends javax.swing.JDialog {
 	// <editor-fold defaultstate="collapsed"
 	// <editor-fold defaultstate="collapsed"
 	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+	// desc="Generated Code">
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		jTabbedPane1 = new javax.swing.JTabbedPane();
-		directoryListEditor =
-				new com.baseoneonline.java.mediabrowser.gui.DirectoryListEditor();
-		fileTypeEditor1 =
-				new com.baseoneonline.java.mediabrowser.gui.FileTypeListEditor();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        directoryListEditor = new com.baseoneonline.java.mediabrowser.gui.DirectoryListEditor();
+        fileTypeEditor1 = new com.baseoneonline.java.mediabrowser.gui.FileTypeListEditor();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle("Settings");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Settings");
 
-		jTabbedPane1.addTab("Media Sources", directoryListEditor);
-		jTabbedPane1.addTab("Media Types", fileTypeEditor1);
+        jTabbedPane1.addTab("Media Sources", directoryListEditor);
+        jTabbedPane1.addTab("Media Types", fileTypeEditor1);
 
-		final javax.swing.GroupLayout layout =
-				new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(
-				javax.swing.GroupLayout.Alignment.LEADING).addComponent(
-				jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400,
-				Short.MAX_VALUE));
-		layout.setVerticalGroup(layout.createParallelGroup(
-				javax.swing.GroupLayout.Alignment.LEADING).addComponent(
-				jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300,
-				Short.MAX_VALUE));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+        );
 
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
 	/**
 	 * @param args
@@ -111,12 +109,12 @@ public class SettingsDialog extends javax.swing.JDialog {
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private com.baseoneonline.java.mediabrowser.gui.DirectoryListEditor directoryListEditor;
-	private com.baseoneonline.java.mediabrowser.gui.FileTypeListEditor fileTypeEditor1;
-	private javax.swing.JTabbedPane jTabbedPane1;
-
-	// End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.baseoneonline.java.mediabrowser.gui.DirectoryListEditor directoryListEditor;
+    private com.baseoneonline.java.mediabrowser.gui.FileTypeListEditor fileTypeEditor1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    // End of variables declaration//GEN-END:variables
 
 	public static SettingsDialog get(final Database db) {
 		if (null == instance)
