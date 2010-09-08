@@ -16,7 +16,7 @@ public class Util {
 		return b;
 	}
 
-	public static Object join(final String[] extensions, final String separator) {
+	public static String join(final String[] extensions, final String separator) {
 		final StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < extensions.length; i++) {
 			buf.append(extensions[i]);

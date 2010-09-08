@@ -1,5 +1,7 @@
 package com.baseoneonline.java.mediabrowser.core;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import javax.swing.Timer;
 
 import org.sqlite.JDBC;
 
@@ -23,49 +28,41 @@ public class Database {
 	private Connection con;
 
 	private ArrayList<FileType> fileTypes;
+	private ArrayList<File> mediaSources;
+
+	private final int flushSettingsDelay = 300;
 
 	private Database() {
-		try {
+		initConnection();
+		initTables();
+		readSettings();
+		settingsTimer.setRepeats(false);
 
+	}
+
+	private final Timer settingsTimer = new Timer(flushSettingsDelay,
+			new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					flushSettings();
+				}
+			});
+
+	private void initConnection() {
+		try {
 			Class.forName(JDBC.class.getName());
 			con = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
-
-			sql("CREATE TABLE IF NOT EXISTS media (file PRIMARY KEY, type INTEGER, lastmodified LONG);");
-			sql("CREATE TABLE IF NOT EXISTS filetypes ("
-					+ "uid INTEGER PRIMARY KEY AUTOINCREMENT, " + "name, "
-					+ "extensions);");
-			sql("CREATE TABLE IF NOT EXISTS mediasources (directory PRIMARY KEY);");
-
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setFileTypes(final ArrayList<FileType> fileTypes) {
-
-	}
-
-	public ArrayList<FileType> getFileTypes() {
-		try {
-
-			final ArrayList<FileType> fileTypes = new ArrayList<FileType>();
-			final ResultSet rs =
-					Database.get().query("SELECT * FROM filetypes;");
-			while (rs.next()) {
-
-				final FileType type = new FileType();
-				type.uid = rs.getInt(1);
-				type.name = rs.getString(2);
-				type.extensions = Util.split(rs.getString(3), ",");
-				fileTypes.add(type);
-
-			}
-			return fileTypes;
-
-		} catch (final SQLException e) {
-			throw new RuntimeException(e);
-		}
-
+	private void initTables() {
+		sql("CREATE TABLE IF NOT EXISTS media (file PRIMARY KEY, type INTEGER, lastmodified LONG);");
+		sql("CREATE TABLE IF NOT EXISTS filetypes ("
+				+ "uid INTEGER PRIMARY KEY AUTOINCREMENT, " + "name, "
+				+ "extensions);");
+		sql("CREATE TABLE IF NOT EXISTS mediasources (directory PRIMARY KEY);");
 	}
 
 	private void sql(final String statement) {
@@ -74,15 +71,6 @@ public class Database {
 			stat = con.createStatement();
 			stat.executeUpdate(statement);
 		} catch (final SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public ResultSet query(final String sql) {
-		try {
-			final Statement stat = con.createStatement();
-			return stat.executeQuery(sql);
-		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -125,32 +113,71 @@ public class Database {
 		}
 	}
 
-	public static Database get() {
-		if (null == instance)
-			instance = new Database();
-		return instance;
+	public ArrayList<FileType> getFileTypes() {
+		return fileTypes;
+	}
+
+	public void setFileTypes(final ArrayList<FileType> fileTypes) {
+		this.fileTypes = fileTypes;
+		settingsTimer.restart();
 	}
 
 	public ArrayList<File> getMediaSources() {
+		return mediaSources;
+	}
+
+	public void setMediaSources(final ArrayList<File> mediaSources) {
+		this.mediaSources = mediaSources;
+		settingsTimer.restart();
+	}
+
+	private void readSettings() {
+		ResultSet rs;
 		try {
-			final ArrayList<File> dirs = new ArrayList<File>();
-			final ResultSet rs = query("SELECT * FROM mediasources;");
+			
+			// Read media sources
+			
+			mediaSources = new ArrayList<File>();
+			rs = con.createStatement().executeQuery(
+							"SELECT * FROM mediasources;");
 			while (rs.next()) {
 				final File f = new File(rs.getString(1));
-				dirs.add(f);
+				mediaSources.add(f);
 			}
-			return dirs;
+			
+			// Read filetypes
+			
+			fileTypes = new ArrayList<FileType>();
+			rs =
+					con.createStatement().executeQuery(
+							"SELECT * FROM filetypes;");
+			while (rs.next()) {
+	
+				final FileType type = new FileType();
+				type.uid = rs.getInt(1);
+				type.name = rs.getString(2);
+				type.extensions = Util.split(rs.getString(3), ",");
+				fileTypes.add(type);
+	
+			}
+			
+			
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setMediaSources(final ArrayList<File> directories) {
+	public void flushSettings() {
+		Logger.getLogger(getClass().getName()).info("Flushing settings...");
+		
+		PreparedStatement prep;
 		try {
+
+			// Store media sources
+
 			con.createStatement().executeUpdate("DELETE FROM mediasources;");
-			final PreparedStatement prep =
-					con.prepareStatement("REPLACE INTO mediasources VALUES(?);");
-			for (final File f : directories) {
+			prep = con.prepareStatement("REPLACE INTO mediasources VALUES(?);");
+			for (final File f : mediaSources) {
 				prep.setString(1, f.getAbsolutePath());
 				prep.addBatch();
 			}
@@ -158,9 +185,32 @@ public class Database {
 			prep.executeBatch();
 			con.commit();
 			con.setAutoCommit(true);
+
+			// Store file types
+
+			con.createStatement().executeUpdate("DELETE FROM filetypes;");
+			prep =
+					con.prepareStatement("INSERT INTO filetypes VALUES(?,?,?);");
+			for (final FileType t : fileTypes) {
+				prep.setString(2, t.name);
+				prep.setString(3, Util.join(t.extensions, ","));
+				prep.addBatch();
+			}
+			con.setAutoCommit(false);
+			prep.executeBatch();
+			con.commit();
+			con.setAutoCommit(true);
+
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
+		readSettings();
+	}
+
+	public static Database get() {
+		if (null == instance)
+			instance = new Database();
+		return instance;
 	}
 
 }
