@@ -60,8 +60,7 @@ public class Database {
 	private void initTables() {
 		sql("CREATE TABLE IF NOT EXISTS media (file PRIMARY KEY, type INTEGER, lastmodified LONG);");
 		sql("CREATE TABLE IF NOT EXISTS filetypes ("
-				+ "uid INTEGER PRIMARY KEY AUTOINCREMENT, " + "name, "
-				+ "extensions);");
+				+ "uid INTEGER PRIMARY KEY, " + "name, " + "extensions);");
 		sql("CREATE TABLE IF NOT EXISTS mediasources (directory PRIMARY KEY);");
 	}
 
@@ -92,10 +91,12 @@ public class Database {
 		}
 	}
 
+	
+
 	public void storeMediaFiles(final List<MediaFile> chunks) {
 		try {
-			final PreparedStatement prep =
-					con.prepareStatement("REPLACE INTO media VALUES(?, ?, ?);");
+			final PreparedStatement prep = con
+					.prepareStatement("REPLACE INTO media VALUES(?, ?, ?);");
 			for (final MediaFile mf : chunks) {
 
 				prep.setString(1, mf.file);
@@ -134,34 +135,31 @@ public class Database {
 	private void readSettings() {
 		ResultSet rs;
 		try {
-			
+
 			// Read media sources
-			
+
 			mediaSources = new ArrayList<File>();
 			rs = con.createStatement().executeQuery(
-							"SELECT * FROM mediasources;");
+					"SELECT * FROM mediasources;");
 			while (rs.next()) {
 				final File f = new File(rs.getString(1));
 				mediaSources.add(f);
 			}
-			
+
 			// Read filetypes
-			
+
 			fileTypes = new ArrayList<FileType>();
-			rs =
-					con.createStatement().executeQuery(
-							"SELECT * FROM filetypes;");
+			rs = con.createStatement().executeQuery("SELECT * FROM filetypes;");
 			while (rs.next()) {
-	
+
 				final FileType type = new FileType();
 				type.uid = rs.getInt(1);
 				type.name = rs.getString(2);
 				type.extensions = Util.split(rs.getString(3), ",");
 				fileTypes.add(type);
-	
+
 			}
-			
-			
+
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -169,7 +167,7 @@ public class Database {
 
 	public void flushSettings() {
 		Logger.getLogger(getClass().getName()).info("Flushing settings...");
-		
+
 		PreparedStatement prep;
 		try {
 
@@ -189,8 +187,7 @@ public class Database {
 			// Store file types
 
 			con.createStatement().executeUpdate("DELETE FROM filetypes;");
-			prep =
-					con.prepareStatement("INSERT INTO filetypes VALUES(?,?,?);");
+			prep = con.prepareStatement("INSERT INTO filetypes VALUES(?,?,?);");
 			for (final FileType t : fileTypes) {
 				prep.setString(2, t.name);
 				prep.setString(3, Util.join(t.extensions, ","));

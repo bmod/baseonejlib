@@ -63,6 +63,7 @@
     <Component class="javax.swing.JTextField" name="tfName">
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfNameActionPerformed"/>
+        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfNameFocusLost"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">

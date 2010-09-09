@@ -14,10 +14,13 @@ public class MediaScanner {
 	private final ArrayList<Listener> listeners =
 			new ArrayList<MediaScanner.Listener>();
 
-	private SwingWorker<ArrayList<MediaFile>, MediaFile> worker;
-	private ArrayList<MediaFile> mediaFiles;
+	private SwingWorker<Void, MediaFile> worker;
 
 	private final Database db;
+	
+	private int totalFiles = 0;
+	// Files to read before storing in the database, batch storing is faster
+	private final int storeInterval = 1500;
 
 	public MediaScanner(final Database db) {
 		this.db = db;
@@ -46,13 +49,14 @@ public class MediaScanner {
 	private void scanFilesFromDisk(final ArrayList<File> dirs) {
 		// Validate
 		fireStatusChanged(Status.GatherFiles);
+		
+		final ArrayList<MediaFile> storeCache = new ArrayList<MediaFile>();
 
-		worker = new SwingWorker<ArrayList<MediaFile>, MediaFile>() {
+		worker = new SwingWorker<Void, MediaFile>() {
 
 			@Override
-			protected ArrayList<MediaFile> doInBackground() throws Exception {
-
-				mediaFiles = new ArrayList<MediaFile>();
+			protected Void doInBackground() throws Exception {
+				totalFiles = 0;
 				for (final File dir : dirs) {
 					if (dir.exists()) {
 						scanDir(dir);
@@ -61,7 +65,11 @@ public class MediaScanner {
 								"Dir not found: " + dir.getAbsolutePath());
 					}
 				}
-				return mediaFiles;
+				if (storeCache.size() > 0) {
+					db.storeMediaFiles(storeCache);
+				}
+				
+				return null;
 			}
 
 			private void scanDir(final File dir) {
@@ -69,23 +77,27 @@ public class MediaScanner {
 					if (f.isDirectory()) {
 						scanDir(f);
 					} else {
+
 						final MediaFile mf = new MediaFile(f.getAbsolutePath());
-						publish(mf);
+						mf.type = getTypeByExtension(f.getName());
+						if (mf.type != null) {
+							totalFiles++;
+							storeCache.add(mf);
+							if (storeCache.size() > storeInterval) {
+								//db.storeMediaFiles(storeCache);
+								storeCache.clear();
+							}
+							
+							publish(mf);
+						}
+						
 					}
 				}
 			}
 
 			@Override
-			protected void process(final List<MediaFile> chunks) {
-
-				for (final MediaFile mf : chunks) {
-					mf.type = getTypeByExtension(mf.file);
-				}
-
-				db.storeMediaFiles(chunks);
-
-				mediaFiles.addAll(chunks);
-				fireProgress(chunks);
+			protected void process(final List<MediaFile> files) {
+				fireProgress(files);
 			}
 
 			@Override
@@ -111,19 +123,16 @@ public class MediaScanner {
 
 	private void fireStatusChanged(final Status msg) {
 		for (final Listener l : listeners) {
-			l.statusChanged(msg);
+			l.statusChanged(msg, totalFiles);
 		}
 	}
 
 	private void fireProgress(final List<MediaFile> chunk) {
 		for (final Listener l : listeners) {
-			l.process(chunk);
+			l.process(chunk, totalFiles);
 		}
 	}
 
-	public ArrayList<MediaFile> getMediaFiles() {
-		return mediaFiles;
-	}
 
 	public void addListener(final Listener l) {
 		if (!listeners.contains(l))
@@ -139,9 +148,9 @@ public class MediaScanner {
 	}
 
 	public static interface Listener {
-		public void process(List<MediaFile> files);
+		public void process(List<MediaFile> files, int totalScanned);
 
-		public void statusChanged(Status msg);
+		public void statusChanged(final Status msg, int totalScanned);
 
 	}
 
