@@ -40,22 +40,22 @@ public class ScannerDialog extends javax.swing.JDialog {
 		scanner.addListener(new MediaScanner.Listener() {
 
 			@Override
-			public void process(final List<MediaFile> files) {
+			public void process(final List<MediaFile> files, final int totalScanned) {
 				// Show last file
 				if (files.size() > 0)
 					lbCurrentFile.setText(files.get(files.size() - 1).file);
 
-				lbFilesFound.setText("" + scanner.getMediaFiles().size());
+				lbFilesFound.setText("" + totalScanned);
 				pack();
 			}
 
 			@Override
-			public void statusChanged(final Status msg) {
+			public void statusChanged(final Status msg, final int totalScanned) {
 				System.out.println(msg);
 				lbStatus.setText(msg.toString());
 				switch (msg) {
 				case Done:
-					lbFilesFound.setText("" + scanner.getMediaFiles().size());
+					lbFilesFound.setText("" + totalScanned);
 					progressBar.setIndeterminate(false);
 					progressBar.setEnabled(false);
 					lbCurrentFile.setText(null);
@@ -66,6 +66,7 @@ public class ScannerDialog extends javax.swing.JDialog {
 				}
 				pack();
 			}
+
 		});
 	}
 
@@ -100,7 +101,7 @@ public class ScannerDialog extends javax.swing.JDialog {
 
         lbCurrentFile.setText("...");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,6 +147,7 @@ public class ScannerDialog extends javax.swing.JDialog {
 	 */
 	public static void main(final String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				final ScannerDialog dialog =
 						new ScannerDialog(new javax.swing.JFrame(), true, null);

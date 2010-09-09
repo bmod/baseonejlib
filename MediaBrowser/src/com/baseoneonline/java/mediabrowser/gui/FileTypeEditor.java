@@ -97,6 +97,11 @@ public class FileTypeEditor extends javax.swing.JPanel {
                 tfNameActionPerformed(evt);
             }
         });
+        tfName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfNameFocusLost(evt);
+            }
+        });
 
         jLabel2.setText("Extensions");
 
@@ -182,6 +187,10 @@ public class FileTypeEditor extends javax.swing.JPanel {
 	private void tfNameActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNameActionPerformed
 		fireDataChanged();
 	}//GEN-LAST:event_tfNameActionPerformed
+
+	private void tfNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNameFocusLost
+		fireDataChanged();
+	}//GEN-LAST:event_tfNameFocusLost
 
 	// Variables declaration - do not modify
     // Variables declaration - do not modify//GEN-BEGIN:variables
