@@ -11,11 +11,14 @@
 
 package com.baseoneonline.java.mediabrowser.gui;
 
+import com.baseoneonline.java.mediabrowser.core.Database;
 import java.util.List;
 
 import com.baseoneonline.java.mediabrowser.core.MediaFile;
 import com.baseoneonline.java.mediabrowser.core.MediaScanner;
 import com.baseoneonline.java.mediabrowser.core.MediaScanner.Status;
+import java.awt.Component;
+import javax.swing.JFrame;
 
 /**
  * 
@@ -24,6 +27,8 @@ import com.baseoneonline.java.mediabrowser.core.MediaScanner.Status;
 public class ScannerDialog extends javax.swing.JDialog {
 
 	private static ScannerDialog instance;
+
+	private MediaScanner scanner;
 
 	/**
 	 * Creates new form ScannerDialog
@@ -35,9 +40,11 @@ public class ScannerDialog extends javax.swing.JDialog {
 		super(parent, modal);
 		initComponents();
 
-		progressBar.setIndeterminate(true);
+		this.scanner = scanner;
+		scanner.addListener(scannerListener);
+	}
 
-		scanner.addListener(new MediaScanner.Listener() {
+	MediaScanner.Listener scannerListener = new MediaScanner.Listener() {
 
 			@Override
 			public void process(final List<MediaFile> files, final int totalScanned) {
@@ -50,10 +57,9 @@ public class ScannerDialog extends javax.swing.JDialog {
 			}
 
 			@Override
-			public void statusChanged(final Status msg, final int totalScanned) {
-				System.out.println(msg);
-				lbStatus.setText(msg.toString());
-				switch (msg) {
+			public void statusChanged(final Status status, final int totalScanned) {
+				lbStatus.setText(status.toString());
+				switch (status) {
 				case Done:
 					lbFilesFound.setText("" + totalScanned);
 					progressBar.setIndeterminate(false);
@@ -67,8 +73,7 @@ public class ScannerDialog extends javax.swing.JDialog {
 				pack();
 			}
 
-		});
-	}
+		};
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -87,9 +92,13 @@ public class ScannerDialog extends javax.swing.JDialog {
         lbStatus = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lbCurrentFile = new javax.swing.JLabel();
+        btClose = new javax.swing.JButton();
+        btStartScanning = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Media Scanner");
+
+        progressBar.setEnabled(false);
 
         jLabel1.setText("Files found:");
 
@@ -101,7 +110,21 @@ public class ScannerDialog extends javax.swing.JDialog {
 
         lbCurrentFile.setText("...");
 
-        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        btClose.setText("Close");
+        btClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCloseActionPerformed(evt);
+            }
+        });
+
+        btStartScanning.setText("Start Scanning");
+        btStartScanning.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btStartScanningActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,7 +140,11 @@ public class ScannerDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(lbCurrentFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbCurrentFile, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btStartScanning)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
+                        .addComponent(btClose)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -135,11 +162,23 @@ public class ScannerDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(lbFilesFound))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btClose)
+                    .addComponent(btStartScanning))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+	private void btStartScanningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartScanningActionPerformed
+		scanner.scan(Database.get().getMediaSources());
+	}//GEN-LAST:event_btStartScanningActionPerformed
+
+	private void btCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCloseActionPerformed
+		
+	}//GEN-LAST:event_btCloseActionPerformed
 
 	/**
 	 * @param args
@@ -163,6 +202,8 @@ public class ScannerDialog extends javax.swing.JDialog {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btClose;
+    private javax.swing.JButton btStartScanning;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lbCurrentFile;
@@ -171,9 +212,11 @@ public class ScannerDialog extends javax.swing.JDialog {
     private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 
-	public static ScannerDialog get(final MediaScanner scanner) {
+	public static ScannerDialog get(final MediaScanner scanner, Component parent) {
 		if (null == instance)
 			instance = new ScannerDialog(null, true, scanner);
+		if (null != parent)
+			instance.setLocationRelativeTo(parent);
 		instance.setVisible(true);
 		return instance;
 	}
