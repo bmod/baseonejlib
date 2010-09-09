@@ -19,17 +19,14 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane1" alignment="0" pref="187" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" pref="225" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="btAdd" max="32767" attributes="1"/>
+                      <Component id="btAdd" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btRemove" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -37,7 +34,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="263" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="228" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btAdd" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -52,6 +49,7 @@
     <Component class="javax.swing.JButton" name="btAdd">
       <Properties>
         <Property name="text" type="java.lang.String" value="Add..."/>
+        <Property name="toolTipText" type="java.lang.String" value="Add Media Source..."/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAddActionPerformed"/>
@@ -69,6 +67,7 @@
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="directories" type="code"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Current media sources"/>
           </Properties>
           <Events>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="listDirectoriesValueChanged"/>
@@ -79,6 +78,7 @@
     <Component class="javax.swing.JButton" name="btRemove">
       <Properties>
         <Property name="text" type="java.lang.String" value="Remove"/>
+        <Property name="toolTipText" type="java.lang.String" value="Remove selected media sources"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>

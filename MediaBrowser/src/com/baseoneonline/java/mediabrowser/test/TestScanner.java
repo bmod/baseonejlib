@@ -15,7 +15,7 @@ public class TestScanner extends JFrame {
 
 			@Override
 			public void run() {
-				ScannerDialog.get(scanner);
+				ScannerDialog.get(scanner, null);
 			}
 		});
 		scanner.scan(Database.get().getMediaSources());
