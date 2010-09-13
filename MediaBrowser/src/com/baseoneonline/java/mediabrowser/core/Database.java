@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Timer;
@@ -18,18 +19,15 @@ import javax.swing.Timer;
 import org.sqlite.JDBC;
 
 import com.baseoneonline.java.mediabrowser.util.Util;
+import org.sqlite.Function;
 
 public class Database {
 
 	private final String dbFile = "media.db";
-
 	private static Database instance;
-
 	private Connection con;
-
 	private ArrayList<FileType> fileTypes;
 	private ArrayList<File> mediaSources;
-
 	private final int flushSettingsDelay = 300;
 
 	private Database() {
@@ -39,9 +37,9 @@ public class Database {
 		settingsTimer.setRepeats(false);
 
 	}
-
 	private final Timer settingsTimer = new Timer(flushSettingsDelay,
 			new ActionListener() {
+
 				@Override
 				public void actionPerformed(final ActionEvent e) {
 					flushSettings();
@@ -58,10 +56,12 @@ public class Database {
 	}
 
 	private void initTables() {
+
 		sql("CREATE TABLE IF NOT EXISTS media (file PRIMARY KEY, type INTEGER, lastmodified LONG);");
 		sql("CREATE TABLE IF NOT EXISTS filetypes ("
 				+ "uid INTEGER PRIMARY KEY, " + "name, " + "extensions);");
 		sql("CREATE TABLE IF NOT EXISTS mediasources (directory PRIMARY KEY);");
+
 	}
 
 	private void sql(final String statement) {
@@ -91,13 +91,11 @@ public class Database {
 		}
 	}
 
-	
-
-	public void storeMediaFiles(final List<MediaFile> chunks) {
+	public void storeMediaFiles(final List<MediaFile> mediaFiles) {
+		if (mediaFiles.size() < 1) return;
 		try {
-			final PreparedStatement prep = con
-					.prepareStatement("REPLACE INTO media VALUES(?, ?, ?);");
-			for (final MediaFile mf : chunks) {
+			final PreparedStatement prep = con.prepareStatement("REPLACE INTO media VALUES(?, ?, ?);");
+			for (final MediaFile mf : mediaFiles) {
 
 				prep.setString(1, mf.file);
 				prep.setInt(2, mf.type.uid);
@@ -204,10 +202,14 @@ public class Database {
 		readSettings();
 	}
 
-	public static Database get() {
-		if (null == instance)
-			instance = new Database();
-		return instance;
+	private void fireDatabaseChanged() {
+		System.out.println("Database Changed!!");
 	}
 
+	public static Database get() {
+		if (null == instance) {
+			instance = new Database();
+		}
+		return instance;
+	}
 }

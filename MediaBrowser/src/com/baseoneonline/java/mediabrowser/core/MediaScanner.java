@@ -16,6 +16,8 @@ public class MediaScanner {
 
 	private SwingWorker<Void, MediaFile> worker;
 
+	private Status currentStatus = Status.Idle;
+
 	private final Database db;
 	
 	private int totalFiles = 0;
@@ -48,7 +50,7 @@ public class MediaScanner {
 
 	private void scanFilesFromDisk(final ArrayList<File> dirs) {
 		// Validate
-		fireStatusChanged(Status.GatherFiles);
+		setStatus(Status.GatherFiles, "Gathering files from media sources.");
 		
 		final ArrayList<MediaFile> storeCache = new ArrayList<MediaFile>();
 
@@ -83,11 +85,12 @@ public class MediaScanner {
 						if (mf.type != null) {
 							totalFiles++;
 							storeCache.add(mf);
+							/*
 							if (storeCache.size() > storeInterval) {
 								//db.storeMediaFiles(storeCache);
 								storeCache.clear();
 							}
-							
+							*/
 							publish(mf);
 						}
 						
@@ -102,12 +105,18 @@ public class MediaScanner {
 
 			@Override
 			protected void done() {
-				fireStatusChanged(Status.Done);
+				setStatus(Status.Done, "Done");
+				
 			};
 
 		};
 		worker.execute();
 
+	}
+
+	private void setStatus(Status status, String message) {
+		currentStatus = status;
+		fireStatusChanged(status, message);
 	}
 
 	private FileType getTypeByExtension(final String filename) {
@@ -121,9 +130,9 @@ public class MediaScanner {
 		return null;
 	}
 
-	private void fireStatusChanged(final Status msg) {
+	private void fireStatusChanged(final Status status, String message) {
 		for (final Listener l : listeners) {
-			l.statusChanged(msg, totalFiles);
+			l.statusChanged(status, message, totalFiles);
 		}
 	}
 
@@ -143,14 +152,18 @@ public class MediaScanner {
 		listeners.remove(l);
 	}
 
+	public void cancel() {
+		Logger.getLogger(getClass().getName()).info("Cancelling scan");
+	}
+
 	public static enum Status {
-		GatherFiles, Done
+		Idle, GatherFiles, Done
 	}
 
 	public static interface Listener {
 		public void process(List<MediaFile> files, int totalScanned);
 
-		public void statusChanged(final Status msg, int totalScanned);
+		public void statusChanged(final Status status, String msg, int totalScanned);
 
 	}
 
