@@ -136,7 +136,6 @@ public class SettingsDialog extends javax.swing.JDialog {
 	public static SettingsDialog get(final Database db) {
 		if (null == instance)
 			instance = new SettingsDialog(null, true, db);
-		instance.setVisible(true);
 		return instance;
 	}
 
