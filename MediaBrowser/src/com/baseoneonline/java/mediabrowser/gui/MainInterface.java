@@ -12,9 +12,12 @@ package com.baseoneonline.java.mediabrowser.gui;
 
 import com.baseoneonline.java.mediabrowser.core.Database;
 import com.baseoneonline.java.mediabrowser.core.MediaScanner;
+import com.baseoneonline.java.mediabrowser.core.SimpleDataView;
+import com.baseoneonline.java.mediabrowser.core.TreeModelAdapter;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.tree.TreeModel;
 
 /**
  *
@@ -22,9 +25,14 @@ import javax.swing.UIManager;
  */
 public class MainInterface extends javax.swing.JFrame {
 
+	private TreeModel treeModel;
+
 	/** Creates new form NewApplication */
 	public MainInterface() {
 		initComponents();
+
+		treeModel = new TreeModelAdapter(new SimpleDataView(Database.get()));
+		jTree1.setModel(treeModel);
 	}
 
 	/** This method is called from within the constructor to
@@ -36,6 +44,8 @@ public class MainInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         miScanLibrary = new javax.swing.JMenuItem();
@@ -47,6 +57,8 @@ public class MainInterface extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
+
+        jScrollPane1.setViewportView(jTree1);
 
         fileMenu.setText("File");
 
@@ -92,11 +104,11 @@ public class MainInterface extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 602, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 386, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
         );
 
         pack();
@@ -143,6 +155,8 @@ public class MainInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTree jTree1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miScanLibrary;
