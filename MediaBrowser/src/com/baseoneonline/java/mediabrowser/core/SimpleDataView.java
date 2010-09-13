@@ -23,8 +23,16 @@ public class SimpleDataView implements DataView {
 		final List<MediaFile> files = db.getMediaFiles();
 
 		for (final FileType t : db.getFileTypes()) {
-			types.add(new TypeNode(t));
-
+			final TypeNode tn = new TypeNode(t);
+			types.add(tn);
+			
+			final ArrayList<MediaFile> mfs = new ArrayList<MediaFile>();
+			for (final MediaFile mf : files) {
+				if (mf.type == t)
+					mfs.add(mf);
+			}
+			map.put(tn, mfs);
+			
 		}
 	}
 
@@ -32,8 +40,9 @@ public class SimpleDataView implements DataView {
 	public ArrayList<? extends MediaNode> getChildren(final MediaNode parent) {
 		if (getRoot() == parent) {
 			return types;
+		} else {
+			return map.get(parent);
 		}
-		return null;
 	}
 
 	@Override
@@ -61,7 +70,7 @@ class RootNode implements MediaNode {
 }
 
 class TypeNode implements MediaNode {
-	private final FileType type;
+	public final FileType type;
 
 	public TypeNode(final FileType type) {
 		this.type = type;
