@@ -1,7 +1,0 @@
-C:\Users\bmod\workspace\unity\Vectorcycle\Temp\bin\Debug\Irrelvant.dll
-C:\Users\bmod\workspace\unity\Vectorcycle\Temp\bin\Debug\Irrelvant.pdb
-C:\Users\bmod\workspace\unity\Vectorcycle\Temp\bin\Debug\UnityEditor.dll
-C:\Users\bmod\workspace\unity\Vectorcycle\Temp\bin\Debug\UnityEngine-Debug.dll
-C:\Users\bmod\workspace\unity\Vectorcycle\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\bmod\workspace\unity\Vectorcycle\obj\Debug\Irrelvant.dll
-C:\Users\bmod\workspace\unity\Vectorcycle\obj\Debug\Irrelvant.pdb
