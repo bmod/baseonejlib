@@ -1,6 +1,7 @@
 package com.baseoneonline.java.math;
 
-public interface Curve {
+public interface Curve
+{
 
 	public Vec2f getCV(int i);
 

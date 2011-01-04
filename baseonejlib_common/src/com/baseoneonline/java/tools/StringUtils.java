@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class StringUtils {
+public class StringUtils
+{
 
 	/**
 	 * Convert an array into a string, each element delimited by a specified
@@ -29,7 +30,8 @@ public class StringUtils {
 	 *            The delimiter to be used.
 	 * @return A String containing all the elements of the array.
 	 */
-	public static String join(final String[] array, final String delim) {
+	public static String join(final String[] array, final String delim)
+	{
 		final StringBuffer sb = join(array, delim, new StringBuffer());
 		return sb.toString();
 	}
@@ -54,10 +56,12 @@ public class StringUtils {
 	 * @return The provided {@link StringBuffer} containing all the elements of
 	 *         the array.
 	 */
-	public static StringBuffer join(final String[] array, final String delim,
-			final StringBuffer sb) {
-		for (int i = 0; i < array.length; i++) {
-			if (i != 0) sb.append(delim);
+	public static StringBuffer join(final String[] array, final String delim, final StringBuffer sb)
+	{
+		for (int i = 0; i < array.length; i++)
+		{
+			if (i != 0)
+				sb.append(delim);
 			sb.append(array[i]);
 		}
 		return sb;
@@ -70,27 +74,34 @@ public class StringUtils {
 	 * @param url
 	 * @return
 	 */
-	public static String urlDecode(final String url) {
-		try {
+	public static String urlDecode(final String url)
+	{
+		try
+		{
 			return URLDecoder.decode(url, Charset.defaultCharset().name());
-		} catch (final UnsupportedEncodingException e) {
-			Logger.getLogger(StringUtils.class.getName()).warning(
-					"Unsupported Encoding in URL: " + url);
+		} catch (final UnsupportedEncodingException e)
+		{
+			Logger.getLogger(StringUtils.class.getName()).warning("Unsupported Encoding in URL: " + url);
 		}
 		return null;
 	}
 
-	public static String padFront(String number, final int length,
-			final String chr) {
-		while (number.length() < length) {
+	public static String padFront(String number, final int length, final String chr)
+	{
+		while (number.length() < length)
+		{
 			number = chr + number;
 		}
 		return number;
 	}
 
-	public static String stripExtension(final String filename) {
+	public static String stripExtension(final String filename)
+	{
 		final int idx = filename.lastIndexOf(".");
-		if (-1 != idx) { return filename.substring(0, idx); }
+		if (-1 != idx)
+		{
+			return filename.substring(0, idx);
+		}
 		return filename;
 	}
 
@@ -103,23 +114,34 @@ public class StringUtils {
 	 *            Don't provide a dot, it will be added.
 	 * @return A new file with the provided extension.
 	 */
-	public static File replaceExtension(final File file,
-			final String newExtension) {
+	public static File replaceExtension(final File file, final String newExtension)
+	{
 		final String fname = stripExtension(file.getAbsolutePath());
 		return new File(fname + "." + newExtension);
 	}
 
-	public static String extractFileName(final String fullPath) {
-		try {
-			final Pattern regex = Pattern.compile("[^/:*?\"<>|\r\n]+$",
-					Pattern.MULTILINE);
+	public static String extractFileName(final String fullPath)
+	{
+		try
+		{
+			final Pattern regex = Pattern.compile("[^/:*?\"<>|\r\n]+$", Pattern.MULTILINE);
 			final Matcher regexMatcher = regex.matcher(fullPath);
-			if (regexMatcher.find()) return regexMatcher.group();
+			if (regexMatcher.find())
+				return regexMatcher.group();
 
-		} catch (final PatternSyntaxException ex) {
+		} catch (final PatternSyntaxException ex)
+		{
 			// Syntax error in the regular expression
 		}
 		return "";
+	}
+
+	public static String getExtension(final String filename)
+	{
+		final int idx = filename.lastIndexOf('.');
+		if (-1 == idx)
+			return "";
+		return filename.substring(idx);
 	}
 
 	/**
@@ -129,34 +151,45 @@ public class StringUtils {
 	 * @return The path without the file or an empty string if there was no path
 	 *         part.
 	 */
-	public static String extractPath(final String fullPath) {
-		try {
+	public static String extractPath(final String fullPath)
+	{
+		try
+		{
 			final Pattern regex = Pattern.compile(".*/");
 			final Matcher regexMatcher = regex.matcher(fullPath);
-			if (regexMatcher.find()) { return regexMatcher.group(); }
-		} catch (final PatternSyntaxException ex) {
+			if (regexMatcher.find())
+			{
+				return regexMatcher.group();
+			}
+		} catch (final PatternSyntaxException ex)
+		{
 			// Not interesting, not happening
-			throw new RuntimeException(
-					"This should not happen, source code is faulty!");
+			throw new RuntimeException("This should not happen, source code is faulty!");
 		}
 		return "";
 	}
 
-	public static String addTrailingSlash(String targetPath) {
-		if (targetPath.endsWith("/") || targetPath.endsWith("\\")) return targetPath;
-		return targetPath+"/";
+	public static String addTrailingSlash(final String targetPath)
+	{
+		if (targetPath.endsWith("/") || targetPath.endsWith("\\"))
+			return targetPath;
+		return targetPath + "/";
 	}
-	
-	public static URI parentOf(URI uri) {
-		
-		try {
-			Pattern regex = Pattern.compile("(.+)/");
-			Matcher regexMatcher = regex.matcher(uri.toASCIIString());
-			if (regexMatcher.find()) {
+
+	public static URI parentOf(final URI uri)
+	{
+
+		try
+		{
+			final Pattern regex = Pattern.compile("(.+)/");
+			final Matcher regexMatcher = regex.matcher(uri.toASCIIString());
+			if (regexMatcher.find())
+			{
 				return new URI(regexMatcher.group(1));
 			}
 			return uri;
-		} catch (Exception ex) {
+		} catch (final Exception ex)
+		{
 			throw new RuntimeException(ex);
 		}
 	}
