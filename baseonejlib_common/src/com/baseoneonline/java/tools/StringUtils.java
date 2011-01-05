@@ -86,13 +86,13 @@ public class StringUtils
 		return null;
 	}
 
-	public static String padFront(String number, final int length, final String chr)
+	public static String padFront(String input, final int length, final String chr)
 	{
-		while (number.length() < length)
+		while (input.length() < length)
 		{
-			number = chr + number;
+			input = chr + input;
 		}
-		return number;
+		return input;
 	}
 
 	public static String stripExtension(final String filename)
