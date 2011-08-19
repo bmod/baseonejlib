@@ -32,6 +32,7 @@ package com.baseoneonline.java.swing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.ListModel;
 import javax.swing.event.EventListenerList;
@@ -49,7 +50,9 @@ import javax.swing.event.ListDataListener;
  * 
  * @see LinkedListModel
  */
-public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
+public final class ArrayListModel<T> extends ArrayList<T> implements ListModel,
+		List<T>
+{
 
 	private static final long serialVersionUID = -6165677201152015546L;
 
@@ -58,7 +61,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	/**
 	 * Constructs an empty list with an initial capacity of ten.
 	 */
-	public ArrayListModel() {
+	public ArrayListModel()
+	{
 		this(10);
 	}
 
@@ -70,7 +74,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @throws IllegalArgumentException
 	 *             if the specified initial capacity is negative
 	 */
-	public ArrayListModel(int initialCapacity) {
+	public ArrayListModel(int initialCapacity)
+	{
 		super(initialCapacity);
 	}
 
@@ -85,7 +90,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @throws NullPointerException
 	 *             if the specified collection is <code>null</code>
 	 */
-	public ArrayListModel(Collection<? extends T> c) {
+	public ArrayListModel(Collection<? extends T> c)
+	{
 		super(c);
 	}
 
@@ -104,7 +110,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *             if index is out of range
 	 *             <code>(index &lt; 0 || index &gt; size())</code>.
 	 */
-	public void add(int index, T element) {
+	@Override
+	public void add(int index, T element)
+	{
 		super.add(index, element);
 		fireIntervalAdded(index, index);
 	}
@@ -117,7 +125,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @return <code>true</code> (as per the general contract of
 	 *         Collection.add).
 	 */
-	public boolean add(T o) {
+	@Override
+	public boolean add(T o)
+	{
 		int newIndex = size();
 		super.add(o);
 		fireIntervalAdded(newIndex, newIndex);
@@ -143,9 +153,12 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @throws NullPointerException
 	 *             if the specified Collection is null.
 	 */
-	public boolean addAll(int index, Collection<? extends T> c) {
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c)
+	{
 		boolean changed = super.addAll(index, c);
-		if (changed) {
+		if (changed)
+		{
 			int lastIndex = index + c.size() - 1;
 			fireIntervalAdded(index, lastIndex);
 		}
@@ -166,10 +179,13 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @throws NullPointerException
 	 *             if the specified collection is null.
 	 */
-	public boolean addAll(Collection<? extends T> c) {
+	@Override
+	public boolean addAll(Collection<? extends T> c)
+	{
 		int firstIndex = size();
 		boolean changed = super.addAll(c);
-		if (changed) {
+		if (changed)
+		{
 			int lastIndex = firstIndex + c.size() - 1;
 			fireIntervalAdded(firstIndex, lastIndex);
 		}
@@ -180,7 +196,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * Removes all of the elements from this list. The list will be empty after
 	 * this call returns.
 	 */
-	public void clear() {
+	@Override
+	public void clear()
+	{
 		if (isEmpty())
 			return;
 
@@ -200,7 +218,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *             if index out of range <code>(index
 	 *              &lt; 0 || index &gt;= size())</code>.
 	 */
-	public T remove(int index) {
+	@Override
+	public T remove(int index)
+	{
 		T removedElement = super.remove(index);
 		fireIntervalRemoved(index, index);
 		return removedElement;
@@ -223,10 +243,13 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *            element to be removed from this list, if present.
 	 * @return <tt>true</tt> if the list contained the specified element.
 	 */
-	public boolean remove(Object o) {
+	@Override
+	public boolean remove(Object o)
+	{
 		int index = indexOf(o);
 		boolean contained = index != -1;
-		if (contained) {
+		if (contained)
+		{
 			remove(index);
 		}
 		return contained;
@@ -244,7 +267,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @param toIndex
 	 *            index after last element to be removed.
 	 */
-	protected void removeRange(int fromIndex, int toIndex) {
+	@Override
+	protected void removeRange(int fromIndex, int toIndex)
+	{
 		super.removeRange(fromIndex, toIndex);
 		fireIntervalRemoved(fromIndex, toIndex - 1);
 	}
@@ -262,7 +287,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *             if index out of range
 	 *             <code>(index &lt; 0 || index &gt;= size())</code>.
 	 */
-	public T set(int index, T element) {
+	@Override
+	public T set(int index, T element)
+	{
 		T previousElement = super.set(index, element);
 		fireContentsChanged(index, index);
 		return previousElement;
@@ -288,7 +315,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @param l
 	 *            the <code>ListDataListener</code> to be added
 	 */
-	public void addListDataListener(ListDataListener l) {
+	public void addListDataListener(ListDataListener l)
+	{
 		getEventListenerList().add(ListDataListener.class, l);
 	}
 
@@ -299,7 +327,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @param l
 	 *            the <code>ListDataListener</code> to be removed
 	 */
-	public void removeListDataListener(ListDataListener l) {
+	public void removeListDataListener(ListDataListener l)
+	{
 		getEventListenerList().remove(ListDataListener.class, l);
 	}
 
@@ -310,7 +339,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *            the requested index
 	 * @return the value at <code>index</code>
 	 */
-	public Object getElementAt(int index) {
+	public Object getElementAt(int index)
+	{
 		return get(index);
 	}
 
@@ -319,7 +349,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * 
 	 * @return the length of the list or 0 if there's no list
 	 */
-	public int getSize() {
+	public int getSize()
+	{
 		return size();
 	}
 
@@ -339,7 +370,8 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * 
 	 * @see EventListenerList
 	 */
-	public void fireContentsChanged(int index) {
+	public void fireContentsChanged(int index)
+	{
 		fireContentsChanged(index, index);
 	}
 
@@ -355,9 +387,9 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * @see #addListDataListener(ListDataListener)
 	 * @see #removeListDataListener(ListDataListener)
 	 */
-	public ListDataListener[] getListDataListeners() {
-		return (ListDataListener[]) getEventListenerList().getListeners(
-				ListDataListener.class);
+	public ListDataListener[] getListDataListeners()
+	{
+		return getEventListenerList().getListeners(ListDataListener.class);
 	}
 
 	/**
@@ -372,13 +404,17 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *            the other end of the new interval
 	 * @see EventListenerList
 	 */
-	private void fireContentsChanged(int index0, int index1) {
+	private void fireContentsChanged(int index0, int index1)
+	{
 		Object[] listeners = getEventListenerList().getListenerList();
 		ListDataEvent e = null;
 
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ListDataListener.class) {
-				if (e == null) {
+		for (int i = listeners.length - 2; i >= 0; i -= 2)
+		{
+			if (listeners[i] == ListDataListener.class)
+			{
+				if (e == null)
+				{
 					e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED,
 							index0, index1);
 				}
@@ -399,13 +435,17 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *            the other end of the new interval
 	 * @see EventListenerList
 	 */
-	private void fireIntervalAdded(int index0, int index1) {
+	private void fireIntervalAdded(int index0, int index1)
+	{
 		Object[] listeners = getEventListenerList().getListenerList();
 		ListDataEvent e = null;
 
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ListDataListener.class) {
-				if (e == null) {
+		for (int i = listeners.length - 2; i >= 0; i -= 2)
+		{
+			if (listeners[i] == ListDataListener.class)
+			{
+				if (e == null)
+				{
 					e = new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED,
 							index0, index1);
 				}
@@ -428,13 +468,17 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 *            <code>index1</code>
 	 * @see EventListenerList
 	 */
-	private void fireIntervalRemoved(int index0, int index1) {
+	private void fireIntervalRemoved(int index0, int index1)
+	{
 		Object[] listeners = getEventListenerList().getListenerList();
 		ListDataEvent e = null;
 
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ListDataListener.class) {
-				if (e == null) {
+		for (int i = listeners.length - 2; i >= 0; i -= 2)
+		{
+			if (listeners[i] == ListDataListener.class)
+			{
+				if (e == null)
+				{
 					e = new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED,
 							index0, index1);
 				}
@@ -449,8 +493,10 @@ public final class ArrayListModel<T> extends ArrayList<T> implements ListModel {
 	 * 
 	 * @return the event listener list used to notify listeners
 	 */
-	private EventListenerList getEventListenerList() {
-		if (listenerList == null) {
+	private EventListenerList getEventListenerList()
+	{
+		if (listenerList == null)
+		{
 			listenerList = new EventListenerList();
 		}
 		return listenerList;
