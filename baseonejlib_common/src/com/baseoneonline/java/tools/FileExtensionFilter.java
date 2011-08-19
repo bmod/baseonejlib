@@ -5,56 +5,72 @@ import java.io.FileFilter;
 import java.io.Serializable;
 
 public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
-		implements FileFilter, Serializable {
+		implements FileFilter, Serializable
+{
 
 	private boolean includeDirectories = true;
 	String[] extensions;
 	String description = "Files";
 
-	public FileExtensionFilter(final String[] ext, final String description) {
+	public FileExtensionFilter(final String[] ext, final String description)
+	{
 		this(ext);
 		this.description = description;
 	}
 
-	public FileExtensionFilter(final String[] ext) {
+	public FileExtensionFilter(final String[] ext)
+	{
 		extensions = new String[ext.length];
-		for (int i = 0; i < ext.length; i++) {
-			if (!ext[i].startsWith(".")) {
+		for (int i = 0; i < ext.length; i++)
+		{
+			if (!ext[i].startsWith("."))
+			{
 				extensions[i] = "." + ext[i];
-			} else {
+			} else
+			{
 				extensions[i] = ext[i];
 			}
 		}
 	}
 
-	public FileExtensionFilter(final String extensionsString) {
-		this(extensionsString,null);
+	public FileExtensionFilter(final String extensionsString)
+	{
+		this(extensionsString, null);
 	}
 
 	public FileExtensionFilter(final String extensionsString,
-			final boolean includeDirs) {
+			final boolean includeDirs)
+	{
 		this(extensionsString);
 		this.includeDirectories = includeDirs;
 	}
 
-	public FileExtensionFilter(String extensionsString, String description) {
+	public FileExtensionFilter(String extensionsString, String description)
+	{
 		extensions = extensionsString.split("[,| |;]");
+
 		this.description = description;
 	}
 
 	@Override
-	public boolean accept(final File f) {
-		if (f.isDirectory() && includeDirectories) return true;
-		for (final String ext : extensions) {
-			if (f.getName().toLowerCase().endsWith(ext)) return true;
+	public boolean accept(final File f)
+	{
+		if (f.isDirectory() && includeDirectories)
+			return true;
+		for (final String ext : extensions)
+		{
+			if (f.getName().toLowerCase().endsWith(ext))
+				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription()
+	{
 		String ext = "(" + StringUtils.join(extensions, ", ") + ")";
-		if (null == description) return ext;
+		if (null == description)
+			return ext;
 		return description + " " + ext;
 	}
 }
