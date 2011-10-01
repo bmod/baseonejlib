@@ -55,16 +55,20 @@ public abstract class AbstractTreeModel implements TreeModel
 
 	public void fireNodesChanged(TreePath path)
 	{
-		TreeModelEvent ev = new TreeModelEvent(this, path);
+		TreeModelEvent ev = createTreeModelEvent(path);
 		for (TreeModelListener l : listeners)
 		{
 			l.treeNodesChanged(ev);
 		}
 	}
 
-	public void fireNodesInserted(TreePath treePath)
+	/**
+	 * @param treePath
+	 *            The path to the inserted child.
+	 */
+	public void fireNodeInserted(TreePath treePath)
 	{
-		TreeModelEvent ev = new TreeModelEvent(this, treePath);
+		TreeModelEvent ev = createTreeModelEvent(treePath);
 		for (TreeModelListener l : listeners)
 		{
 
@@ -72,13 +76,39 @@ public abstract class AbstractTreeModel implements TreeModel
 		}
 	}
 
-	public void fireNodesRemoved(TreePath path)
+	public void fireNodesRemoved(TreePath path, int oldIndex)
 	{
-		TreeModelEvent ev = new TreeModelEvent(this, path);
+
+		Object[] children = { path.getLastPathComponent() };
+		int[] indices = { oldIndex };
+
+		TreeModelEvent ev = new TreeModelEvent(this, path.getParentPath(),
+				indices, children);
+
 		for (TreeModelListener l : listeners)
 		{
 			l.treeNodesRemoved(ev);
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param path
+	 * @return A {@link TreeModelEvent} that contains the child index of the
+	 *         last path component and the last path component as child itself.
+	 */
+	private TreeModelEvent createTreeModelEvent(TreePath treePath)
+	{
+		// Store child index
+		int index = getIndexOfChild(treePath.getParentPath()
+				.getLastPathComponent(), treePath.getLastPathComponent());
+		int[] indices = { index };
+		// Store actual child
+		Object[] children = { treePath.getLastPathComponent() };
+
+		TreeModelEvent ev = new TreeModelEvent(this, treePath.getParentPath(),
+				indices, children);
+		return ev;
 	}
 }

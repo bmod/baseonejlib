@@ -946,6 +946,10 @@ public class XMLElement
 		return lst;
 	}
 
+	/**
+	 * @param name
+	 * @return First child with this name
+	 */
 	public XMLElement getChild(final String name)
 	{
 		for (final XMLElement x : getChildren())
@@ -955,9 +959,9 @@ public class XMLElement
 				return x;
 			}
 		}
-		Logger.getLogger(getClass().getName()).severe(
-				"Child of " + getName() + " not found: " + name);
-		return null;
+		throw new RuntimeException("Child not found on '" + getName() + "': "
+				+ name);
+
 	}
 
 	/**
@@ -3091,6 +3095,12 @@ public class XMLElement
 		XMLElement xml = new XMLElement();
 		xml.parseFromReader(new FileReader(f));
 		return xml;
+	}
+
+	public static XMLElement loadXML(String string) throws XMLParseException,
+			FileNotFoundException, IOException
+	{
+		return loadXML(new File(string));
 	}
 
 }
