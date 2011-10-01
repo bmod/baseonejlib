@@ -43,7 +43,17 @@ public class Config
 
 	}
 
-	public void store(String id, Component comp)
+	/**
+	 * Warning! Use this only if the component appears once in the application.
+	 * 
+	 * @param comp
+	 */
+	public void store(final Component comp)
+	{
+		store(comp.getClass().getName(), comp);
+	}
+
+	public void store(final String id, final Component comp)
 	{
 		if (comp instanceof Window)
 		{
@@ -60,11 +70,21 @@ public class Config
 		}
 	}
 
-	public void restore(String id, Component comp)
+	/**
+	 * Warning! Use this only if the component appears once in your application.
+	 * 
+	 * @param comp
+	 */
+	public void restore(final Component comp)
+	{
+		restore(comp.getClass().getName(), comp);
+	}
+
+	public void restore(final String id, final Component comp)
 	{
 		if (comp instanceof Window)
 		{
-			Rectangle rect = new Rectangle();
+			final Rectangle rect = new Rectangle();
 			restore(id + "Bounds", rect);
 			((Window) comp).setBounds(rect);
 
@@ -79,12 +99,12 @@ public class Config
 		}
 	}
 
-	public void addPersistenceFactory(PersistenceFactory factory)
+	public void addPersistenceFactory(final PersistenceFactory factory)
 	{
 		persistenceFactories.add(factory);
 	}
 
-	private void store(String id, Rectangle rect)
+	private void store(final String id, final Rectangle rect)
 	{
 		prefs.putInt(id + "X", rect.x);
 		prefs.putInt(id + "Y", rect.y);
@@ -92,7 +112,7 @@ public class Config
 		prefs.putInt(id + "H", rect.height);
 	}
 
-	private void restore(String id, Rectangle rect)
+	private void restore(final String id, final Rectangle rect)
 	{
 		rect.x = prefs.getInt(id + "X", DEFAULT_RECT.x);
 		rect.y = prefs.getInt(id + "Y", DEFAULT_RECT.y);
@@ -106,7 +126,7 @@ public class Config
 		{
 			storePersistentObjects();
 			prefs.flush();
-		} catch (BackingStoreException e)
+		} catch (final BackingStoreException e)
 		{
 			e.printStackTrace();
 		}
@@ -114,15 +134,15 @@ public class Config
 
 	private void storePersistentObjects()
 	{
-		for (String key : persistentObjects.keySet())
+		for (final String key : persistentObjects.keySet())
 		{
-			Object o = persistentObjects.get(key);
-			PersistenceFactory factory = getFactory(o);
+			final Object o = persistentObjects.get(key);
+			final PersistenceFactory factory = getFactory(o);
 			factory.store(this, key, o);
 		}
 	}
 
-	public static void setApplicationClass(Class<?> appClass)
+	public static void setApplicationClass(final Class<?> appClass)
 	{
 		applicationClass = appClass;
 	}
@@ -135,27 +155,27 @@ public class Config
 		return instance;
 	}
 
-	public File getFile(String key)
+	public File getFile(final String key)
 	{
-		String filename = prefs.get(key, null);
+		final String filename = prefs.get(key, null);
 		if (null == filename)
 			return null;
 		return new File(filename);
 	}
 
-	public File getFile(String key, File defaultValue)
+	public File getFile(final String key, final File defaultValue)
 	{
 		return new File(prefs.get(key, defaultValue.getAbsolutePath()));
 	}
 
-	public void setFile(String key, File f)
+	public void setFile(final String key, final File f)
 	{
 		prefs.put(key, f.getAbsolutePath());
 	}
 
-	private PersistenceFactory getFactory(Object value)
+	private PersistenceFactory getFactory(final Object value)
 	{
-		for (PersistenceFactory factory : persistenceFactories)
+		for (final PersistenceFactory factory : persistenceFactories)
 		{
 			if (factory.getType().isInstance(value))
 				return factory;
@@ -164,17 +184,17 @@ public class Config
 				"No persistence factory found for class: " + value.getClass());
 	}
 
-	public void persist(String key, Object value)
+	public void persist(final String key, final Object value)
 	{
 
-		PersistenceFactory factory = getFactory(value);
+		final PersistenceFactory factory = getFactory(value);
 		factory.restore(this, key, value);
 		persistentObjects.put(key, value);
 	}
 
-	public Rectangle getRectangle(String key, Rectangle defaultValue)
+	public Rectangle getRectangle(final String key, final Rectangle defaultValue)
 	{
-		Rectangle rect = new Rectangle();
+		final Rectangle rect = new Rectangle();
 		rect.x = prefs.getInt(key + "X", defaultValue.x);
 		rect.y = prefs.getInt(key + "Y", defaultValue.y);
 		rect.width = prefs.getInt(key + "Width", defaultValue.width);
@@ -182,7 +202,7 @@ public class Config
 		return rect;
 	}
 
-	public void putRectangle(String key, Rectangle bounds)
+	public void putRectangle(final String key, final Rectangle bounds)
 	{
 		prefs.putInt(key + "X", bounds.x);
 		prefs.putInt(key + "Y", bounds.y);
@@ -190,12 +210,12 @@ public class Config
 		prefs.putInt(key + "Height", bounds.height);
 	}
 
-	public int getInt(String key, int defaultValue)
+	public int getInt(final String key, final int defaultValue)
 	{
 		return prefs.getInt(key, defaultValue);
 	}
 
-	public void putInt(String key, int value)
+	public void putInt(final String key, final int value)
 	{
 		prefs.putInt(key, value);
 	}
