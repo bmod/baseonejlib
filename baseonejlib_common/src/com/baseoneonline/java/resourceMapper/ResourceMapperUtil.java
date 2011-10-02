@@ -13,7 +13,7 @@ public class ResourceMapperUtil
 			final Class<T> referenceResourceType)
 			throws ResourceMapperException
 	{
-		ResourceMapper.addResourceClassPath(referenceResourceType.getPackage());
+		ResourceMapper.addResourcePackage(referenceResourceType.getPackage());
 
 		final InputStream is = referenceResourceType.getClassLoader()
 				.getResourceAsStream(url);
@@ -23,4 +23,5 @@ public class ResourceMapperUtil
 		final ResourceLoader loader = new XMLResourceLoader(is);
 		return (T) ResourceMapper.loadResource(loader);
 	}
+
 }

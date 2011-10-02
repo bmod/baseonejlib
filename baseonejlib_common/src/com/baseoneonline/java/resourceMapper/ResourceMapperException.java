@@ -13,7 +13,7 @@ public class ResourceMapperException extends Exception
 		super(string);
 	}
 
-	public ResourceMapperException(final InstantiationException e)
+	public ResourceMapperException(final Exception e)
 	{
 		super(e);
 	}
