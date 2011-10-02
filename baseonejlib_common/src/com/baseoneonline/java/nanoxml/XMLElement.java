@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -3089,18 +3090,23 @@ public class XMLElement
 		return new XMLParseException(getName(), parserLineNr, msg);
 	}
 
-	public static XMLElement loadXML(File f) throws XMLParseException,
+	public static XMLElement loadXML(final File f) throws XMLParseException,
 			FileNotFoundException, IOException
 	{
-		XMLElement xml = new XMLElement();
+		final XMLElement xml = new XMLElement();
 		xml.parseFromReader(new FileReader(f));
 		return xml;
 	}
 
-	public static XMLElement loadXML(String string) throws XMLParseException,
-			FileNotFoundException, IOException
+	public static XMLElement loadXML(final String string)
+			throws XMLParseException, FileNotFoundException, IOException
 	{
 		return loadXML(new File(string));
+	}
+
+	public Set<String> getAttributeKeys()
+	{
+		return attributes.keySet();
 	}
 
 }

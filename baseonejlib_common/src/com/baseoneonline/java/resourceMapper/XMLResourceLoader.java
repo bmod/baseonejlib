@@ -1,8 +1,14 @@
 package com.baseoneonline.java.resourceMapper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
 
@@ -28,6 +34,12 @@ public class XMLResourceLoader implements ResourceLoader
 			throw new ResourceMapperException(
 					"Error while initializing resource loader.", e);
 		}
+	}
+
+	public XMLResourceLoader(final File mediaConfigFile)
+			throws FileNotFoundException, ResourceMapperException
+	{
+		this(new FileInputStream(mediaConfigFile));
 	}
 
 	@Override
@@ -65,18 +77,6 @@ public class XMLResourceLoader implements ResourceLoader
 				}
 
 				@Override
-				public ResourceNode getChild(final int i)
-				{
-					return nodeFromXMLElement(x.getChildren().get(i));
-				}
-
-				@Override
-				public int getChildCount()
-				{
-					return x.countChildren();
-				}
-
-				@Override
 				public ResourceNode getChild(final String name)
 						throws ResourceMapperException
 				{
@@ -88,6 +88,24 @@ public class XMLResourceLoader implements ResourceLoader
 										+ "' in node '" + getName() + ".");
 					return child;
 				}
+
+				@Override
+				public Set<String> getAttributeKeys()
+				{
+					return x.getAttributeKeys();
+				}
+
+				@Override
+				List<ResourceNode> getChildren() throws ResourceMapperException
+				{
+					final List<ResourceNode> children = new ArrayList<ResourceNode>();
+					for (final XMLElement xChild : x.getChildren())
+					{
+						children.add(nodeFromXMLElement(xChild));
+					}
+					return children;
+				}
+
 			};
 			nodeCache.put(x, node);
 		}

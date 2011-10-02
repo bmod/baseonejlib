@@ -13,14 +13,19 @@ public class ResourceMapper
 
 	private final List<Package> resourcePackages = new ArrayList<Package>();
 
-	private final HashMap<Class<?>, FieldProcessor<?>> fieldProcessors = new HashMap<Class<?>, FieldProcessor<?>>();
+	private final HashMap<Class<?>, FieldMarshaller<?>> fieldMarshallers = new HashMap<Class<?>, FieldMarshaller<?>>();
 
 	private ResourceMapper()
 	{
-		fieldProcessors.put(int.class, new IntFieldProcessor());
-		fieldProcessors.put(File.class, new FileFieldProcessor());
+		fieldMarshallers.put(int.class, new IntFieldMarshaller());
+		fieldMarshallers.put(File.class, new FileFieldMarshaller());
+		fieldMarshallers.put(String[].class, new StringArrayFieldMarshaller());
+		fieldMarshallers.put(String.class, new StringFieldMarshaller());
 	}
 
+	/**
+	 * @return
+	 */
 	private static ResourceMapper get()
 	{
 		if (null == instance)
@@ -28,24 +33,79 @@ public class ResourceMapper
 		return instance;
 	}
 
+	/**
+	 * @param saver
+	 * @param res
+	 * @throws ResourceMapperException
+	 */
+	public static void saveResource(final ResourceSaver saver,
+			final Resource res) throws ResourceMapperException
+	{
+		// TODO: Implement this chain properly
+		get().marshallResource(saver, res);
+	}
+
+	/**
+	 * @param saver
+	 * @param res
+	 */
+	private void marshallResource(final ResourceSaver saver, final Resource res)
+	{
+		if (ListResource.class.isAssignableFrom(res.getClass()))
+		{
+			marshallListResource(saver, (ListResource<Resource>) res);
+		} else if (Resource.class.isAssignableFrom(res.getClass()))
+		{
+
+		}
+	}
+
+	/**
+	 * @param saver
+	 * @param res
+	 */
+	private void marshallListResource(final ResourceSaver saver,
+			final ListResource<Resource> res)
+	{
+		for (final Resource childRes : res)
+		{
+			saver.addChild(res.name);
+		}
+	}
+
+	/**
+	 * @param loader
+	 * @return
+	 * @throws ResourceMapperException
+	 */
 	public static Resource loadResource(final ResourceLoader loader)
 			throws ResourceMapperException
 	{
-		return get().processResource(loader.getRootNode());
+		return get().unmarshallResource(loader.getRootNode());
 	}
 
-	private Resource processResource(final ResourceNode node)
+	/**
+	 * @param node
+	 * @return
+	 * @throws ResourceMapperException
+	 */
+	private Resource unmarshallResource(final ResourceNode node)
 			throws ResourceMapperException
 	{
 		final Resource res = createInstance(node.getName());
 
-		processFields(node, res);
+		unmarshallFields(node, res);
 
 		return res;
 	}
 
+	/**
+	 * @param node
+	 * @param res
+	 * @throws ResourceMapperException
+	 */
 	@SuppressWarnings("unchecked")
-	private void processFields(final ResourceNode node, final Resource res)
+	private void unmarshallFields(final ResourceNode node, final Resource res)
 			throws ResourceMapperException
 	{
 		for (final Field f : res.getClass().getFields())
@@ -53,21 +113,21 @@ public class ResourceMapper
 			final Class<?> fieldType = f.getType();
 			Object value = null;
 
-			if (List.class.equals(fieldType))
+			if (ListResource.class.equals(fieldType))
 			{
-				value = new ArrayList<Object>();
-				final ResourceNode arrayNode = node.getChild(f.getName());
-
-				for (int i = 0; i < arrayNode.getChildCount(); i++)
-				{
-					final ResourceNode childNode = arrayNode.getChild(i);
-					final Resource childResource = processResource(childNode);
-					((List<Resource>) value).add(childResource);
-				}
+				value = unmarshallListField(node, res, f);
 			} else
 			{
 				final String stringValue = node.getAttribute(f.getName());
-				value = getFieldProcessor(fieldType).process(stringValue);
+				try
+				{
+					value = getFieldMarshaller(fieldType).unmarshall(
+							stringValue);
+				} catch (final ResourceMapperException e)
+				{
+					throw new ResourceMapperException(
+							"Error unmarshalling field: " + f.getName(), e);
+				}
 			}
 
 			if (null == value)
@@ -91,10 +151,38 @@ public class ResourceMapper
 
 	}
 
-	private FieldProcessor<?> getFieldProcessor(final Class<?> fieldType)
+	/**
+	 * @param node
+	 * @param res
+	 * @param f
+	 * @return
+	 * @throws ResourceMapperException
+	 */
+	private ListResource<Resource> unmarshallListField(final ResourceNode node,
+			final Resource res, final Field f) throws ResourceMapperException
+	{
+		final ListResource<Resource> value = new ListResource<Resource>(
+				f.getName());
+
+		final ResourceNode arrayNode = node.getChild(f.getName());
+
+		for (final ResourceNode childNode : arrayNode.getChildren())
+		{
+			final Resource childResource = unmarshallResource(childNode);
+			((List<Resource>) value).add(childResource);
+		}
+		return value;
+	}
+
+	/**
+	 * @param fieldType
+	 * @return
+	 * @throws ResourceMapperException
+	 */
+	private FieldMarshaller<?> getFieldMarshaller(final Class<?> fieldType)
 			throws ResourceMapperException
 	{
-		final FieldProcessor<?> proc = fieldProcessors.get(fieldType);
+		final FieldMarshaller<?> proc = fieldMarshallers.get(fieldType);
 		if (null == proc)
 		{
 			throw new ResourceMapperException("No support for field type: "
@@ -163,45 +251,9 @@ public class ResourceMapper
 	 * 
 	 * @param p
 	 */
-	public static void addResourceClassPath(final Package p)
+	public static void addResourcePackage(final Package p)
 	{
 		get().resourcePackages.add(p);
-	}
-
-	interface FieldProcessor<T>
-	{
-
-		T process(String value) throws ResourceMapperException;
-
-	}
-
-	class IntFieldProcessor implements FieldProcessor<Integer>
-	{
-
-		@Override
-		public Integer process(final String value)
-				throws ResourceMapperException
-		{
-
-			try
-			{
-				return Integer.parseInt(value);
-			} catch (final Exception e)
-			{
-				throw new ResourceMapperException("Error parsing integer.");
-			}
-		}
-
-	}
-
-	class FileFieldProcessor implements FieldProcessor<File>
-	{
-
-		@Override
-		public File process(final String value) throws ResourceMapperException
-		{
-			return new File(value);
-		}
 	}
 
 }
