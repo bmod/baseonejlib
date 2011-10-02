@@ -1,0 +1,30 @@
+!Version "2.00"
+JoystickInputModifierResource {
+	!RTTIInfoFieldName "Default"
+
+	General {
+		Name					 = "Default"
+		NameIsIdentifier		 = "False"
+		Parent					 = [null]
+		DelayCurve				 = <Controller/AimAccelerationCurves:Default>
+		AimAssistDistanceCurve	 = <Controller/AimAssistCurves:Default_OverDistance>
+		AimAssistSpeedCurve		 = <Controller/AimAssistCurves:Default_OverSpeed>
+		AimConeAngle			 = "10.0"
+		AimConeAngleOffset		 = "5.0"
+	}
+}
+
+JoystickInputModifierResource {
+	!RTTIInfoFieldName "StA3_Emplaced_AimHelpers"
+
+	General {
+		Name					 = "StA3_Emplaced_AimHelpers"
+		NameIsIdentifier		 = "False"
+		Parent					 = [null]
+		DelayCurve				 = <Controller/AimAccelerationCurves:Default>
+		AimAssistDistanceCurve	 = <Controller/AimAssistCurves:Default_OverDistance>
+		AimAssistSpeedCurve		 = <Controller/AimAssistCurves:Default_OverSpeed>
+		AimConeAngle			 = "10.0"
+		AimConeAngleOffset		 = "5.0"
+	}
+}
