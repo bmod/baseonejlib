@@ -1,6 +1,6 @@
 package com.baseoneonline.java.resourceMapper;
 
-
+// TODO: Move the node functionality into this interface and make this an abstract class
 public interface ResourceIO
 {
 
