@@ -1,28 +1,24 @@
 package com.baseoneonline.java.resourceMapper;
 
 import java.util.List;
-import java.util.Set;
 
-public abstract class ResourceNode
+public interface ResourceNode
 {
 
-	abstract String getName();
+	void addChild(ResourceNode child);
 
-	abstract String getAttribute(String name) throws ResourceMapperException;
+	void setAttribute(String name, Object value);
 
-	abstract List<ResourceNode> getChildren() throws ResourceMapperException;
+	ResourceNode create(String name);
 
-	ResourceNode getChild(final String name) throws ResourceMapperException
-	{
-		for (final ResourceNode node : getChildren())
-		{
-			if (node.getName().equals(name))
-				return node;
-		}
-		throw new ResourceMapperException("Could not find child '" + name
-				+ "' on node '" + getName() + "'");
-	}
+	ResourceNode getChild(String name) throws Exception;
 
-	abstract Set<String> getAttributeKeys();
+	String getName();
+
+	String getAttribute(String name);
+
+	List<ResourceNode> getChildren();
+
+	List<ResourceNode> getChildren(String name);
 
 }

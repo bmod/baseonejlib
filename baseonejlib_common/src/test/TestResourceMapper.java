@@ -1,15 +1,15 @@
 package test;
 
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 
 import test.testResources.World;
 
-import com.baseoneonline.java.nanoxml.XMLElement;
-import com.baseoneonline.java.resourceMapper.ListResource;
 import com.baseoneonline.java.resourceMapper.Resource;
+import com.baseoneonline.java.resourceMapper.ListResource;
+import com.baseoneonline.java.resourceMapper.ResourceIO;
+import com.baseoneonline.java.resourceMapper.ResourceNode;
+import com.baseoneonline.java.resourceMapper.XMLResourceIO;
+import com.baseoneonline.java.resourceMapper.XMLResourceNode;
 import com.baseoneonline.java.tools.StringUtils;
 
 public class TestResourceMapper
@@ -17,6 +17,7 @@ public class TestResourceMapper
 
 	private static final String ARRAY_DELIMITER = ",";
 	private static final String ID = "id";
+
 	private final Package resourcePackage = World.class.getPackage();
 
 	public static void main(final String[] args) throws Exception
@@ -24,30 +25,32 @@ public class TestResourceMapper
 		new TestResourceMapper();
 	}
 
+	private final ResourceIO resio;
+
 	public TestResourceMapper() throws Exception
 	{
 		final String inFile = "test/testResourceIn.xml";
 		final String outFile = "test/testResourceOut.xml";
 
-		final XMLElement xml = loadXML(inFile);
+		resio = new XMLResourceIO();
+		final ResourceNode xml = resio.loadFile(inFile);
 
 		final World world = (World) unmarshallResource(xml);
 
-		final XMLElement xMarshalled = marshallResource(world, null);
+		final ResourceNode xMarshalled = marshallResource(world, null);
 
-		writeXML(xMarshalled, outFile);
+		resio.write(xMarshalled, outFile);
 	}
 
 	/* ##### MARSHALL ##### */
 
-	private XMLElement marshallResource(final Resource res, String name)
+	private ResourceNode marshallResource(final Resource res, String name)
 			throws Exception
 	{
 		if (null == name)
 			name = res.getClass().getSimpleName();
 
-		final XMLElement xml = new XMLElement(name);
-		xml.ignoreCase = false;
+		final ResourceNode xml = new XMLResourceNode(name);
 
 		for (final Field field : res.getClass().getFields())
 		{
@@ -58,14 +61,14 @@ public class TestResourceMapper
 
 				final ListResource<?> child = (ListResource<?>) field.get(res);
 				@SuppressWarnings("unchecked")
-				final XMLElement xChild = marshallListResource(
+				final ResourceNode xChild = marshallListResource(
 						(ListResource<Resource>) child, field.getName());
 				xml.addChild(xChild);
 
 			} else if (Resource.class.isAssignableFrom(fieldType))
 			{
 				final Resource child = (Resource) field.get(res);
-				final XMLElement xChild = marshallResource(child,
+				final ResourceNode xChild = marshallResource(child,
 						fieldType.getSimpleName());
 				xChild.setAttribute(ID, field.getName());
 				xml.addChild(xChild);
@@ -86,10 +89,10 @@ public class TestResourceMapper
 		return xml;
 	}
 
-	private XMLElement marshallListResource(final ListResource<Resource> res,
+	private ResourceNode marshallListResource(final ListResource<Resource> res,
 			final String name) throws Exception
 	{
-		final XMLElement xml = new XMLElement(name);
+		final ResourceNode xml = resio.createNode(name);
 		for (final Resource child : res)
 		{
 			xml.addChild(marshallResource(child, child.getClass()
@@ -100,7 +103,7 @@ public class TestResourceMapper
 
 	/* ##### UNMARSHALL ##### */
 
-	private Resource unmarshallResource(final XMLElement xml) throws Exception
+	private Resource unmarshallResource(final ResourceNode xml) throws Exception
 	{
 		final Class<? extends Resource> type = resolveType(xml.getName());
 		final Resource res = type.newInstance();
@@ -114,21 +117,20 @@ public class TestResourceMapper
 			if (ListResource.class.isAssignableFrom(fieldType))
 			{
 				// A List
-				final XMLElement xChild = xml.getChild(field.getName());
+				final ResourceNode xChild = xml.getChild(field.getName());
 				value = unmarshallResourceArray(xChild, fieldType);
 
 			} else if (Resource.class.isAssignableFrom(fieldType))
 			{
 				// A Resource
-				final XMLElement xChild = getChildByIDAndType(xml,
+				final ResourceNode xChild = getChildByIDAndType(xml,
 						fieldType.getSimpleName(), field.getName());
 				value = unmarshallResource(xChild);
 
 			} else
 			{
 				// A primitive value or other
-				final String attribute = xml
-						.getStringAttribute(field.getName());
+				final String attribute = xml.getAttribute(field.getName());
 				value = unmarshallAttribute(attribute, field);
 			}
 
@@ -141,11 +143,11 @@ public class TestResourceMapper
 
 	@SuppressWarnings("unchecked")
 	private <T extends Resource> ListResource<T> unmarshallResourceArray(
-			final XMLElement xml, final Class<?> type) throws Exception
+			final ResourceNode xml, final Class<?> type) throws Exception
 	{
 
 		final ListResource<T> list = new ListResource<T>();
-		for (final XMLElement xChild : xml.getChildren())
+		for (final ResourceNode xChild : xml.getChildren())
 		{
 			list.add((T) unmarshallResource(xChild));
 		}
@@ -191,29 +193,12 @@ public class TestResourceMapper
 
 	/* ##### UTILS ##### */
 
-	private XMLElement loadXML(final String fileName) throws Exception
+	private ResourceNode getChildByIDAndType(final ResourceNode xml, final String type,
+			final String id) throws Exception
 	{
-		final XMLElement xml = new XMLElement();
-
-		xml.parseFromReader(new InputStreamReader(new FileInputStream(fileName)));
-		return xml;
-	}
-
-	private void writeXML(final XMLElement xml, final String filename)
-			throws Exception
-	{
-		final FileWriter writer = new FileWriter(filename);
-		xml.write(writer);
-		writer.flush();
-		writer.close();
-	}
-
-	private XMLElement getChildByIDAndType(final XMLElement xml,
-			final String type, final String id) throws Exception
-	{
-		for (final XMLElement xChild : xml.getChildren(type))
+		for (final ResourceNode xChild : xml.getChildren(type))
 		{
-			if (xChild.getStringAttribute(ID).equals(id))
+			if (xChild.getAttribute(ID).equals(id))
 				return xChild;
 		}
 		throw new Exception("No child found with id '" + id + "' and type '"
