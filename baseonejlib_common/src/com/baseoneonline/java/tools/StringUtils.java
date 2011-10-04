@@ -13,6 +13,17 @@ import java.util.regex.PatternSyntaxException;
 public class StringUtils
 {
 
+	public static String[] splitAndTrim(final String value,
+			final String delimRegex)
+	{
+		final String[] out = value.split(delimRegex);
+		for (int i = 0; i < out.length; i++)
+		{
+			out[i] = out[i].trim();
+		}
+		return out;
+	}
+
 	/**
 	 * Convert an array into a string, each element delimited by a specified
 	 * delimiter <br>
@@ -56,7 +67,8 @@ public class StringUtils
 	 * @return The provided {@link StringBuffer} containing all the elements of
 	 *         the array.
 	 */
-	public static StringBuffer join(final String[] array, final String delim, final StringBuffer sb)
+	public static StringBuffer join(final String[] array, final String delim,
+			final StringBuffer sb)
 	{
 		for (int i = 0; i < array.length; i++)
 		{
@@ -81,12 +93,14 @@ public class StringUtils
 			return URLDecoder.decode(url, Charset.defaultCharset().name());
 		} catch (final UnsupportedEncodingException e)
 		{
-			Logger.getLogger(StringUtils.class.getName()).warning("Unsupported Encoding in URL: " + url);
+			Logger.getLogger(StringUtils.class.getName()).warning(
+					"Unsupported Encoding in URL: " + url);
 		}
 		return null;
 	}
 
-	public static String padFront(String input, final int length, final String chr)
+	public static String padFront(String input, final int length,
+			final String chr)
 	{
 		while (input.length() < length)
 		{
@@ -114,7 +128,8 @@ public class StringUtils
 	 *            Don't provide a dot, it will be added.
 	 * @return A new file with the provided extension.
 	 */
-	public static File replaceExtension(final File file, final String newExtension)
+	public static File replaceExtension(final File file,
+			final String newExtension)
 	{
 		final String fname = stripExtension(file.getAbsolutePath());
 		return new File(fname + "." + newExtension);
@@ -124,7 +139,8 @@ public class StringUtils
 	{
 		try
 		{
-			final Pattern regex = Pattern.compile("[^/:*?\"<>|\r\n]+$", Pattern.MULTILINE);
+			final Pattern regex = Pattern.compile("[^/:*?\"<>|\r\n]+$",
+					Pattern.MULTILINE);
 			final Matcher regexMatcher = regex.matcher(fullPath);
 			if (regexMatcher.find())
 				return regexMatcher.group();
@@ -164,7 +180,8 @@ public class StringUtils
 		} catch (final PatternSyntaxException ex)
 		{
 			// Not interesting, not happening
-			throw new RuntimeException("This should not happen, source code is faulty!");
+			throw new RuntimeException(
+					"This should not happen, source code is faulty!");
 		}
 		return "";
 	}
