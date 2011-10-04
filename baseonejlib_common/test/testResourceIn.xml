@@ -1,0 +1,14 @@
+<World width="515" height="800">
+	<God id="localGod" />
+	<plants>
+		<Plant name="Flower" height="1" />
+		<Plant name="Cactus" height="3" />
+		<Plant name="Tree" height="8" />
+	</plants>
+
+	<animals>
+		<Animal properties="fat, large, heavy" />
+		<Animal properties="thin, small" />
+	</animals>
+
+</World>

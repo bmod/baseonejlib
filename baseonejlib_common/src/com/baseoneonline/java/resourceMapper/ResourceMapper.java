@@ -69,7 +69,7 @@ public class ResourceMapper
 	{
 		for (final Resource childRes : res)
 		{
-			saver.addChild(res.name);
+			// saver.addChild(res.name);
 		}
 	}
 
@@ -161,8 +161,7 @@ public class ResourceMapper
 	private ListResource<Resource> unmarshallListField(final ResourceNode node,
 			final Resource res, final Field f) throws ResourceMapperException
 	{
-		final ListResource<Resource> value = new ListResource<Resource>(
-				f.getName());
+		final ListResource<Resource> value = null;
 
 		final ResourceNode arrayNode = node.getChild(f.getName());
 
