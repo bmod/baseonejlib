@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 
 import com.baseoneonline.java.tools.StringUtils;
 
-// TODO: Move the node functionality into this interface and make this an abstract class
 public abstract class ResourceMapper<E extends Resource>
 {
 
