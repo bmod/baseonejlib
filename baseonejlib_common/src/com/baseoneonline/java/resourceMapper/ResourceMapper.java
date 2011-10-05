@@ -6,16 +6,24 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import com.baseoneonline.java.tools.StringUtils;
 
 public abstract class ResourceMapper
 {
 
+	private final HashMap<Class<?>, FieldSerializer<?>> fieldConverters = new HashMap<Class<?>, FieldSerializer<?>>();
+
 	public ResourceMapper(Class<? extends Resource> rootResource)
 	{
 		resourcePackage = rootResource.getPackage();
 
+		fieldConverters.put(String.class, new StringFieldSerializer());
+		fieldConverters.put(int.class, new IntFieldSerializer());
+		fieldConverters.put(String[].class, new StringArrayFieldSerializer());
+		fieldConverters.put(File.class, new FileFieldSerializer());
+		fieldConverters.put(float.class, new FloatFieldSerializer());
 	}
 
 	public Resource load(File inFile) throws Exception
@@ -41,7 +49,6 @@ public abstract class ResourceMapper
 	protected abstract void write(ResourceNode node, OutputStream out)
 			throws Exception;
 
-	private static final String ARRAY_DELIMITER = ",";
 	private static final String ID = "id";
 
 	private final Package resourcePackage;
@@ -77,10 +84,8 @@ public abstract class ResourceMapper
 			} else {
 				Object value = field.get(res);
 
-				if (String[].class.isAssignableFrom(fieldType)) {
-					value = StringUtils.join((String[]) value, ARRAY_DELIMITER);
-				}
-				node.setAttribute(field.getName(), value);
+				node.setAttribute(field.getName(), getFieldConverter(fieldType)
+						.serialize(value));
 
 			}
 		}
@@ -126,7 +131,9 @@ public abstract class ResourceMapper
 			} else {
 				// A primitive value or other
 				final String attribute = node.getAttribute(field.getName());
-				value = unmarshallAttribute(attribute, field);
+
+				value = getFieldConverter(field.getType()).deserialize(
+						attribute);
 			}
 
 			field.set(res, value);
@@ -146,34 +153,6 @@ public abstract class ResourceMapper
 			list.add((T) unmarshallResource(childNode));
 		}
 		return list;
-	}
-
-	private static Object unmarshallAttribute(final String value,
-			final Field field) throws Exception
-	{
-		final Class<?> fieldType = field.getType();
-		if (int.class.equals(fieldType)) {
-			try {
-				return Integer.parseInt(value);
-			} catch (final Exception e) {
-				throw new Exception("Error while parsing integer '"
-						+ field.getName() + "' = '" + value + "'");
-			}
-		} else if (float.class.equals(fieldType)) {
-			try {
-				return Float.parseFloat(value);
-			} catch (final Exception e) {
-				throw new Exception("Error while parsing float '"
-						+ field.getName() + "' = '" + value + "'");
-			}
-		} else if (String.class.equals(fieldType)) {
-			return value;
-		} else if (String[].class.equals(fieldType)) {
-			return StringUtils.splitAndTrim(value, ARRAY_DELIMITER);
-		} else {
-			throw new UnsupportedOperationException(field.getName() + " = "
-					+ value);
-		}
 	}
 
 	/* ##### UTILS ##### */
@@ -201,6 +180,14 @@ public abstract class ResourceMapper
 	{
 		final ResourceNode xMarshalled = marshallResource(res, null);
 		write(xMarshalled, out);
+	}
+
+	private FieldSerializer<?> getFieldConverter(Class<?> type)
+	{
+		if (!fieldConverters.containsKey(type))
+			throw new UnsupportedOperationException(
+					"No field converter for type: " + type.getName());
+		return fieldConverters.get(type);
 	}
 
 	/**
@@ -231,4 +218,101 @@ public abstract class ResourceMapper
 		write(res, new FileOutputStream(outFile));
 	}
 
+}
+
+interface FieldSerializer<T>
+{
+
+	T deserialize(String value) throws Exception;
+
+	String serialize(Object value);
+}
+
+class IntFieldSerializer implements FieldSerializer<Integer>
+{
+
+	@Override
+	public Integer deserialize(String value) throws Exception
+	{
+		try {
+			return Integer.parseInt(value);
+		} catch (Exception e) {
+			throw new Exception("Error while parsing value: " + value);
+		}
+	}
+
+	@Override
+	public String serialize(Object value)
+	{
+		return value.toString();
+	}
+
+}
+
+class FloatFieldSerializer implements FieldSerializer<Float>
+{
+
+	@Override
+	public Float deserialize(String value) throws Exception
+	{
+		try {
+			return Float.parseFloat(value);
+		} catch (Exception e) {
+			throw new Exception("Error while parsing value: " + value);
+		}
+	}
+
+	@Override
+	public String serialize(Object value)
+	{
+		return value.toString();
+	}
+
+}
+
+class StringFieldSerializer implements FieldSerializer<String>
+{
+	@Override
+	public String deserialize(String value) throws Exception
+	{
+		return value;
+	}
+
+	@Override
+	public String serialize(Object value)
+	{
+		return (String) value;
+	}
+}
+
+class FileFieldSerializer implements FieldSerializer<File>
+{
+	@Override
+	public File deserialize(String value) throws Exception
+	{
+		return new File(value);
+	}
+
+	@Override
+	public String serialize(Object value)
+	{
+		return ((File) value).getAbsolutePath();
+	}
+}
+
+class StringArrayFieldSerializer implements FieldSerializer<String[]>
+{
+	private static String DELIMITER = ",";
+
+	@Override
+	public String[] deserialize(String value) throws Exception
+	{
+		return StringUtils.splitAndTrim(value, DELIMITER);
+	}
+
+	@Override
+	public String serialize(Object value)
+	{
+		return StringUtils.join((String[]) value, DELIMITER);
+	}
 }
