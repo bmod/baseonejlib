@@ -1,30 +1,44 @@
 package com.baseoneonline.java.resourceMapper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 
 import com.baseoneonline.java.tools.StringUtils;
 
-public abstract class ResourceMapper<E extends Resource>
+public abstract class ResourceMapper
 {
 
-	public ResourceMapper(Class<E> rootResource)
+	public ResourceMapper(Class<? extends Resource> rootResource)
 	{
 		resourcePackage = rootResource.getPackage();
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public E load(String inFile) throws Exception
+	public Resource load(File inFile) throws Exception
 	{
-		ResourceNode node = loadNode(inFile);
-		return (E) unmarshallResource(node);
+		return load(new FileInputStream(inFile));
 	}
 
-	protected abstract ResourceNode loadNode(String inFile) throws Exception;
+	public Resource load(String inFile) throws Exception
+	{
+		return load(new FileInputStream(inFile));
+	}
+
+	public Resource load(InputStream is) throws Exception
+	{
+		ResourceNode node = loadNode(is);
+		return unmarshallResource(node);
+	}
+
+	protected abstract ResourceNode loadNode(InputStream in) throws Exception;
 
 	protected abstract ResourceNode createNode(String name);
 
-	protected abstract void write(ResourceNode node, String outFile)
+	protected abstract void write(ResourceNode node, OutputStream out)
 			throws Exception;
 
 	private static final String ARRAY_DELIMITER = ",";
@@ -34,7 +48,7 @@ public abstract class ResourceMapper<E extends Resource>
 
 	/* ##### MARSHALL ##### */
 
-	public ResourceNode marshallResource(final Resource res, String name)
+	private ResourceNode marshallResource(final Resource res, String name)
 			throws Exception
 	{
 		if (null == name)
@@ -87,7 +101,7 @@ public abstract class ResourceMapper<E extends Resource>
 
 	/* ##### UNMARSHALL ##### */
 
-	public Resource unmarshallResource(final ResourceNode node)
+	private Resource unmarshallResource(final ResourceNode node)
 			throws Exception
 	{
 		final Class<? extends Resource> type = resolveType(node.getName());
@@ -183,10 +197,38 @@ public abstract class ResourceMapper<E extends Resource>
 				.getName() + '.' + type);
 	}
 
-	public void write(E res, String outFile) throws Exception
+	public void write(Resource res, OutputStream out) throws Exception
 	{
 		final ResourceNode xMarshalled = marshallResource(res, null);
-		write(xMarshalled, outFile);
+		write(xMarshalled, out);
+	}
+
+	/**
+	 * Write a resource tree to a file.
+	 * 
+	 * @param res
+	 *            The resource root to serialize.
+	 * @param outFile
+	 *            The file to write to on the file system.
+	 * @throws Exception
+	 */
+	public void write(Resource res, File outFile) throws Exception
+	{
+		write(res, new FileOutputStream(outFile));
+	}
+
+	/**
+	 * Write a resource tree to a file.
+	 * 
+	 * @param res
+	 *            The resource root to serialize.
+	 * @param outFile
+	 *            The file to write to on the file system.
+	 * @throws Exception
+	 */
+	public void write(Resource res, String outFile) throws Exception
+	{
+		write(res, new FileOutputStream(outFile));
 	}
 
 }

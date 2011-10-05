@@ -1,25 +1,26 @@
 package com.baseoneonline.java.resourceMapper;
 
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
 
-public class XMLResourceMapper<E extends Resource> extends ResourceMapper<E>
+public class XMLResourceMapper extends ResourceMapper
 {
 
-	public XMLResourceMapper(Class<E> rootResource)
+	public XMLResourceMapper(Class<? extends Resource> rootResource)
 	{
 		super(rootResource);
 	}
 
 	@Override
-	protected ResourceNode loadNode(final String inFile) throws Exception
+	protected ResourceNode loadNode(final InputStream in) throws Exception
 	{
 		final XMLElement xml = new XMLElement();
-		xml.parseFromReader(new InputStreamReader(new FileInputStream(inFile)));
+		xml.parseFromReader(new InputStreamReader(in));
 		return new XMLResourceNode(xml);
 	}
 
@@ -30,10 +31,10 @@ public class XMLResourceMapper<E extends Resource> extends ResourceMapper<E>
 	}
 
 	@Override
-	protected void write(final ResourceNode node, final String outFile)
+	protected void write(final ResourceNode node, final OutputStream out)
 			throws IOException
 	{
-		final FileWriter writer = new FileWriter(outFile);
+		final OutputStreamWriter writer = new OutputStreamWriter(out);
 		final XMLResourceNode xNode = (XMLResourceNode) node;
 		xNode.getXML().write(writer);
 		writer.flush();

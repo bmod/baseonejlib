@@ -14,9 +14,9 @@ public class TestResourceMapper
 		final String inFile = "test/testResourceIn.xml";
 		final String outFile = "test/testResourceOut.xml";
 
-		ResourceMapper<World> resio = new XMLResourceMapper<World>(World.class);
+		ResourceMapper resio = new XMLResourceMapper(World.class);
 
-		final World world = resio.load(inFile);
+		final World world = (World) resio.load(inFile);
 
 		resio.write(world, outFile);
 	}
