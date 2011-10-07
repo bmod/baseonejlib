@@ -1,5 +1,6 @@
 package com.baseoneonline.java.swing;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,11 +15,16 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 {
 
 	private final HashSet<ListDataListener> listeners = new HashSet<ListDataListener>();
-	private final List<T> sourceData;
+	private List<T> sourceData;
 
 	public ListModelWrapper(final List<T> source)
 	{
 		this.sourceData = source;
+	}
+
+	public ListModelWrapper()
+	{
+		sourceData = new ArrayList<T>();
 	}
 
 	@Override
@@ -86,8 +92,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	public boolean add(final T e)
 	{
 		final boolean re = sourceData.add(e);
-		if (re)
-		{
+		if (re) {
 			final int index = sourceData.size() - 1;
 			fireIntervalAdded(index, index);
 		}
@@ -257,5 +262,16 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 				ListDataEvent.CONTENTS_CHANGED, index0, index1);
 		for (final ListDataListener l : listeners)
 			l.contentsChanged(e);
+	}
+
+	/**
+	 * Replace the current source with the new list.
+	 * 
+	 * @param newSource
+	 */
+	public void set(final List<T> newSource)
+	{
+		this.sourceData = newSource;
+		fireContentsChanged(0, sourceData.size() - 1);
 	}
 }
