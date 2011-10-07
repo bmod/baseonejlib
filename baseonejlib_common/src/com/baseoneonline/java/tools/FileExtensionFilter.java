@@ -23,12 +23,13 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 		extensions = new String[ext.length];
 		for (int i = 0; i < ext.length; i++)
 		{
-			if (!ext[i].startsWith("."))
+			final String x = ext[i].trim();
+			if (!x.startsWith("."))
 			{
-				extensions[i] = "." + ext[i];
+				extensions[i] = "." + x.trim();
 			} else
 			{
-				extensions[i] = ext[i];
+				extensions[i] = x.trim();
 			}
 		}
 	}
@@ -42,10 +43,11 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 			final boolean includeDirs)
 	{
 		this(extensionsString);
-		this.includeDirectories = includeDirs;
+		includeDirectories = includeDirs;
 	}
 
-	public FileExtensionFilter(String extensionsString, String description)
+	public FileExtensionFilter(final String extensionsString,
+			final String description)
 	{
 		extensions = extensionsString.split("[,| |;]");
 
@@ -68,7 +70,7 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 	@Override
 	public String getDescription()
 	{
-		String ext = "(" + StringUtils.join(extensions, ", ") + ")";
+		final String ext = "(" + StringUtils.join(extensions, ", ") + ")";
 		if (null == description)
 			return ext;
 		return description + " " + ext;

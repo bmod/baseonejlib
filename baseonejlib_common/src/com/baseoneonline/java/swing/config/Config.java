@@ -41,6 +41,8 @@ public class Config
 			prefs = Preferences.userNodeForPackage(getClass());
 		}
 
+		addPersistenceFactory(new WindowPersistenceFactory());
+
 	}
 
 	/**
