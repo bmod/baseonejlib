@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-public class FileUtils {
+public class FileUtils
+{
 
 	/**
 	 * Read a file into a {@link String} and return it. Will not throw errors
@@ -20,22 +21,27 @@ public class FileUtils {
 	 * @return {@link String} containing the contents of the file or null if the
 	 *         file could not be read.
 	 */
-	public static String readFile(final File f) {
-		try {
+	public static String readFile(final File f)
+	{
+		try
+		{
 			final FileReader reader = new FileReader(f);
 			final StringBuffer buf = new StringBuffer();
 			int c;
-			while ((c = reader.read()) != -1) {
+			while ((c = reader.read()) != -1)
+			{
 				buf.append((char) c);
 			}
 			reader.close();
 			return buf.toString();
-		} catch (final FileNotFoundException e) {
+		} catch (final FileNotFoundException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"File not found: " + f.getAbsolutePath());
-		} catch (final IOException e) {
+					"File not found: " + f.getAbsolutePath());
+		} catch (final IOException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"IO Exception while reading file: " + f.getAbsolutePath());
+					"IO Exception while reading file: " + f.getAbsolutePath());
 			e.printStackTrace();
 		}
 		return null;
@@ -49,48 +55,66 @@ public class FileUtils {
 	 * @param s
 	 *            Write this {@link String} to the file.
 	 */
-	public static void writeFile(final File f, final String s) {
-		try {
+	public static void writeFile(final File f, final String s)
+	{
+		try
+		{
 			final FileWriter writer = new FileWriter(f);
 			writer.write(s);
 			writer.flush();
 			writer.close();
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
-				"IO Exception while writing: " + f.getAbsolutePath());
+					"IO Exception while writing: " + f.getAbsolutePath());
 		}
 	}
 
-	private static char[] ALLOWED_CHARS =
-		"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: "
-				.toCharArray();
+	private static char[] ALLOWED_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: "
+			.toCharArray();
 
-	public static String removeIllegalChars(String filename) {
-		StringBuffer buf = new StringBuffer();
-		char[] fname = filename.toCharArray();
-		for (char fc : fname) {
-			for (char c : ALLOWED_CHARS) {
-				if (fc == c) {
-					buf.append(c);
-					break;
+	public static String removeIllegalChars(final String filename,
+			final boolean allowSeparators)
+	{
+		final StringBuffer buf = new StringBuffer();
+		final char[] fname = filename.toCharArray();
+		for (final char fc : fname)
+		{
+			if (allowSeparators && fc == File.separatorChar)
+			{
+				buf.append(fc);
+			} else
+			{
+				for (final char c : ALLOWED_CHARS)
+				{
+					if (fc == c)
+					{
+						buf.append(c);
+						break;
+					}
 				}
 			}
 		}
 		return buf.toString();
 	}
 
-	public static String readFile(URL url) {
-		try {
-			BufferedInputStream bin = new BufferedInputStream(url.openStream());
-			StringBuffer buf = new StringBuffer();
+	public static String readFile(final URL url)
+	{
+		try
+		{
+			final BufferedInputStream bin = new BufferedInputStream(
+					url.openStream());
+			final StringBuffer buf = new StringBuffer();
 			int c;
-			while ((c = bin.read()) != -1) {
+			while ((c = bin.read()) != -1)
+			{
 				buf.append((char) c);
 			}
 			return buf.toString();
-		} catch (IOException e) {
+		} catch (final IOException e)
+		{
 			Logger.getLogger(FileUtils.class.getName()).severe(
-				"Error loading: " + url);
+					"Error loading: " + url);
 		}
 		return null;
 	}
