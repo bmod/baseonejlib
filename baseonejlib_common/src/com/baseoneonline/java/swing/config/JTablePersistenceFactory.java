@@ -32,14 +32,18 @@ public class JTablePersistenceFactory implements PersistenceFactory
 
 	private void setColumnWidths(final JTable table, final int[] widths)
 	{
+
 		if (null == widths || widths.length != table.getColumnCount())
 			return;
 
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
 		final TableColumnModel colModel = table.getColumnModel();
+
 		for (int i = 0; i < widths.length; i++)
 		{
 			final TableColumn col = colModel.getColumn(i);
-			col.setWidth(widths[i]);
+			col.setPreferredWidth(widths[i]);
 		}
 	}
 
