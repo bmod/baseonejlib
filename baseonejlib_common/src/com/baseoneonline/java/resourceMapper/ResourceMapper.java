@@ -15,7 +15,7 @@ public abstract class ResourceMapper
 
 	private final HashMap<Class<?>, FieldSerializer<?>> fieldConverters = new HashMap<Class<?>, FieldSerializer<?>>();
 
-	public ResourceMapper(Class<? extends Resource> rootResource)
+	public ResourceMapper(final Class<? extends Resource> rootResource)
 	{
 		resourcePackage = rootResource.getPackage();
 
@@ -26,19 +26,19 @@ public abstract class ResourceMapper
 		fieldConverters.put(float.class, new FloatFieldSerializer());
 	}
 
-	public Resource load(File inFile) throws Exception
+	public Resource load(final File inFile) throws Exception
 	{
 		return load(new FileInputStream(inFile));
 	}
 
-	public Resource load(String inFile) throws Exception
+	public Resource load(final String inFile) throws Exception
 	{
 		return load(new FileInputStream(inFile));
 	}
 
-	public Resource load(InputStream is) throws Exception
+	public Resource load(final InputStream is) throws Exception
 	{
-		ResourceNode node = loadNode(is);
+		final ResourceNode node = loadNode(is);
 		return unmarshallResource(node);
 	}
 
@@ -63,10 +63,12 @@ public abstract class ResourceMapper
 
 		final ResourceNode node = createNode(name);
 
-		for (final Field field : res.getClass().getFields()) {
+		for (final Field field : res.getClass().getFields())
+		{
 			final Class<?> fieldType = field.getType();
 
-			if (ListResource.class.isAssignableFrom(fieldType)) {
+			if (ListResource.class.isAssignableFrom(fieldType))
+			{
 
 				final ListResource<?> child = (ListResource<?>) field.get(res);
 				@SuppressWarnings("unchecked")
@@ -74,15 +76,17 @@ public abstract class ResourceMapper
 						(ListResource<Resource>) child, field.getName());
 				node.addChild(childNode);
 
-			} else if (Resource.class.isAssignableFrom(fieldType)) {
+			} else if (Resource.class.isAssignableFrom(fieldType))
+			{
 				final Resource child = (Resource) field.get(res);
 				final ResourceNode childNode = marshallResource(child,
 						fieldType.getSimpleName());
 				childNode.setAttribute(ID, field.getName());
 				node.addChild(childNode);
 
-			} else {
-				Object value = field.get(res);
+			} else
+			{
+				final Object value = field.get(res);
 
 				node.setAttribute(field.getName(), getFieldConverter(fieldType)
 						.serialize(value));
@@ -97,7 +101,8 @@ public abstract class ResourceMapper
 			final String name) throws Exception
 	{
 		final ResourceNode node = createNode(name);
-		for (final Resource child : res) {
+		for (final Resource child : res)
+		{
 			node.addChild(marshallResource(child, child.getClass()
 					.getSimpleName()));
 		}
@@ -112,26 +117,33 @@ public abstract class ResourceMapper
 		final Class<? extends Resource> type = resolveType(node.getName());
 		final Resource res = type.newInstance();
 
-		for (final Field field : type.getFields()) {
+		for (final Field field : type.getFields())
+		{
 			final Class<?> fieldType = field.getType();
 
 			final Object value;
 
-			if (ListResource.class.isAssignableFrom(fieldType)) {
+			if (ListResource.class.isAssignableFrom(fieldType))
+			{
 				// A List
 				final ResourceNode childNode = node.getChild(field.getName());
 				value = unmarshallResourceArray(childNode, fieldType);
 
-			} else if (Resource.class.isAssignableFrom(fieldType)) {
+			} else if (Resource.class.isAssignableFrom(fieldType))
+			{
 				// A Resource
 				final ResourceNode childNode = getChildByIDAndType(node,
 						fieldType.getSimpleName(), field.getName());
 				value = unmarshallResource(childNode);
 
-			} else {
+			} else
+			{
 				// A primitive value or other
 				final String attribute = node.getAttribute(field.getName());
 
+				if (null == attribute)
+					throw new Exception("Attribute '" + field.getName()
+							+ "' not found on node: " + node.getName());
 				value = getFieldConverter(field.getType()).deserialize(
 						attribute);
 			}
@@ -149,7 +161,8 @@ public abstract class ResourceMapper
 	{
 
 		final ListResource<T> list = new ListResource<T>();
-		for (final ResourceNode childNode : node.getChildren()) {
+		for (final ResourceNode childNode : node.getChildren())
+		{
 			list.add((T) unmarshallResource(childNode));
 		}
 		return list;
@@ -160,7 +173,8 @@ public abstract class ResourceMapper
 	private static ResourceNode getChildByIDAndType(final ResourceNode node,
 			final String type, final String id) throws Exception
 	{
-		for (final ResourceNode childNode : node.getChildren(type)) {
+		for (final ResourceNode childNode : node.getChildren(type))
+		{
 			if (childNode.getAttribute(ID).equals(id))
 				return childNode;
 		}
@@ -176,13 +190,14 @@ public abstract class ResourceMapper
 				.getName() + '.' + type);
 	}
 
-	public void write(Resource res, OutputStream out) throws Exception
+	public void write(final Resource res, final OutputStream out)
+			throws Exception
 	{
 		final ResourceNode xMarshalled = marshallResource(res, null);
 		write(xMarshalled, out);
 	}
 
-	private FieldSerializer<?> getFieldConverter(Class<?> type)
+	private FieldSerializer<?> getFieldConverter(final Class<?> type)
 	{
 		if (!fieldConverters.containsKey(type))
 			throw new UnsupportedOperationException(
@@ -199,7 +214,7 @@ public abstract class ResourceMapper
 	 *            The file to write to on the file system.
 	 * @throws Exception
 	 */
-	public void write(Resource res, File outFile) throws Exception
+	public void write(final Resource res, final File outFile) throws Exception
 	{
 		write(res, new FileOutputStream(outFile));
 	}
@@ -213,7 +228,8 @@ public abstract class ResourceMapper
 	 *            The file to write to on the file system.
 	 * @throws Exception
 	 */
-	public void write(Resource res, String outFile) throws Exception
+	public void write(final Resource res, final String outFile)
+			throws Exception
 	{
 		write(res, new FileOutputStream(outFile));
 	}
@@ -232,17 +248,19 @@ class IntFieldSerializer implements FieldSerializer<Integer>
 {
 
 	@Override
-	public Integer deserialize(String value) throws Exception
+	public Integer deserialize(final String value) throws Exception
 	{
-		try {
+		try
+		{
 			return Integer.parseInt(value);
-		} catch (Exception e) {
+		} catch (final Exception e)
+		{
 			throw new Exception("Error while parsing value: " + value);
 		}
 	}
 
 	@Override
-	public String serialize(Object value)
+	public String serialize(final Object value)
 	{
 		return value.toString();
 	}
@@ -253,17 +271,19 @@ class FloatFieldSerializer implements FieldSerializer<Float>
 {
 
 	@Override
-	public Float deserialize(String value) throws Exception
+	public Float deserialize(final String value) throws Exception
 	{
-		try {
+		try
+		{
 			return Float.parseFloat(value);
-		} catch (Exception e) {
+		} catch (final Exception e)
+		{
 			throw new Exception("Error while parsing value: " + value);
 		}
 	}
 
 	@Override
-	public String serialize(Object value)
+	public String serialize(final Object value)
 	{
 		return value.toString();
 	}
@@ -273,13 +293,13 @@ class FloatFieldSerializer implements FieldSerializer<Float>
 class StringFieldSerializer implements FieldSerializer<String>
 {
 	@Override
-	public String deserialize(String value) throws Exception
+	public String deserialize(final String value) throws Exception
 	{
 		return value;
 	}
 
 	@Override
-	public String serialize(Object value)
+	public String serialize(final Object value)
 	{
 		return (String) value;
 	}
@@ -288,13 +308,13 @@ class StringFieldSerializer implements FieldSerializer<String>
 class FileFieldSerializer implements FieldSerializer<File>
 {
 	@Override
-	public File deserialize(String value) throws Exception
+	public File deserialize(final String value) throws Exception
 	{
 		return new File(value);
 	}
 
 	@Override
-	public String serialize(Object value)
+	public String serialize(final Object value)
 	{
 		return ((File) value).getAbsolutePath();
 	}
@@ -305,13 +325,13 @@ class StringArrayFieldSerializer implements FieldSerializer<String[]>
 	private static String DELIMITER = ",";
 
 	@Override
-	public String[] deserialize(String value) throws Exception
+	public String[] deserialize(final String value) throws Exception
 	{
 		return StringUtils.splitAndTrim(value, DELIMITER);
 	}
 
 	@Override
-	public String serialize(Object value)
+	public String serialize(final Object value)
 	{
 		return StringUtils.join((String[]) value, DELIMITER);
 	}

@@ -70,7 +70,7 @@ public class FileUtils
 		}
 	}
 
-	private static char[] ALLOWED_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_./\\: "
+	private static char[] ALLOWED_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!()-_.: "
 			.toCharArray();
 
 	public static String removeIllegalChars(final String filename,
@@ -80,7 +80,7 @@ public class FileUtils
 		final char[] fname = filename.toCharArray();
 		for (final char fc : fname)
 		{
-			if (allowSeparators && fc == File.separatorChar)
+			if (allowSeparators && (fc == '/' || fc == '\\'))
 			{
 				buf.append(fc);
 			} else
