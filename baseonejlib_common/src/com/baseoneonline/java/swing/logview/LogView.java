@@ -1,49 +1,118 @@
 package com.baseoneonline.java.swing.logview;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.swing.AbstractAction;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import com.baseoneonline.java.swing.SwingUtils;
 
 public class LogView extends JPanel {
 
-	private final JTextArea taLog;
+	public static final Level[] LOG_LEVELS = { Level.ALL, Level.CONFIG,
+			Level.FINE, Level.FINER, Level.FINEST, Level.INFO, Level.SEVERE,
+			Level.WARNING };
 
-	private LogRecordFormatter formatter;
+	private JTable table;
 
-	private Level level;
-	
+	private final LogRecordModel model = new LogRecordModel();
+
+	private Logger logger;
+
+	private final JPopupMenu bottomContextMenu = createContextMenu();
+
+	public LogView(Logger logger) {
+
+		initComponents();
+		updateStatus();
+		model.addTableModelListener(tableModelListener);
+
+		SwingUtils.setContextMenu(statusPanel, bottomContextMenu);
+		setLogger(logger);
+		setLevel(Level.INFO);
+
+	}
+
 	public LogView() {
-		this(null, new DefaultLogRecordFormatter());
+		this(Logger.getLogger(""));
 	}
-	
-	public LogView(String loggerName, final LogRecordFormatter formatter) {
-		if (null == loggerName)
-			loggerName = "";
-		Logger.getLogger(loggerName).addHandler(logHandler);
-		taLog = new JTextArea();
-		taLog.setEditable(false);
+
+	private void initComponents() {
+		table = new JTable(model);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		table.setShowGrid(false);
+		table.setTableHeader(null);
+
+		table.getColumnModel().getColumn(0).setMaxWidth(80);
+
 		setLayout(new BorderLayout());
-		add(new JScrollPane(taLog));
-		setRecordFormatter(formatter);
-		Logger.getLogger(getClass().getName()).info("LogView");
+		scrollPane = new JScrollPane(table);
+		add(scrollPane);
+		statusPanel = new JPanel();
+		statusPanel.setLayout(new BorderLayout(0, 0));
+		lblStatus = new JLabel("Status");
+		statusPanel.add(lblStatus);
+		add(statusPanel, BorderLayout.SOUTH);
 	}
-	
+
+	public void setLogger(Logger logger) {
+		if (null == this.logger) {
+			logger.removeHandler(logHandler);
+		}
+		this.logger = logger;
+		logger.addHandler(logHandler);
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	private final TableModelListener tableModelListener = new TableModelListener() {
+
+		@Override
+		public void tableChanged(TableModelEvent e) {
+			table.scrollRectToVisible(new Rectangle(table.getCellRect(
+					model.getRowCount() - 1, 0, true)));
+		}
+	};
+
+	private void updateStatus() {
+		if (null == lblStatus || logger == null)
+			return;
+		StringBuffer buf = new StringBuffer();
+		buf.append("Level: " + logger.getLevel().getName());
+
+		lblStatus.setText(buf.toString());
+	}
+
 	public void clear() {
-		taLog.setText("");
+		model.clear();
 	}
-	
+
 	public void setLevel(final Level level) {
-		this.level = level;
+		logger.setLevel(level);
+		updateStatus();
 	}
-	
+
 	public Level getLevel() {
-		return level;
+		return logger.getLevel();
 	}
 
 	private final Handler logHandler = new Handler() {
@@ -57,30 +126,92 @@ public class LogView extends JPanel {
 
 		@Override
 		public void publish(final LogRecord record) {
-			taLog.append(formatter.format(record) + "\n");
-			taLog.setCaretPosition(taLog.getDocument().getLength());
+			model.add(record);
 		};
 	};
+	private JLabel lblStatus;
+	private JScrollPane scrollPane;
+	private JPanel statusPanel;
 
-	public static class DefaultLogRecordFormatter implements LogRecordFormatter {
-		@Override
-		public String format(final LogRecord r) {
-			return r.getLoggerName()
-					+ "\n"
-					+ r.getLevel().getName()
-					+ "\t"
-					+ r.getMessage()
-					+ "\n";
-		}
+	public void setRecordFormatter(final Formatter formatter) {
+		model.setFormatter(formatter);
 	}
 
-	public void setRecordFormatter(final LogRecordFormatter formatter) {
-		if (null == formatter) {
-			this.formatter = new DefaultLogRecordFormatter();
+	private JPopupMenu createContextMenu() {
+		JPopupMenu menu = new JPopupMenu();
+
+		for (final Level lvl : LOG_LEVELS) {
+			menu.add(new AbstractAction(lvl.getName()) {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setLevel(lvl);
+				}
+			});
 		}
-		else {
-			this.formatter = formatter;
+
+		return menu;
+	}
+}
+
+class LogCellRenderer extends DefaultTableCellRenderer {
+	@Override
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		Component comp = super.getTableCellRendererComponent(table, value,
+				isSelected, hasFocus, row, column);
+		if (row == 0) {
+
 		}
+		return comp;
+	}
+}
+
+class LogRecordModel extends AbstractTableModel {
+
+	private final LinkedList<LogRecord> records = new LinkedList<LogRecord>();
+	private Formatter formatter = new DefaultLogRecordFormatter();
+
+	public void add(LogRecord record) {
+		records.add(record);
+		int last = records.size() - 1;
+		fireTableRowsInserted(last, last);
+	}
+
+	public void setFormatter(Formatter formatter) {
+		this.formatter = formatter;
+	}
+
+	public Formatter getFormatter() {
+		return formatter;
+	}
+
+	public void clear() {
+		records.clear();
+	}
+
+	@Override
+	public int getRowCount() {
+		return records.size();
+	}
+
+	@Override
+	public int getColumnCount() {
+		return 2;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		switch (columnIndex) {
+		case 0:
+			return records.get(rowIndex).getLevel();
+		case 1:
+			return records.get(rowIndex).getMessage();
+
+		default:
+			break;
+		}
+		return null;
 	}
 
 }
