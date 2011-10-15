@@ -2,7 +2,6 @@ package com.baseoneonline.java.swing.logview;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.logging.Formatter;
@@ -24,7 +23,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.baseoneonline.java.swing.SwingUtils;
 
-public class LogView extends JPanel {
+public class LogView extends JPanel
+{
 
 	public static final Level[] LOG_LEVELS = { Level.ALL, Level.CONFIG,
 			Level.FINE, Level.FINER, Level.FINEST, Level.INFO, Level.SEVERE,
@@ -38,7 +38,8 @@ public class LogView extends JPanel {
 
 	private final JPopupMenu bottomContextMenu = createContextMenu();
 
-	public LogView(Logger logger) {
+	public LogView(final Logger logger)
+	{
 
 		initComponents();
 		updateStatus();
@@ -50,12 +51,15 @@ public class LogView extends JPanel {
 
 	}
 
-	public LogView() {
+	public LogView()
+	{
 		this(Logger.getLogger(""));
 	}
 
-	private void initComponents() {
+	private void initComponents()
+	{
 		table = new JTable(model);
+		table.setBorder(null);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		table.setShowGrid(false);
 		table.setTableHeader(null);
@@ -64,6 +68,7 @@ public class LogView extends JPanel {
 
 		setLayout(new BorderLayout());
 		scrollPane = new JScrollPane(table);
+		scrollPane.setBorder(null);
 		add(scrollPane);
 		statusPanel = new JPanel();
 		statusPanel.setLayout(new BorderLayout(0, 0));
@@ -72,60 +77,73 @@ public class LogView extends JPanel {
 		add(statusPanel, BorderLayout.SOUTH);
 	}
 
-	public void setLogger(Logger logger) {
-		if (null == this.logger) {
+	public void setLogger(final Logger logger)
+	{
+		if (null == this.logger)
+		{
 			logger.removeHandler(logHandler);
 		}
 		this.logger = logger;
 		logger.addHandler(logHandler);
 	}
 
-	public Logger getLogger() {
+	public Logger getLogger()
+	{
 		return logger;
 	}
 
-	private final TableModelListener tableModelListener = new TableModelListener() {
+	private final TableModelListener tableModelListener = new TableModelListener()
+	{
 
 		@Override
-		public void tableChanged(TableModelEvent e) {
-			table.scrollRectToVisible(new Rectangle(table.getCellRect(
-					model.getRowCount() - 1, 0, true)));
+		public void tableChanged(final TableModelEvent e)
+		{
+			scrollPane.getVerticalScrollBar().setValue(
+					scrollPane.getVerticalScrollBar().getMaximum());
 		}
 	};
 
-	private void updateStatus() {
+	private void updateStatus()
+	{
 		if (null == lblStatus || logger == null)
 			return;
-		StringBuffer buf = new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 		buf.append("Level: " + logger.getLevel().getName());
 
 		lblStatus.setText(buf.toString());
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		model.clear();
 	}
 
-	public void setLevel(final Level level) {
+	public void setLevel(final Level level)
+	{
 		logger.setLevel(level);
 		updateStatus();
 	}
 
-	public Level getLevel() {
+	public Level getLevel()
+	{
 		return logger.getLevel();
 	}
 
-	private final Handler logHandler = new Handler() {
+	private final Handler logHandler = new Handler()
+	{
 		@Override
-		public void close() throws SecurityException {
+		public void close() throws SecurityException
+		{
 		};
 
 		@Override
-		public void flush() {
+		public void flush()
+		{
 		};
 
 		@Override
-		public void publish(final LogRecord record) {
+		public void publish(final LogRecord record)
+		{
 			model.add(record);
 		};
 	};
@@ -133,18 +151,23 @@ public class LogView extends JPanel {
 	private JScrollPane scrollPane;
 	private JPanel statusPanel;
 
-	public void setRecordFormatter(final Formatter formatter) {
+	public void setRecordFormatter(final Formatter formatter)
+	{
 		model.setFormatter(formatter);
 	}
 
-	private JPopupMenu createContextMenu() {
-		JPopupMenu menu = new JPopupMenu();
+	private JPopupMenu createContextMenu()
+	{
+		final JPopupMenu menu = new JPopupMenu();
 
-		for (final Level lvl : LOG_LEVELS) {
-			menu.add(new AbstractAction(lvl.getName()) {
+		for (final Level lvl : LOG_LEVELS)
+		{
+			menu.add(new AbstractAction(lvl.getName())
+			{
 
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(final ActionEvent e)
+				{
 					setLevel(lvl);
 				}
 			});
@@ -154,54 +177,66 @@ public class LogView extends JPanel {
 	}
 }
 
-class LogCellRenderer extends DefaultTableCellRenderer {
+class LogCellRenderer extends DefaultTableCellRenderer
+{
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
-		Component comp = super.getTableCellRendererComponent(table, value,
-				isSelected, hasFocus, row, column);
-		if (row == 0) {
+	public Component getTableCellRendererComponent(final JTable table,
+			final Object value, final boolean isSelected,
+			final boolean hasFocus, final int row, final int column)
+	{
+		final Component comp = super.getTableCellRendererComponent(table,
+				value, isSelected, hasFocus, row, column);
+		if (row == 0)
+		{
 
 		}
 		return comp;
 	}
 }
 
-class LogRecordModel extends AbstractTableModel {
+class LogRecordModel extends AbstractTableModel
+{
 
 	private final LinkedList<LogRecord> records = new LinkedList<LogRecord>();
 	private Formatter formatter = new DefaultLogRecordFormatter();
 
-	public void add(LogRecord record) {
+	public void add(final LogRecord record)
+	{
 		records.add(record);
-		int last = records.size() - 1;
+		final int last = records.size() - 1;
 		fireTableRowsInserted(last, last);
 	}
 
-	public void setFormatter(Formatter formatter) {
+	public void setFormatter(final Formatter formatter)
+	{
 		this.formatter = formatter;
 	}
 
-	public Formatter getFormatter() {
+	public Formatter getFormatter()
+	{
 		return formatter;
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		records.clear();
 	}
 
 	@Override
-	public int getRowCount() {
+	public int getRowCount()
+	{
 		return records.size();
 	}
 
 	@Override
-	public int getColumnCount() {
+	public int getColumnCount()
+	{
 		return 2;
 	}
 
 	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
+	public Object getValueAt(final int rowIndex, final int columnIndex)
+	{
 		switch (columnIndex) {
 		case 0:
 			return records.get(rowIndex).getLevel();
