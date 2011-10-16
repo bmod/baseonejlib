@@ -155,6 +155,11 @@ public class Config
 				"No persistence factory found for class: " + value.getClass());
 	}
 
+	public void persist(final Object value)
+	{
+		persist(value.getClass().getName(), value);
+	}
+
 	public void persist(final String key, final Object value)
 	{
 
