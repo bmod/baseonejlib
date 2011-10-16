@@ -3,10 +3,8 @@ package com.baseoneonline.java.tools;
 import java.util.Comparator;
 import java.util.List;
 
-public class ListUtils
-{
-	private ListUtils()
-	{
+public class ListUtils {
+	private ListUtils() {
 
 	}
 
@@ -20,13 +18,11 @@ public class ListUtils
 	 * @return
 	 */
 	public static <E> int addSorted(final List<E> list, final E element,
-			final Comparator<E> comp)
-	{
+			final Comparator<E> comp) {
 		int index = 0;
 		final int len = list.size();
 
-		for (; index < len; index++)
-		{
+		for (; index < len; index++) {
 			final E listElement = list.get(index);
 			if (comp.compare(element, listElement) <= 0)
 				break;
