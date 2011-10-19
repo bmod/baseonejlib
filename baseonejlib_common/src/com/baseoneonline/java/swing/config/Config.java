@@ -222,4 +222,14 @@ public class Config
 		}
 		return key;
 	}
+
+	public String getString(final String key, final String defaultvalue)
+	{
+		return prefs.get(key, defaultvalue);
+	}
+
+	public void putString(final String key, final String value)
+	{
+		prefs.put(key, value);
+	}
 }
