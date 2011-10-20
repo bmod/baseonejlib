@@ -13,8 +13,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jbox2d-2.0.1-full.jar" sourcepath="lib/jbox2d-2.0.1-full.jar"/>
-	<classpathentry kind="lib" path="lib/jaudiotagger.jar" sourcepath="lib/jaudiotaggersrc.jar"/>
-	<classpathentry kind="lib" path="lib/jaudiotaggersrc.jar"/>
 	<classpathentry kind="lib" path="lib/glazedlists_java15-1.9-20110828.184933-10-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
