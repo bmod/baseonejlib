@@ -8,32 +8,27 @@ import java.io.OutputStreamWriter;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
 
-public class XMLResourceMapper extends ResourceMapper
-{
+public class XMLResourceMapper extends ResourceMapper {
 
-	public XMLResourceMapper(Class<? extends Resource> rootResource)
-	{
-		super(rootResource);
+	public XMLResourceMapper(final ResourceLocator resLoc) {
+		super(resLoc);
 	}
 
 	@Override
-	protected ResourceNode loadNode(final InputStream in) throws Exception
-	{
+	protected ResourceNode loadNode(final InputStream in) throws Exception {
 		final XMLElement xml = new XMLElement();
 		xml.parseFromReader(new InputStreamReader(in));
 		return new XMLResourceNode(xml);
 	}
 
 	@Override
-	protected ResourceNode createNode(final String name)
-	{
+	protected ResourceNode createNode(final String name) {
 		return new XMLResourceNode(name);
 	}
 
 	@Override
 	protected void write(final ResourceNode node, final OutputStream out)
-			throws IOException
-	{
+			throws IOException {
 		final OutputStreamWriter writer = new OutputStreamWriter(out);
 		final XMLResourceNode xNode = (XMLResourceNode) node;
 		xNode.getXML().write(writer);
