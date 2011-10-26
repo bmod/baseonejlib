@@ -116,8 +116,19 @@ public abstract class ResourceMapper {
 
 			final Object value = getFieldValue(fieldType, node, field);
 
-			if (null != value)
+			if (null == value) {
+				// Didn't find attribute on ResourceNode
+				if (field.get(res) == null) {
+					// Didn't find default value on Resource either, fail!
+					throw new RuntimeException(
+							String.format(
+									"No attribute '%s' found on node '%s' and no default value was defined.",
+									field.getName(), node.getName()));
+				}
+			} else {
+				// Attribute found, overriding any default values.
 				field.set(res, value);
+			}
 
 		}
 
