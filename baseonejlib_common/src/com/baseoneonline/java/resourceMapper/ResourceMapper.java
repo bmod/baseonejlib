@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.baseoneonline.java.tools.StringUtils;
@@ -23,6 +25,10 @@ public abstract class ResourceMapper {
 
 	private final ResourceLocator resourceLocator;
 
+	private static final String ID = "id";
+
+	private final Set<Package> resourcePackages = new HashSet<Package>();
+
 	private static final Logger LOG = Logger.getLogger(ResourceMapper.class
 			.getName());
 
@@ -31,17 +37,39 @@ public abstract class ResourceMapper {
 
 	}
 
+	/**
+	 * Load a resource file and return the resulting {@link Resource}
+	 * 
+	 * 
+	 * @param <T>
+	 *            The type of {@link Resource} we want to process.
+	 * @param type
+	 *            Exact type of resource to process and return
+	 * @param inFile
+	 *            Relative path to the resource.
+	 * @return A {@link Resource} subclass based on the file's contents.
+	 * @throws Exception
+	 *             When loading or parsing failed.
+	 */
 	public <T extends Resource> T load(final Class<T> type, final String inFile)
 			throws Exception {
 		return load(type, resourceLocator.getInputStream(inFile));
 	}
 
+	public ResourceNode loadNode(String inFile) throws Exception {
+		return loadNode(resourceLocator.getInputStream(inFile));
+	}
+
 	@SuppressWarnings("unchecked")
 	private <T extends Resource> T load(final Class<T> type,
 			final InputStream is) throws Exception {
-		resourcePackage = type.getPackage();
+		addResourcePackage(type.getPackage());
 		final ResourceNode node = loadNode(is);
 		return (T) unmarshallResource(node);
+	}
+
+	public void addResourcePackage(Package pack) {
+		resourcePackages.add(pack);
 	}
 
 	protected abstract ResourceNode loadNode(InputStream in) throws Exception;
@@ -50,12 +78,6 @@ public abstract class ResourceMapper {
 
 	protected abstract void write(ResourceNode node, OutputStream out)
 			throws Exception;
-
-	private static final String ID = "id";
-
-	private Package resourcePackage;
-
-	/* ##### MARSHALL ##### */
 
 	private ResourceNode marshallResource(final Resource res, String name)
 			throws Exception {
@@ -109,11 +131,18 @@ public abstract class ResourceMapper {
 	private Resource unmarshallResource(final ResourceNode node)
 			throws Exception {
 		final Class<? extends Resource> type = resolveType(node.getName());
-		final Resource res = type.newInstance();
+
+		Resource res = null;
+		try {
+			res = type.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(
+					"Instantiation error, maybe no parameterless constructor? "
+							+ type.getName());
+		}
 
 		for (final Field field : type.getFields()) {
 			final Class<?> fieldType = field.getType();
-
 			final Object value = getFieldValue(fieldType, node, field);
 
 			if (null == value) {
@@ -201,8 +230,19 @@ public abstract class ResourceMapper {
 	@SuppressWarnings("unchecked")
 	private Class<? extends Resource> resolveType(final String type)
 			throws ClassNotFoundException {
-		return (Class<? extends Resource>) Class.forName(resourcePackage
-				.getName() + '.' + type);
+		for (Package pack : resourcePackages) {
+			try {
+				return (Class<? extends Resource>) Class.forName(pack.getName()
+						+ '.' + type);
+			} catch (ClassNotFoundException e) {
+				LOG.warning("Failed to find type '" + type + "' in package '"
+						+ pack.getName() + "'.");
+			}
+		}
+		throw new RuntimeException(
+				"Could not resolve type in any of the resource packages: "
+						+ type);
+
 	}
 
 	public void write(final Resource res, final OutputStream out)
