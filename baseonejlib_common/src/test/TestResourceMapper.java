@@ -3,22 +3,28 @@ package test;
 import test.testResources.World;
 
 import com.baseoneonline.java.resourceMapper.FileResourceLocator;
+import com.baseoneonline.java.resourceMapper.ResourceLocator;
 import com.baseoneonline.java.resourceMapper.ResourceMapper;
-import com.baseoneonline.java.resourceMapper.XMLResourceMapper;
+import com.baseoneonline.java.resourceMapper.ResourceTree;
+import com.baseoneonline.java.resourceMapper.XMLResourceTree;
 
-public class TestResourceMapper {
+public class TestResourceMapper
+{
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception
+	{
 
 		final String inFile = "test/testResourceIn.xml";
 		final String outFile = "test/testResourceOut.xml";
 
-		final ResourceMapper resio = new XMLResourceMapper(
-				new FileResourceLocator());
+		final ResourceLocator locator = new FileResourceLocator();
 
-		final World world = resio.load(World.class, inFile);
+		final ResourceTree tree = new XMLResourceTree(locator, inFile);
 
-		resio.write(world, outFile);
+		final ResourceMapper mapper = new ResourceMapper(tree);
+
+		final World world = mapper.decode(World.class);
+
 	}
 
 }
