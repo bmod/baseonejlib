@@ -1,192 +1,248 @@
 package com.baseoneonline.java.resourceMapper;
 
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.HashMap;
+
+import com.baseoneonline.java.tools.StringUtils;
+
 public abstract class ResourceTree {
+	private static final HashMap<Class<?>, Serializer<?>> serializers = new HashMap<Class<?>, Serializer<?>>();
+
 	public abstract int getChildCount(Object parent);
 
 	public abstract Object getChild(Object parent, int index);
 
 	public abstract String getName(Object node);
 
-	public abstract String getAttribute(Object node, String name);
+	public abstract String getString(Object node, String name);
+
+	public abstract void putString(Object node, String name, String value);
+
+	public ResourceTree() {
+		addSerializer(new StringSerializer());
+		addSerializer(new IntSerializer());
+		addSerializer(new DoubleSerializer());
+		addSerializer(new FloatSerializer());
+		addSerializer(new FileSerializer());
+		addSerializer(new BooleanSerializer());
+	}
+
+	/**
+	 * Add type serialization support to this {@link ResourceTree}. Adding a
+	 * {@link Serializer} will also add support for arrays of the specified
+	 * type.
+	 * 
+	 * @param componentType
+	 *            The super type to add supprt for.
+	 * @param serializer
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void addSerializer(Serializer<?> serializer) {
+		Class<?> type = serializer.getType();
+		serializers.put(type, serializer);
+
+		// And add array serializer as well
+		Class<?> arrayType = Array.newInstance(type, 0).getClass();
+		serializers.put(arrayType, new ArraySerializer(serializer, type));
+		serializers.put(type, serializer);
+	}
+
+	public void put(Object node, String name, Object value) {
+		try {
+			String serialized = getSerializer(value.getClass())
+					.serialize(value);
+			putString(node, name, serialized);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Object get(Object node, String name, Class<?> type) {
+		String value = getString(node, name);
+		if (null == value)
+			return null;
+		try {
+			Serializer<?> ser = getSerializer(type);
+			if (null == ser)
+				throw new RuntimeException("Type not supported: " + type);
+			return ser.deserialize(value);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public abstract Object addChild(Object parent, String name);
 
-	public abstract Object getRoot();
-
-	public Integer getIntAttribute(final Object node, final String name)
-			throws Exception {
-		final String value = getAttribute(node, name);
-		if (null == value)
-			return null;
-		try {
-			return Integer.parseInt(value);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to int on node '%s'.",
-							name, value, getName(node)));
-		}
-	}
-
-	public Float getFloatAttribute(final Object node, final String name)
-			throws Exception {
-		final String value = getAttribute(node, name);
-		if (null == value)
-			return null;
-		try {
-			return Float.parseFloat(value);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to float on node '%s'.",
-							name, value, getName(node)));
-		}
-	}
-
 	public abstract Object getChild(Object node, String name);
 
-	public Double getDoubleAttribute(final Object node, final String name)
-			throws Exception {
-		final String value = getAttribute(node, name);
-		if (null == value)
-			return null;
+	public abstract Object load(String path) throws Exception;
 
-		try {
-			return Double.parseDouble(value);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to double on node '%s'.",
-							name, value, getName(node)));
+	public abstract void save(Object node, String path);
+
+	private Serializer<?> getSerializer(Class<?> type) {
+		for (Class<?> t : serializers.keySet()) {
+
+			if (t.isAssignableFrom(type)) {
+				return serializers.get(t);
+			}
 		}
+		throw new RuntimeException("Could not find serializer for type: "
+				+ type);
 	}
 
-	public Boolean getBooleanAttribute(final Object node, final String name)
-			throws Exception {
-		final String value = getAttribute(node, name);
-		if (null == value)
-			return null;
+}
 
-		try {
-			return Boolean.parseBoolean(value);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to boolean on node '%s'.",
-							name, value, getName(node)));
-		}
+interface Serializer<T> {
+	public T deserialize(String value);
+
+	public Class<?> getType();
+
+	public String serialize(Object value);
+}
+
+class BooleanSerializer implements Serializer<Boolean> {
+	@Override
+	public Boolean deserialize(String value) {
+		return Boolean.parseBoolean(value);
 	}
 
-	public String[] getArrayAttribute(final Object node, final String name) {
-		final String value = getAttribute(node, name);
-		if (null == value)
-			return null;
-
-		final String[] values = value.split(",");
-		for (int i = 0; i < values.length; i++)
-			values[i] = values[i].trim();
-		return values;
+	@Override
+	public String serialize(Object value) {
+		return Boolean.toString((Boolean) value);
 	}
 
-	public float[] getFloatArrayAttribute(final Object node, final String name)
-			throws Exception {
-		final String[] value = getArrayAttribute(node, name);
-		if (null == value)
-			return null;
+	@Override
+	public Class<?> getType() {
+		return boolean.class;
+	}
+};
 
-		final float[] re = new float[value.length];
-		try {
-			for (int i = 0; i < re.length; i++)
-				re[i] = Float.parseFloat(value[i]);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to float on node '%s'.",
-							name, value, getName(node)));
+class StringSerializer implements Serializer<String> {
+	@Override
+	public String deserialize(String value) {
+		return value;
+	}
+
+	@Override
+	public String serialize(Object value) {
+		return (String) value;
+	}
+
+	@Override
+	public Class<?> getType() {
+		return String.class;
+	}
+};
+
+class IntSerializer implements Serializer<Integer> {
+
+	@Override
+	public Integer deserialize(String value) {
+		return Integer.parseInt(value);
+	}
+
+	@Override
+	public String serialize(Object value) {
+		return Integer.toString((Integer) value);
+	}
+
+	@Override
+	public Class<?> getType() {
+		return int.class;
+	}
+
+};
+
+class FloatSerializer implements Serializer<Float> {
+	@Override
+	public Float deserialize(String value) {
+		return Float.parseFloat(value);
+	}
+
+	@Override
+	public String serialize(Object value) {
+		return Float.toString((Float) value);
+	}
+
+	@Override
+	public Class<?> getType() {
+		return float.class;
+	}
+};
+
+class DoubleSerializer implements Serializer<Double> {
+	@Override
+	public Double deserialize(String value) {
+		return Double.parseDouble(value);
+	}
+
+	@Override
+	public String serialize(Object value) {
+		return Double.toString((Double) value);
+	}
+
+	@Override
+	public Class<?> getType() {
+		return double.class;
+	}
+
+};
+
+class FileSerializer implements Serializer<File> {
+	@Override
+	public File deserialize(String value) {
+		return new File(value);
+	};
+
+	@Override
+	public String serialize(Object value) {
+		return ((File) value).getAbsolutePath();
+	}
+
+	@Override
+	public Class<?> getType() {
+		return File.class;
+	};
+};
+
+class ArraySerializer<T> implements Serializer<T[]> {
+
+	private final Serializer<T> serializer;
+	private final Class<T> componentType;
+
+	public ArraySerializer(Serializer<T> serializer, Class<T> componentType) {
+		if (null == componentType)
+			throw new NullPointerException();
+		this.componentType = componentType;
+		this.serializer = serializer;
+	}
+
+	@Override
+	public T[] deserialize(String value) {
+		String[] arr = value.split(",");
+		@SuppressWarnings("unchecked")
+		T[] re = (T[]) Array.newInstance(componentType, arr.length);
+		for (int i = 0; i < re.length; i++) {
+			re[i] = serializer.deserialize(arr[i]);
 		}
 		return re;
 	}
 
-	public double[] getDoubleArrayAttribute(final Object node, final String name)
-			throws Exception {
-		final String[] value = getArrayAttribute(node, name);
-		if (null == value)
-			return null;
-
-		final double[] re = new double[value.length];
-		try {
-			for (int i = 0; i < re.length; i++)
-				re[i] = Double.parseDouble(value[i]);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to double on node '%s'.",
-							name, value, getName(node)));
+	@Override
+	public String serialize(Object value) {
+		Object[] arr = (Object[]) value;
+		String[] re = new String[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			re[i] = serializer.serialize(arr[i]);
 		}
-		return re;
+		return StringUtils.join(re, ",");
 	}
 
-	public int[] getIntArrayAttribute(final Object node, final String name)
-			throws Exception {
-		final String[] value = getArrayAttribute(node, name);
-		if (null == value)
-			return null;
-
-		final int[] re = new int[value.length];
-		try {
-			for (int i = 0; i < re.length; i++)
-				re[i] = Integer.parseInt(value[i]);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to int on node '%s'.",
-							name, value, getName(node)));
-		}
-		return re;
+	@Override
+	public Class<?> getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public boolean[] getBooleanArrayAttribute(final Object node,
-			final String name) throws Exception {
-		final String[] value = getArrayAttribute(node, name);
-		if (null == value)
-			return null;
-
-		final boolean[] re = new boolean[value.length];
-		try {
-			for (int i = 0; i < re.length; i++)
-				re[i] = Boolean.parseBoolean(value[i]);
-		} catch (final NumberFormatException e) {
-			throw new Exception(
-					String.format(
-							"Could not convert attribute '%s' value '%s' to boolean on node '%s'.",
-							name, value, getName(node)));
-		}
-		return re;
-	}
-
-	public String getAttribute(final String path) {
-		try {
-			return getAttributeFromPath(getRoot(), path);
-		} catch (final Exception e) {
-			throw new RuntimeException("Path format wrong: " + path);
-		}
-	}
-
-	private String getAttributeFromPath(final Object parent, final String string)
-			throws Exception {
-		int index = string.indexOf('.');
-		if (-1 == index) {
-			index = string.indexOf('#');
-			if (-1 == index)
-				return getAttribute(parent, string);
-			else
-				throw new Exception("Wrong path formatting");
-		} else {
-			final String node = string.substring(0, index);
-			final Object child = getChild(parent, node);
-			final String newPath = string.substring(index, string.length() - 1);
-			System.out.println(node);
-			return getAttributeFromPath(child, newPath);
-		}
-	}
 }
