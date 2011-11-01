@@ -1,7 +1,6 @@
 package com.baseoneonline.java.resourceMapper;
 
-public abstract class ResourceTree
-{
+public abstract class ResourceTree {
 	public abstract int getChildCount(Object parent);
 
 	public abstract Object getChild(Object parent, int index);
@@ -15,16 +14,13 @@ public abstract class ResourceTree
 	public abstract Object getRoot();
 
 	public Integer getIntAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String value = getAttribute(node, name);
 		if (null == value)
 			return null;
-		try
-		{
+		try {
 			return Integer.parseInt(value);
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to int on node '%s'.",
@@ -33,16 +29,13 @@ public abstract class ResourceTree
 	}
 
 	public Float getFloatAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String value = getAttribute(node, name);
 		if (null == value)
 			return null;
-		try
-		{
+		try {
 			return Float.parseFloat(value);
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to float on node '%s'.",
@@ -53,17 +46,14 @@ public abstract class ResourceTree
 	public abstract Object getChild(Object node, String name);
 
 	public Double getDoubleAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String value = getAttribute(node, name);
 		if (null == value)
 			return null;
 
-		try
-		{
+		try {
 			return Double.parseDouble(value);
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to double on node '%s'.",
@@ -72,17 +62,14 @@ public abstract class ResourceTree
 	}
 
 	public Boolean getBooleanAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String value = getAttribute(node, name);
 		if (null == value)
 			return null;
 
-		try
-		{
+		try {
 			return Boolean.parseBoolean(value);
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to boolean on node '%s'.",
@@ -90,8 +77,7 @@ public abstract class ResourceTree
 		}
 	}
 
-	public String[] getArrayAttribute(final Object node, final String name)
-	{
+	public String[] getArrayAttribute(final Object node, final String name) {
 		final String value = getAttribute(node, name);
 		if (null == value)
 			return null;
@@ -103,21 +89,16 @@ public abstract class ResourceTree
 	}
 
 	public float[] getFloatArrayAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String[] value = getArrayAttribute(node, name);
 		if (null == value)
 			return null;
 
 		final float[] re = new float[value.length];
-		try
-		{
+		try {
 			for (int i = 0; i < re.length; i++)
-			{
 				re[i] = Float.parseFloat(value[i]);
-			}
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to float on node '%s'.",
@@ -127,21 +108,16 @@ public abstract class ResourceTree
 	}
 
 	public double[] getDoubleArrayAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String[] value = getArrayAttribute(node, name);
 		if (null == value)
 			return null;
 
 		final double[] re = new double[value.length];
-		try
-		{
+		try {
 			for (int i = 0; i < re.length; i++)
-			{
 				re[i] = Double.parseDouble(value[i]);
-			}
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to double on node '%s'.",
@@ -151,21 +127,16 @@ public abstract class ResourceTree
 	}
 
 	public int[] getIntArrayAttribute(final Object node, final String name)
-			throws Exception
-	{
+			throws Exception {
 		final String[] value = getArrayAttribute(node, name);
 		if (null == value)
 			return null;
 
 		final int[] re = new int[value.length];
-		try
-		{
+		try {
 			for (int i = 0; i < re.length; i++)
-			{
 				re[i] = Integer.parseInt(value[i]);
-			}
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to int on node '%s'.",
@@ -175,21 +146,16 @@ public abstract class ResourceTree
 	}
 
 	public boolean[] getBooleanArrayAttribute(final Object node,
-			final String name) throws Exception
-	{
+			final String name) throws Exception {
 		final String[] value = getArrayAttribute(node, name);
 		if (null == value)
 			return null;
 
 		final boolean[] re = new boolean[value.length];
-		try
-		{
+		try {
 			for (int i = 0; i < re.length; i++)
-			{
 				re[i] = Boolean.parseBoolean(value[i]);
-			}
-		} catch (final NumberFormatException e)
-		{
+		} catch (final NumberFormatException e) {
 			throw new Exception(
 					String.format(
 							"Could not convert attribute '%s' value '%s' to boolean on node '%s'.",
@@ -198,4 +164,29 @@ public abstract class ResourceTree
 		return re;
 	}
 
+	public String getAttribute(final String path) {
+		try {
+			return getAttributeFromPath(getRoot(), path);
+		} catch (final Exception e) {
+			throw new RuntimeException("Path format wrong: " + path);
+		}
+	}
+
+	private String getAttributeFromPath(final Object parent, final String string)
+			throws Exception {
+		int index = string.indexOf('.');
+		if (-1 == index) {
+			index = string.indexOf('#');
+			if (-1 == index)
+				return getAttribute(parent, string);
+			else
+				throw new Exception("Wrong path formatting");
+		} else {
+			final String node = string.substring(0, index);
+			final Object child = getChild(parent, node);
+			final String newPath = string.substring(index, string.length() - 1);
+			System.out.println(node);
+			return getAttributeFromPath(child, newPath);
+		}
+	}
 }
