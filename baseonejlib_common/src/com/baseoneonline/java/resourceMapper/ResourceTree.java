@@ -6,7 +6,8 @@ import java.util.HashMap;
 
 import com.baseoneonline.java.tools.StringUtils;
 
-public abstract class ResourceTree {
+public abstract class ResourceTree
+{
 	private static final HashMap<Class<?>, Serializer<?>> serializers = new HashMap<Class<?>, Serializer<?>>();
 
 	public abstract int getChildCount(Object parent);
@@ -19,7 +20,8 @@ public abstract class ResourceTree {
 
 	public abstract void putString(Object node, String name, String value);
 
-	public ResourceTree() {
+	public ResourceTree()
+	{
 		addSerializer(new StringSerializer());
 		addSerializer(new IntSerializer());
 		addSerializer(new DoubleSerializer());
@@ -37,37 +39,45 @@ public abstract class ResourceTree {
 	 *            The super type to add supprt for.
 	 * @param serializer
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addSerializer(Serializer<?> serializer) {
-		Class<?> type = serializer.getType();
+	@SuppressWarnings(
+	{ "unchecked", "rawtypes" })
+	public void addSerializer(final Serializer<?> serializer)
+	{
+		final Class<?> type = serializer.getType();
 		serializers.put(type, serializer);
 
 		// And add array serializer as well
-		Class<?> arrayType = Array.newInstance(type, 0).getClass();
+		final Class<?> arrayType = Array.newInstance(type, 0).getClass();
 		serializers.put(arrayType, new ArraySerializer(serializer, type));
 		serializers.put(type, serializer);
 	}
 
-	public void put(Object node, String name, Object value) {
-		try {
-			String serialized = getSerializer(value.getClass())
+	public void put(final Object node, final String name, final Object value)
+	{
+		try
+		{
+			final String serialized = getSerializer(value.getClass())
 					.serialize(value);
 			putString(node, name, serialized);
-		} catch (Exception e) {
+		} catch (final Exception e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
 
-	public Object get(Object node, String name, Class<?> type) {
-		String value = getString(node, name);
+	public Object get(final Object node, final String name, final Class<?> type)
+	{
+		final String value = getString(node, name);
 		if (null == value)
 			return null;
-		try {
-			Serializer<?> ser = getSerializer(type);
+		try
+		{
+			final Serializer<?> ser = getSerializer(type);
 			if (null == ser)
 				throw new RuntimeException("Type not supported: " + type);
 			return ser.deserialize(value);
-		} catch (Exception e) {
+		} catch (final Exception e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
@@ -80,10 +90,13 @@ public abstract class ResourceTree {
 
 	public abstract void save(Object node, String path);
 
-	private Serializer<?> getSerializer(Class<?> type) {
-		for (Class<?> t : serializers.keySet()) {
+	private Serializer<?> getSerializer(final Class<?> type)
+	{
+		for (final Class<?> t : serializers.keySet())
+		{
 
-			if (t.isAssignableFrom(type)) {
+			if (t.isAssignableFrom(type))
+			{
 				return serializers.get(t);
 			}
 		}
@@ -93,7 +106,8 @@ public abstract class ResourceTree {
 
 }
 
-interface Serializer<T> {
+interface Serializer<T>
+{
 	public T deserialize(String value);
 
 	public Class<?> getType();
@@ -101,117 +115,144 @@ interface Serializer<T> {
 	public String serialize(Object value);
 }
 
-class BooleanSerializer implements Serializer<Boolean> {
+class BooleanSerializer implements Serializer<Boolean>
+{
 	@Override
-	public Boolean deserialize(String value) {
+	public Boolean deserialize(final String value)
+	{
 		return Boolean.parseBoolean(value);
 	}
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return Boolean.toString((Boolean) value);
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return boolean.class;
 	}
 };
 
-class StringSerializer implements Serializer<String> {
+class StringSerializer implements Serializer<String>
+{
 	@Override
-	public String deserialize(String value) {
+	public String deserialize(final String value)
+	{
 		return value;
 	}
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return (String) value;
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return String.class;
 	}
 };
 
-class IntSerializer implements Serializer<Integer> {
+class IntSerializer implements Serializer<Integer>
+{
 
 	@Override
-	public Integer deserialize(String value) {
+	public Integer deserialize(final String value)
+	{
 		return Integer.parseInt(value);
 	}
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return Integer.toString((Integer) value);
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return int.class;
 	}
 
 };
 
-class FloatSerializer implements Serializer<Float> {
+class FloatSerializer implements Serializer<Float>
+{
 	@Override
-	public Float deserialize(String value) {
+	public Float deserialize(final String value)
+	{
 		return Float.parseFloat(value);
 	}
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return Float.toString((Float) value);
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return float.class;
 	}
 };
 
-class DoubleSerializer implements Serializer<Double> {
+class DoubleSerializer implements Serializer<Double>
+{
 	@Override
-	public Double deserialize(String value) {
+	public Double deserialize(final String value)
+	{
 		return Double.parseDouble(value);
 	}
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return Double.toString((Double) value);
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return double.class;
 	}
 
 };
 
-class FileSerializer implements Serializer<File> {
+class FileSerializer implements Serializer<File>
+{
 	@Override
-	public File deserialize(String value) {
+	public File deserialize(final String value)
+	{
 		return new File(value);
 	};
 
 	@Override
-	public String serialize(Object value) {
+	public String serialize(final Object value)
+	{
 		return ((File) value).getAbsolutePath();
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		return File.class;
 	};
 };
 
-class ArraySerializer<T> implements Serializer<T[]> {
+class ArraySerializer implements Serializer<Object>
+{
 
-	private final Serializer<T> serializer;
-	private final Class<T> componentType;
+	private final Serializer<?> serializer;
+	private final Class<?> componentType;
 
-	public ArraySerializer(Serializer<T> serializer, Class<T> componentType) {
+	public ArraySerializer(final Serializer<?> serializer,
+			final Class<?> componentType)
+	{
 		if (null == componentType)
 			throw new NullPointerException();
 		this.componentType = componentType;
@@ -219,28 +260,36 @@ class ArraySerializer<T> implements Serializer<T[]> {
 	}
 
 	@Override
-	public T[] deserialize(String value) {
-		String[] arr = value.split(",");
-		@SuppressWarnings("unchecked")
-		T[] re = (T[]) Array.newInstance(componentType, arr.length);
-		for (int i = 0; i < re.length; i++) {
-			re[i] = serializer.deserialize(arr[i]);
+	public Object deserialize(final String value)
+	{
+		final String[] arr = value.split(",");
+
+		// Same as: type[] re = new type[arr.length]
+		final Object re = Array.newInstance(componentType, arr.length);
+		for (int i = 0; i < Array.getLength(re); i++)
+		{
+			// Same as: re[i] = arr[i].trim();
+			final Object val = serializer.deserialize(arr[i].toString().trim());
+			Array.set(re, i, val);
 		}
 		return re;
 	}
 
 	@Override
-	public String serialize(Object value) {
-		Object[] arr = (Object[]) value;
-		String[] re = new String[arr.length];
-		for (int i = 0; i < arr.length; i++) {
+	public String serialize(final Object value)
+	{
+		final Object[] arr = (Object[]) value;
+		final String[] re = new String[arr.length];
+		for (int i = 0; i < arr.length; i++)
+		{
 			re[i] = serializer.serialize(arr[i]);
 		}
 		return StringUtils.join(re, ",");
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getType()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
