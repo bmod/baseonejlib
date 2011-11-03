@@ -1,9 +1,15 @@
 package com.baseoneonline.java.resourceMapper;
 
-import java.io.File;
 import java.lang.reflect.Array;
 import java.util.HashMap;
 
+import com.baseoneonline.java.resourceMapper.serializers.BooleanSerializer;
+import com.baseoneonline.java.resourceMapper.serializers.DoubleSerializer;
+import com.baseoneonline.java.resourceMapper.serializers.FileSerializer;
+import com.baseoneonline.java.resourceMapper.serializers.FloatSerializer;
+import com.baseoneonline.java.resourceMapper.serializers.IntSerializer;
+import com.baseoneonline.java.resourceMapper.serializers.Serializer;
+import com.baseoneonline.java.resourceMapper.serializers.StringSerializer;
 import com.baseoneonline.java.tools.StringUtils;
 
 public abstract class ResourceTree {
@@ -92,119 +98,6 @@ public abstract class ResourceTree {
 	}
 
 }
-
-interface Serializer<T> {
-	public T deserialize(String value);
-
-	public Class<?> getType();
-
-	public String serialize(Object value);
-}
-
-class BooleanSerializer implements Serializer<Boolean> {
-	@Override
-	public Boolean deserialize(final String value) {
-		return Boolean.parseBoolean(value);
-	}
-
-	@Override
-	public String serialize(final Object value) {
-		return Boolean.toString((Boolean) value);
-	}
-
-	@Override
-	public Class<?> getType() {
-		return boolean.class;
-	}
-};
-
-class StringSerializer implements Serializer<String> {
-	@Override
-	public String deserialize(final String value) {
-		return value;
-	}
-
-	@Override
-	public String serialize(final Object value) {
-		return (String) value;
-	}
-
-	@Override
-	public Class<?> getType() {
-		return String.class;
-	}
-};
-
-class IntSerializer implements Serializer<Integer> {
-
-	@Override
-	public Integer deserialize(final String value) {
-		return Integer.parseInt(value);
-	}
-
-	@Override
-	public String serialize(final Object value) {
-		return Integer.toString((Integer) value);
-	}
-
-	@Override
-	public Class<?> getType() {
-		return int.class;
-	}
-
-};
-
-class FloatSerializer implements Serializer<Float> {
-	@Override
-	public Float deserialize(final String value) {
-		return Float.parseFloat(value);
-	}
-
-	@Override
-	public String serialize(final Object value) {
-		return Float.toString((Float) value);
-	}
-
-	@Override
-	public Class<?> getType() {
-		return float.class;
-	}
-};
-
-class DoubleSerializer implements Serializer<Double> {
-	@Override
-	public Double deserialize(final String value) {
-		return Double.parseDouble(value);
-	}
-
-	@Override
-	public String serialize(final Object value) {
-		return Double.toString((Double) value);
-	}
-
-	@Override
-	public Class<?> getType() {
-		return double.class;
-	}
-
-};
-
-class FileSerializer implements Serializer<File> {
-	@Override
-	public File deserialize(final String value) {
-		return new File(value);
-	};
-
-	@Override
-	public String serialize(final Object value) {
-		return ((File) value).getAbsolutePath();
-	}
-
-	@Override
-	public Class<?> getType() {
-		return File.class;
-	};
-};
 
 class ArraySerializer implements Serializer<Object> {
 
