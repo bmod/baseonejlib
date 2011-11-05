@@ -12,19 +12,24 @@ import com.baseoneonline.java.swing.config.Config;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.nodes.PPath;
 
-public class TestHexGrid extends JFrame {
-	public static void main(final String[] args) {
+public class TestHexGrid extends JFrame
+{
+	public static void main(final String[] args)
+	{
 		final TestHexGrid app = new TestHexGrid();
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable()
+		{
 
 			@Override
-			public void run() {
+			public void run()
+			{
 				app.setVisible(true);
 			}
 		});
 	}
 
-	public TestHexGrid() {
+	public TestHexGrid()
+	{
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(winAdapter);
 		initComponents();
@@ -33,44 +38,77 @@ public class TestHexGrid extends JFrame {
 		Config.get().persist(this);
 		// createGrid();
 		final double radius = 10;
-		generateGrid(4, radius);
+		generateGrid(3, radius);
 	}
 
-	private void createGrid() {
+	private void createGrid()
+	{
 		final PPath hex = new Hexagon(40);
 		pCanvas.getLayer().addChild(hex);
 	}
 
-	private void generateGrid(final int iter, final double radius) {
-		final int[] xyz = { 0, 0, 0 };
-		final int[][] deltas = { { 1, 0, -1 }, { 0, 1, -1 }, { -1, 1, 0 },
-				{ -1, 0, 1 }, { 0, -1, 1 }, { 1, -1, 0 } };
-		for (int i = 0; i < iter; i++) {
-			int x = xyz[0];
-			int y = xyz[1] - i;
-			int z = xyz[2] + i;
+	private void generateGrid(final int iter, final double radius)
+	{
+		int[] coords = new int[3];
+		final int[] xyz =
+		{ -2, 2, 0 };
+		final int[][] deltas =
+		{
+		{ 1, 0, -1 },
+		{ 0, 1, -1 },
+		{ -1, 1, 0 },
+		{ -1, 0, 1 },
+		{ 0, -1, 1 },
+		{ 1, -1, 0 } };
+		for (int r = 0; r < iter; r++)
+		{
+			int x = 0;
+			int y = -r;
+			int z = r;
+			int nh = 0;
+
+			coords[0] = x;
+			coords[1] = y;
+			coords[2] = z;
+			placeTile(coords, radius);
+
 			for (int j = 0; j < 6; j++)
-				for (int k = 0; k < i; k++) {
-					x = x + deltas[j][0];
-					y = y + deltas[j][1];
-					z = z + deltas[j][2];
-					final int[] coords = { x, y, z };
+			{
+
+				if (j == 5)
+					nh = r - 1;
+				else
+					nh = r;
+				for (int i = 0; i < nh; i++)
+				{
+					x += deltas[j][0];
+					y += deltas[j][1];
+					z += deltas[j][2];
+
+					coords[0] = x;
+					coords[1] = y;
+					coords[2] = z;
 					placeTile(coords, radius);
 				}
+			}
 		}
 	}
 
-	private void placeTile(final int[] coords, final double radius) {
-		final Point2D pt = IsoHexGrid.hexToCart(coords[1], coords[2],
+	private void placeTile(final int[] coords, final double radius)
+	{
+		final Point2D pt = IsoHexGrid.hexToCart(coords[0], coords[1],
 				radius * 2);
+		System.out.println(coords[0] + "\t" + coords[1] + "\t" + coords[2]);
 		final Hexagon hx = new Hexagon(radius + 4);
 		hx.translate(pt.getX(), pt.getY());
 		pCanvas.getLayer().addChild(hx);
 	}
 
-	private final WindowAdapter winAdapter = new WindowAdapter() {
+	private final WindowAdapter winAdapter = new WindowAdapter()
+	{
 		@Override
-		public void windowClosing(final java.awt.event.WindowEvent e) {
+		public void windowClosing(final java.awt.event.WindowEvent e)
+		{
 			Config.get().flush();
 			setVisible(false);
 			dispose();
@@ -78,7 +116,8 @@ public class TestHexGrid extends JFrame {
 	};
 	private PCanvas pCanvas;
 
-	private void initComponents() {
+	private void initComponents()
+	{
 		setLayout(new BorderLayout());
 		pCanvas = new PCanvas();
 		add(pCanvas);
@@ -86,43 +125,52 @@ public class TestHexGrid extends JFrame {
 
 }
 
-class IsoHexGrid {
+class IsoHexGrid
+{
 
-	private static double sqrt3 = Math.sqrt(3);
+	private static double offXX = Hexagon.HEIGHT;
+	private static double offYX = 1.5;
+	private static double offXY = -Hexagon.HEIGHT;
+	private static double offYY = 1.5;
 
-	private IsoHexGrid() {
+	private IsoHexGrid()
+	{
 	}
 
 	public static Point2D hexToCart(final int x, final int y,
-			final double radius) {
-		final double tx = sqrt3 * radius * (y / 2 + x);
-		final double ty = 1.5 * radius * y;
-		return new Point2D.Double(tx, ty);
+			final double radius)
+	{
+		final double tx = (x * offXX) + (y * offXY);
+		final double ty = (x * offYX) + (y * offYY);
+		return new Point2D.Double(tx * radius, ty * radius);
 	}
 
 	public static Point2D cartToHex(final double x, final double y,
-			final double radius) {
+			final double radius)
+	{
 		return null;
 	}
 
 }
 
-class Hexagon extends PPath {
+class Hexagon extends PPath
+{
 
-	public static final double AX = 0.5;
-	public static final double AY = Math.sin(Math.PI / 3);
+	public static final double HEIGHT = Math.sin(Math.PI / 3);
 	private static Point2D[] points;
-	static {
+	static
+	{
 		points = new Point2D[6];
-		points[0] = new Point2D.Double(-1, 0);
-		points[1] = new Point2D.Double(-AX, AY);
-		points[2] = new Point2D.Double(AX, AY);
-		points[3] = new Point2D.Double(1, 0);
-		points[4] = new Point2D.Double(AX, -AY);
-		points[5] = new Point2D.Double(-AX, -AY);
+		points[0] = new Point2D.Double(0, -1);
+		points[1] = new Point2D.Double(HEIGHT, -.5);
+		points[2] = new Point2D.Double(HEIGHT, .5);
+		points[3] = new Point2D.Double(0, 1);
+		points[4] = new Point2D.Double(-HEIGHT, .5);
+		points[5] = new Point2D.Double(-HEIGHT, -.5);
 	}
 
-	public Hexagon(final double radius) {
+	public Hexagon(final double radius)
+	{
 		final Point2D[] pts = new Point2D[points.length];
 		// Calculate angled corners
 		// Start left, ccw
