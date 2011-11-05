@@ -3,19 +3,26 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import com.baseoneonline.java.math.IsoCoord;
+import com.baseoneonline.java.math.IsoHexGrid;
 import com.baseoneonline.java.swing.config.Config;
 
 import edu.umd.cs.piccolo.PCanvas;
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
+import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.nodes.PPath;
 
 public class TestHexGrid extends JFrame
 {
 	public static void main(final String[] args)
 	{
+
 		final TestHexGrid app = new TestHexGrid();
 		SwingUtilities.invokeLater(new Runnable()
 		{
@@ -28,6 +35,10 @@ public class TestHexGrid extends JFrame
 		});
 	}
 
+	private PCanvas pCanvas;
+	private final List<Hexagon> hexagons = new ArrayList<Hexagon>();
+	private final double hexRadius = 10;
+
 	public TestHexGrid()
 	{
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -36,73 +47,39 @@ public class TestHexGrid extends JFrame
 		setSize(300, 300);
 		Config.setApplicationClass(getClass());
 		Config.get().persist(this);
-		// createGrid();
-		final double radius = 10;
-		generateGrid(3, radius);
+
+		createGrid();
+		pCanvas.addInputEventListener(mouseAdapter);
 	}
 
 	private void createGrid()
 	{
-		final PPath hex = new Hexagon(40);
-		pCanvas.getLayer().addChild(hex);
-	}
-
-	private void generateGrid(final int iter, final double radius)
-	{
-		int[] coords = new int[3];
-		final int[] xyz =
-		{ -2, 2, 0 };
-		final int[][] deltas =
+		double[] pos = new double[2];
+		for (int i = 0; i < 8; i++)
 		{
-		{ 1, 0, -1 },
-		{ 0, 1, -1 },
-		{ -1, 1, 0 },
-		{ -1, 0, 1 },
-		{ 0, -1, 1 },
-		{ 1, -1, 0 } };
-		for (int r = 0; r < iter; r++)
-		{
-			int x = 0;
-			int y = -r;
-			int z = r;
-			int nh = 0;
-
-			coords[0] = x;
-			coords[1] = y;
-			coords[2] = z;
-			placeTile(coords, radius);
-
-			for (int j = 0; j < 6; j++)
+			IsoCoord[] pts = IsoHexGrid.ringCoordinates(i, new IsoCoord());
+			for (IsoCoord pt : pts)
 			{
-
-				if (j == 5)
-					nh = r - 1;
-				else
-					nh = r;
-				for (int i = 0; i < nh; i++)
-				{
-					x += deltas[j][0];
-					y += deltas[j][1];
-					z += deltas[j][2];
-
-					coords[0] = x;
-					coords[1] = y;
-					coords[2] = z;
-					placeTile(coords, radius);
-				}
+				IsoHexGrid.hexToCart(pt, pos);
+				final Hexagon hx = new Hexagon(hexRadius);
+				hx.translate(pos[0] * hexRadius * 2, pos[1] * hexRadius * 2);
+				hexagons.add(hx);
+				pCanvas.getLayer().addChild(hx);
 			}
 		}
 	}
 
-	private void placeTile(final int[] coords, final double radius)
+	private final PBasicInputEventHandler mouseAdapter = new PBasicInputEventHandler()
 	{
-		final Point2D pt = IsoHexGrid.hexToCart(coords[0], coords[1],
-				radius * 2);
-		System.out.println(coords[0] + "\t" + coords[1] + "\t" + coords[2]);
-		final Hexagon hx = new Hexagon(radius + 4);
-		hx.translate(pt.getX(), pt.getY());
-		pCanvas.getLayer().addChild(hx);
-	}
+
+		@Override
+		public void mouseMoved(PInputEvent e)
+		{
+			IsoCoord hexPos = IsoHexGrid.cartToHex(e.getPosition().getX()
+					/ hexRadius, e.getPosition().getY() / hexRadius, null);
+			System.out.println(hexPos);
+		}
+	};
 
 	private final WindowAdapter winAdapter = new WindowAdapter()
 	{
@@ -114,41 +91,12 @@ public class TestHexGrid extends JFrame
 			dispose();
 		};
 	};
-	private PCanvas pCanvas;
 
 	private void initComponents()
 	{
 		setLayout(new BorderLayout());
 		pCanvas = new PCanvas();
 		add(pCanvas);
-	}
-
-}
-
-class IsoHexGrid
-{
-
-	private static double offXX = Hexagon.HEIGHT;
-	private static double offYX = 1.5;
-	private static double offXY = -Hexagon.HEIGHT;
-	private static double offYY = 1.5;
-
-	private IsoHexGrid()
-	{
-	}
-
-	public static Point2D hexToCart(final int x, final int y,
-			final double radius)
-	{
-		final double tx = (x * offXX) + (y * offXY);
-		final double ty = (x * offYX) + (y * offYY);
-		return new Point2D.Double(tx * radius, ty * radius);
-	}
-
-	public static Point2D cartToHex(final double x, final double y,
-			final double radius)
-	{
-		return null;
 	}
 
 }
