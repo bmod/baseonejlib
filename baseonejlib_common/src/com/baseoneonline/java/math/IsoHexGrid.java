@@ -35,12 +35,12 @@ public class IsoHexGrid<T>
 
 	public T set(IsoCoord c, T element)
 	{
-		return get(c.x).set(c.y, element);
+		return get(c.x).set(base + c.y, element);
 	}
 
 	public T get(IsoCoord c)
 	{
-		return get(c.x).get(c.y);
+		return get(c.x).get(base + c.y);
 	}
 
 	private List<T> get(int index)
@@ -79,10 +79,13 @@ public class IsoHexGrid<T>
 	public static IsoCoord cartToHex(final double x, final double y,
 			IsoCoord out)
 	{
+
 		if (null == out)
 			out = new IsoCoord();
+
 		out.x = (int) Math.ceil((x / H) + ((y * 2) / 3));
 		out.y = (int) Math.ceil(((2 * y) / 3) - (x / H));
+
 		return out;
 	}
 
@@ -92,7 +95,7 @@ public class IsoHexGrid<T>
 	 * @param c
 	 * @return
 	 */
-	public static IsoCoord[] neighbors(IsoCoord c)
+	public IsoCoord[] neighbors(IsoCoord c)
 	{
 		return ringCoordinates(1, c);
 	}
@@ -129,7 +132,8 @@ public class IsoHexGrid<T>
 			for (int i = 0; i < nh; i++)
 			{
 				current.addLocal(deltas[j]);
-				pts[index++] = new IsoCoord(current);
+				IsoCoord c = new IsoCoord(current);
+				pts[index++] = c;
 			}
 		}
 
