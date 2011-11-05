@@ -39,6 +39,8 @@ public class TestHexGrid extends JFrame
 	private final List<Hexagon> hexagons = new ArrayList<Hexagon>();
 	private final double hexRadius = 10;
 
+	private final IsoHexGrid<Hexagon> hex = new IsoHexGrid<Hexagon>();
+
 	public TestHexGrid()
 	{
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
