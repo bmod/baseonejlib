@@ -1,8 +1,8 @@
 package test.testResources;
 
-import com.baseoneonline.java.resourceMapper.Resource;
+import com.baseoneonline.java.resourceMapper.IDResource;
 
-public class Plant implements Resource
+public class Plant extends IDResource
 {
 	public int height;
 	public String name;

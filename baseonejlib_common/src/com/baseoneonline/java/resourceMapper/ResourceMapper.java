@@ -90,14 +90,14 @@ public class ResourceMapper
 	private Object decodeListAttribute(final Resource res, final Object node,
 			final Class<?> type, final String name) throws Exception
 	{
-		final ListResource<Resource> list = new ListResource<Resource>();
+		final ListResource<IDResource> list = new ListResource<IDResource>();
 		final Object listNode = resTree.getChild(node, name);
 		if (null != listNode)
 		{
 			for (int i = 0; i < resTree.getChildCount(listNode); i++)
 			{
 				final Resource childRes = decode(resTree.getChild(listNode, i));
-				list.add(childRes);
+				list.add((IDResource) childRes);
 			}
 		}
 		return list;
