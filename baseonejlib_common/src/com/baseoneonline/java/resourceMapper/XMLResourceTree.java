@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.NotImplementedException;
 
 import com.baseoneonline.java.nanoxml.XMLElement;
 
@@ -114,7 +113,7 @@ public class XMLResourceTree extends ResourceTree
 	@Override
 	public void save(Object node, String path)
 	{
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
