@@ -20,13 +20,9 @@ public class IsoHexGrid<T>
 	private final List<List<T>> _grid = new ArrayList<List<T>>(base * 2);
 
 	private static final IsoCoord[] deltas =
-	{
-		new IsoCoord(1, 0, -1),
-		new IsoCoord(0, 1, -1),
-		new IsoCoord(-1, 1, 0),
-		new IsoCoord(-1, 0, 1),
-		new IsoCoord(0, -1, 1),
-		new IsoCoord(1, -1, 0) };
+	{ new IsoCoord(1, 0, -1), new IsoCoord(0, 1, -1), new IsoCoord(-1, 1, 0),
+			new IsoCoord(-1, 0, 1), new IsoCoord(0, -1, 1),
+			new IsoCoord(1, -1, 0) };
 
 	public IsoHexGrid()
 	{
@@ -76,6 +72,7 @@ public class IsoHexGrid<T>
 	 * @param y
 	 * @return Grid coordinates for a cartesian location.
 	 */
+
 	public static IsoCoord cartToHex(final double x, final double y,
 			IsoCoord out)
 	{
