@@ -18,6 +18,7 @@ public class SplitPanePersistenceFactory implements PersistenceFactory
 		JSplitPane splitPane = ((JSplitPane) value);
 		splitPane.setDividerLocation(conf.getInt(key + "DividerLocation",
 				splitPane.getDividerLocation()));
+
 	}
 
 	@Override

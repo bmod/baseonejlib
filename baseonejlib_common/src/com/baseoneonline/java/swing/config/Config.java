@@ -105,6 +105,7 @@ public class Config
 		for (final String key : persistentObjects.keySet())
 		{
 			final Object o = persistentObjects.get(key);
+
 			final PersistenceFactory factory = getFactory(o);
 			factory.store(this, key, o);
 		}
