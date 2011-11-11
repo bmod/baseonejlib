@@ -17,7 +17,8 @@ public class ListResource<T extends IDResource> extends ArrayList<T> implements
 			if (res.id.equals(id))
 				return res;
 		}
-		return null;
+		throw new RuntimeException(String.format(
+				"Resource with id '%s' not found.", id));
 	}
 
 }

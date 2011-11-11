@@ -78,6 +78,9 @@ public class ResourceMapper
 		if (ListResource.class.isAssignableFrom(type))
 			return decodeListAttribute(res, node, type, name);
 
+		if (SetResource.class.isAssignableFrom(type))
+			return decodeSetAttribute(res, node, type, name);
+
 		if (Resource.class.isAssignableFrom(type))
 			return decode(resTree.getChild(node, type.getSimpleName()));
 
@@ -98,6 +101,22 @@ public class ResourceMapper
 			{
 				final Resource childRes = decode(resTree.getChild(listNode, i));
 				list.add((IDResource) childRes);
+			}
+		}
+		return list;
+	}
+
+	private Object decodeSetAttribute(final Resource res, final Object node,
+			final Class<?> type, final String name) throws Exception
+	{
+		final SetResource<Resource> list = new SetResource<Resource>();
+		final Object listNode = resTree.getChild(node, name);
+		if (null != listNode)
+		{
+			for (int i = 0; i < resTree.getChildCount(listNode); i++)
+			{
+				final Resource childRes = decode(resTree.getChild(listNode, i));
+				list.add(childRes);
 			}
 		}
 		return list;
