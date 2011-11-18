@@ -6,28 +6,33 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 public class RuntimeExecutor {
 
+	private static Logger LOG = Logger.getLogger(RuntimeExecutor.class
+			.getName());
+
 	public static void exec(final String cmd, final OutputStream os) {
+		LOG.info("RUN: " + cmd);
 		try {
 
 			final Process proc = new ProcessBuilder(cmd).start();
 			// any error message?
-			final StreamGobbler errorGobbler = new StreamGobbler(proc
-					.getErrorStream(), "ERROR", os);
+			final StreamGobbler errorGobbler = new StreamGobbler(
+					proc.getErrorStream(), "ERROR", os);
 
 			// any output?
-			final StreamGobbler outputGobbler = new StreamGobbler(proc
-					.getInputStream(), "OUTPUT", os);
+			final StreamGobbler outputGobbler = new StreamGobbler(
+					proc.getInputStream(), "OUTPUT", os);
 
 			// kick them off
-			errorGobbler.start();
 			outputGobbler.start();
+			errorGobbler.start();
 
 			// any error???
 			final int exitVal = proc.waitFor();
-			System.out.println("ExitValue: " + exitVal);
+			LOG.info("EXIT: " + exitVal);
 			os.flush();
 			os.close();
 		} catch (final Throwable t) {
@@ -37,6 +42,8 @@ public class RuntimeExecutor {
 }
 
 class StreamGobbler extends Thread {
+
+	private static Logger LOG = Logger.getLogger(StreamGobbler.class.getName());
 
 	InputStream is;
 	String type;
@@ -50,23 +57,31 @@ class StreamGobbler extends Thread {
 			final OutputStream redirect) {
 		this.is = is;
 		this.type = type;
-		this.os = redirect;
+		os = redirect;
 	}
 
 	@Override
 	public void run() {
 		try {
 			PrintWriter pw = null;
-			if (os != null) pw = new PrintWriter(os);
+			boolean hasRun = false;
+			if (os != null)
+				pw = new PrintWriter(os);
 
 			final InputStreamReader isr = new InputStreamReader(is);
 			final BufferedReader br = new BufferedReader(isr);
-			System.out.println(type + ">");
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				if (pw != null) pw.println(line);
+
+			if (pw != null) {
+				int c;
+				while (-1 != (c = br.read())) {
+					if (!hasRun) {
+						hasRun = true;
+						LOG.info(type + ": ");
+					}
+					pw.append((char) c);
+				}
+				pw.flush();
 			}
-			if (pw != null) pw.flush();
 		} catch (final IOException ioe) {
 			ioe.printStackTrace();
 		}

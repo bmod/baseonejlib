@@ -80,6 +80,8 @@ public abstract class ResourceTree {
 
 	public abstract Object addChild(Object parent, String name);
 
+	public abstract Object requireChild(Object node, String name);
+
 	public abstract Object getChild(Object node, String name);
 
 	public abstract Object load(String path) throws Exception;
@@ -87,12 +89,9 @@ public abstract class ResourceTree {
 	public abstract void save(Object node, String path);
 
 	private Serializer<?> getSerializer(final Class<?> type) {
-		for (final Class<?> t : serializers.keySet()) {
-
-			if (t.isAssignableFrom(type)) {
+		for (final Class<?> t : serializers.keySet())
+			if (t.isAssignableFrom(type))
 				return serializers.get(t);
-			}
-		}
 		throw new RuntimeException("Could not find serializer for type: "
 				+ type);
 	}
@@ -130,9 +129,8 @@ class ArraySerializer implements Serializer<Object> {
 	public String serialize(final Object value) {
 		final Object[] arr = (Object[]) value;
 		final String[] re = new String[arr.length];
-		for (int i = 0; i < arr.length; i++) {
+		for (int i = 0; i < arr.length; i++)
 			re[i] = serializer.serialize(arr[i]);
-		}
 		return StringUtils.join(re, ",");
 	}
 
