@@ -5,27 +5,32 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class ResourceMapper {
+public class ResourceMapper
+{
 
 	private final ResourceTree resTree;
 
 	private final Set<Package> resourcePackages = new HashSet<Package>();
 
-	public ResourceMapper(final ResourceTree resTree) {
+	public ResourceMapper(final ResourceTree resTree)
+	{
 		this.resTree = resTree;
 	}
 
-	public void addResourcePackage(final Package pack) {
+	public void addResourcePackage(final Package pack)
+	{
 		resourcePackages.add(pack);
 	}
 
 	public <E extends Resource> E decode(final Class<E> type, final String path)
-			throws Exception {
+			throws Exception
+	{
 		addResourcePackage(type.getPackage());
 		return decode(resTree.load(path));
 	}
 
-	private <E extends Resource> E decode(final Object node) throws Exception {
+	private <E extends Resource> E decode(final Object node) throws Exception
+	{
 		final String typeName = resTree.getName(node);
 
 		@SuppressWarnings("unchecked")
@@ -37,15 +42,18 @@ public class ResourceMapper {
 	}
 
 	private void decodeAttributes(final Resource resource, final Object node)
-			throws Exception {
-		for (final Field field : resource.getClass().getFields()) {
+			throws Exception
+	{
+		for (final Field field : resource.getClass().getFields())
+		{
 			final Class<?> attributeType = field.getType();
 			final String attributeName = field.getName();
 
 			final Object value = decodeAttribute(resource, node, attributeType,
 					attributeName);
 
-			if (null == value) {
+			if (null == value)
+			{
 				if (null == field.get(resource))
 					throw new Exception(
 							String.format(
@@ -59,7 +67,8 @@ public class ResourceMapper {
 	}
 
 	private Object decodeAttribute(final Resource res, final Object node,
-			final Class<?> type, final String name) throws Exception {
+			final Class<?> type, final String name) throws Exception
+	{
 		// Order is important
 
 		if (ListResource.class.isAssignableFrom(type))
@@ -78,11 +87,14 @@ public class ResourceMapper {
 	}
 
 	private Object decodeListAttribute(final Resource res, final Object node,
-			final Class<?> type, final String name) throws Exception {
-		final ListResource<IDResource> list = new ListResource<IDResource>();
+			final Class<?> type, final String name) throws Exception
+	{
+		final ListResource<IDResource> list = new ListResource<IDResource>(
+				(Class<? extends IDResource>) type);
 		final Object listNode = resTree.getChild(node, name);
 		if (null != listNode)
-			for (int i = 0; i < resTree.getChildCount(listNode); i++) {
+			for (int i = 0; i < resTree.getChildCount(listNode); i++)
+			{
 				final Resource childRes = decode(resTree.getChild(listNode, i));
 				list.add((IDResource) childRes);
 			}
@@ -90,27 +102,33 @@ public class ResourceMapper {
 	}
 
 	private Object decodeSetAttribute(final Resource res, final Object node,
-			final Class<?> type, final String name) throws Exception {
+			final Class<?> type, final String name) throws Exception
+	{
 		final SetResource<Resource> list = new SetResource<Resource>();
 		final Object listNode = resTree.requireChild(node, name);
 		if (null != listNode)
-			for (int i = 0; i < resTree.getChildCount(listNode); i++) {
+			for (int i = 0; i < resTree.getChildCount(listNode); i++)
+			{
 				final Resource childRes = decode(resTree.getChild(listNode, i));
 				list.add(childRes);
 			}
 		return list;
 	}
 
-	private Resource createInstance(final String typeName) throws Exception {
-		for (final Package pack : resourcePackages) {
+	private Resource createInstance(final String typeName) throws Exception
+	{
+		for (final Package pack : resourcePackages)
+		{
 			final String className = pack.getName() + '.' + typeName;
 
-			try {
+			try
+			{
 				@SuppressWarnings("unchecked")
 				final Class<? extends Resource> type = (Class<? extends Resource>) Class
 						.forName(className);
 				return type.newInstance();
-			} catch (final Exception e) {
+			} catch (final Exception e)
+			{
 				Logger.getLogger(getClass().getName()).warning(
 						String.format("Class '%s' not found in package '%s'.",
 								typeName, pack.getName()));
@@ -120,7 +138,8 @@ public class ResourceMapper {
 		throw new Exception("Could not create type instance: " + typeName);
 	}
 
-	public void encode(final Resource res, final String path) {
+	public void encode(final Resource res, final String path)
+	{
 
 	}
 }
