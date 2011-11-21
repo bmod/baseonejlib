@@ -10,17 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
 
-import com.baseoneonline.java.resourceMapper.Resource;
 import com.baseoneonline.java.resourceMapper.ResourceNode;
-import com.baseoneonline.java.resourceMapper.ResourceProperty;
+import com.baseoneonline.java.swing.config.Config;
 
 public class ResourcePropertyEditor extends JPanel
 {
 	private JLabel lbTitle;
 	private JScrollPane scrollPane;
-	private JTable table;
+	private EditableTable table;
 
 	private final PropertyTableModel tableModel = new PropertyTableModel();
 
@@ -28,6 +26,7 @@ public class ResourcePropertyEditor extends JPanel
 	{
 		initComponents();
 		table.setModel(tableModel);
+		Config.get().persist(getClass().getName() + "Table", table);
 	}
 
 	private void initComponents()
@@ -61,64 +60,19 @@ public class ResourcePropertyEditor extends JPanel
 		gbc_scrollPane.gridy = 1;
 		add(scrollPane, gbc_scrollPane);
 
-		table = new JTable();
+		table = new EditableTable();
+		table.setRowSelectionAllowed(false);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setShowGrid(false);
 		scrollPane.setViewportView(table);
 	}
 
 	public void setResource(ResourceNode node)
 	{
-		lbTitle.setText(node.id + " : " + node.res.getClass().getSimpleName());
-		tableModel.setResource(node.res);
-	}
+		lbTitle.setText(node.getId() + " : "
+				+ node.getResource().getClass().getSimpleName());
+		tableModel.setResource(node.getResource());
 
-}
-
-class PropertyTableModel extends AbstractTableModel
-{
-	private final String[] columnNames =
-	{ "Key", "Value" };
-	private Resource res = null;
-
-	public void setResource(Resource res)
-	{
-		this.res = res;
-		fireTableDataChanged();
-	}
-
-	@Override
-	public String getColumnName(int column)
-	{
-		return columnNames[column];
-	}
-
-	@Override
-	public int getRowCount()
-	{
-		if (null == res)
-			return 0;
-
-		return res.getProperties().size();
-	}
-
-	@Override
-	public int getColumnCount()
-	{
-		return 2;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex)
-	{
-		ResourceProperty prop = res.getProperties().get(rowIndex);
-		switch (columnIndex)
-		{
-		case 0:
-			return prop.id;
-		case 1:
-			return prop.value;
-		default:
-			return null;
-		}
 	}
 
 }
