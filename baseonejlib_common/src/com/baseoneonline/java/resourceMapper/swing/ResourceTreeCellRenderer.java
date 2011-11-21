@@ -44,7 +44,8 @@ public class ResourceTreeCellRenderer extends DefaultTreeCellRenderer
 			JLabel label = (JLabel) comp;
 			if (value instanceof ResourceNode)
 			{
-				Icon icon = iconMap.get(((ResourceNode) value).res.getClass());
+				Icon icon = iconMap.get(((ResourceNode) value).getResource()
+						.getClass());
 				if (null != icon)
 				{
 					label.setIcon(icon);

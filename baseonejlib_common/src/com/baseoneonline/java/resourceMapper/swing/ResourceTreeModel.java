@@ -2,6 +2,7 @@ package com.baseoneonline.java.resourceMapper.swing;
 
 import com.baseoneonline.java.resourceMapper.Resource;
 import com.baseoneonline.java.resourceMapper.ResourceNode;
+import com.baseoneonline.java.resourceMapper.ResourceUtil;
 import com.baseoneonline.java.swing.AbstractTreeModel;
 
 public class ResourceTreeModel extends AbstractTreeModel
@@ -24,13 +25,13 @@ public class ResourceTreeModel extends AbstractTreeModel
 	@Override
 	public Object getChild(Object parent, int index)
 	{
-		return ((ResourceNode) parent).res.getChildren().get(index);
+		return ResourceUtil.getChildren((Resource) parent).get(index);
 	}
 
 	@Override
 	public int getChildCount(Object parent)
 	{
-		return ((ResourceNode) parent).res.getChildren().size();
+		return ResourceUtil.getChildren((Resource) parent).size();
 	}
 
 	@Override

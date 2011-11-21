@@ -6,31 +6,57 @@ import java.util.List;
 
 public class ResourceUtil
 {
-	public static List<String> getProperties(Resource parent)
+	public static List<ResourceNode> getChildren(Resource res)
 	{
-		List<String> list = new ArrayList<String>();
+		List<ResourceNode> children = new ArrayList<ResourceNode>();
+		if (res instanceof ListResource<?>)
+		{
+			ListResource<?> listRes = (ListResource<?>) res;
+			for (IDResource child : listRes)
 
-		for (Field f : parent.getClass().getFields())
+				children.add(new ResourceNode(child.id, child));
+		} else if (res instanceof SetResource<?>) {
+
+		} else
+		{
+			for (Field f : res.getClass().getFields())
+			{
+				if (Resource.class.isAssignableFrom(f.getType()))
+				{
+					try
+					{
+						children.add(new ResourceNode(f.getName(), (Resource) f
+								.get(res)));
+					} catch (Exception e)
+					{
+						throw new RuntimeException(e);
+					}
+				}
+			}
+
+		}
+		return children;
+	}
+
+	public static List<ResourceProperty> getProperties(Resource res)
+	{
+		List<ResourceProperty> properties = new ArrayList<ResourceProperty>();
+
+		for (Field f : res.getClass().getFields())
 		{
 			if (!Resource.class.isAssignableFrom(f.getType()))
 			{
-				list.add(f.getName());
+				try
+				{
+					properties.add(new ResourceProperty(res, f.getName(), f
+							.get(res)));
+				} catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
 			}
 		}
-		return list;
-	}
 
-	public static List<String> getChildren(Resource parent)
-	{
-		List<String> list = new ArrayList<String>();
-
-		for (Field f : parent.getClass().getFields())
-		{
-			if (Resource.class.isAssignableFrom(f.getType()))
-			{
-				list.add(f.getName());
-			}
-		}
-		return list;
+		return properties;
 	}
 }
