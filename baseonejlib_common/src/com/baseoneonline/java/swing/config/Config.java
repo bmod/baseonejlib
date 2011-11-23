@@ -12,6 +12,7 @@ import java.util.prefs.Preferences;
 
 import com.baseoneonline.java.tools.NumberUtils;
 
+@SuppressWarnings("unchecked")
 public class Config
 {
 
@@ -20,6 +21,7 @@ public class Config
 	private static Config instance;
 	private final Preferences prefs;
 
+	@SuppressWarnings("rawtypes")
 	private final List<PersistenceFactory> persistenceFactories = new ArrayList<PersistenceFactory>();
 	private final HashMap<String, Object> persistentObjects = new HashMap<String, Object>();
 
@@ -39,6 +41,7 @@ public class Config
 		addPersistenceFactory(new WindowPersistenceFactory());
 		addPersistenceFactory(new SplitPanePersistenceFactory());
 		addPersistenceFactory(new JTablePersistenceFactory());
+		addPersistenceFactory(new JTreePersistenceFactory());
 
 	}
 
@@ -47,12 +50,12 @@ public class Config
 	 * 
 	 * @param comp
 	 */
-	public void store(final Component comp)
+	public void store(final Object comp)
 	{
 		store(comp.getClass().getName(), comp);
 	}
 
-	public void store(final String id, final Component comp)
+	public void store(final String id, final Object comp)
 	{
 		getFactory(comp).store(this, id, comp);
 	}
@@ -83,7 +86,8 @@ public class Config
 	 * 
 	 * @param factory
 	 */
-	public void addPersistenceFactory(final PersistenceFactory factory)
+	public void addPersistenceFactory(
+			@SuppressWarnings("rawtypes") final PersistenceFactory factory)
 	{
 		persistenceFactories.add(factory);
 	}
@@ -106,6 +110,7 @@ public class Config
 		{
 			final Object o = persistentObjects.get(key);
 
+			@SuppressWarnings("rawtypes")
 			final PersistenceFactory factory = getFactory(o);
 			factory.store(this, key, o);
 		}
@@ -145,6 +150,7 @@ public class Config
 		prefs.put(truncateKey(key), f.getAbsolutePath());
 	}
 
+	@SuppressWarnings("rawtypes")
 	private PersistenceFactory getFactory(final Object value)
 	{
 		for (final PersistenceFactory factory : persistenceFactories)
@@ -161,6 +167,7 @@ public class Config
 		persist(value.getClass().getName(), value);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void persist(final String key, final Object value)
 	{
 

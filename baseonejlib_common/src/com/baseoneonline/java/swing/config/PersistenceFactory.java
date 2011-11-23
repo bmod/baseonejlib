@@ -1,6 +1,6 @@
 package com.baseoneonline.java.swing.config;
 
-public interface PersistenceFactory
+public interface PersistenceFactory<T>
 {
 
 	/**
@@ -11,7 +11,7 @@ public interface PersistenceFactory
 	 * @param storable
 	 *            An object to be stored.
 	 */
-	public void store(Config conf, String key, Object storable);
+	public void store(Config conf, String key, T storable);
 
 	/**
 	 * /**
@@ -24,11 +24,11 @@ public interface PersistenceFactory
 	 *            An object to be stored.
 	 */
 
-	public void restore(Config conf, String key, Object storable);
+	public void restore(Config conf, String key, T storable);
 
 	/**
 	 * @return The type of storable object this factory supports.
 	 */
-	public Class<?> getType();
+	public Class<? extends T> getType();
 
 }
