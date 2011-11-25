@@ -44,7 +44,8 @@ public abstract class AbstractTreeModel implements TreeModel
 	public void fireTreeStructureChanged()
 	{
 
-		Object[] path = { getRoot() };
+		Object[] path =
+		{ getRoot() };
 		TreeModelEvent ev = new TreeModelEvent(this, path);
 		for (TreeModelListener l : listeners)
 		{
@@ -79,8 +80,10 @@ public abstract class AbstractTreeModel implements TreeModel
 	public void fireNodesRemoved(TreePath path, int oldIndex)
 	{
 
-		Object[] children = { path.getLastPathComponent() };
-		int[] indices = { oldIndex };
+		Object[] children =
+		{ path.getLastPathComponent() };
+		int[] indices =
+		{ oldIndex };
 
 		TreeModelEvent ev = new TreeModelEvent(this, path.getParentPath(),
 				indices, children);
@@ -103,12 +106,15 @@ public abstract class AbstractTreeModel implements TreeModel
 		// Store child index
 		int index = getIndexOfChild(treePath.getParentPath()
 				.getLastPathComponent(), treePath.getLastPathComponent());
-		int[] indices = { index };
+		int[] indices =
+		{ index };
 		// Store actual child
-		Object[] children = { treePath.getLastPathComponent() };
+		Object[] children =
+		{ treePath.getLastPathComponent() };
 
 		TreeModelEvent ev = new TreeModelEvent(this, treePath.getParentPath(),
 				indices, children);
 		return ev;
 	}
+
 }
