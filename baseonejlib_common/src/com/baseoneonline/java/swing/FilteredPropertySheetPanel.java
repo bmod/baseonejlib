@@ -40,6 +40,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.baseoneonline.java.swing.propertySheet.BeanPropertyInfo;
 import com.l2fprod.common.propertysheet.AbstractProperty;
 import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertyEditorFactory;
@@ -67,7 +68,8 @@ import com.l2fprod.common.util.ResourceManager;
  * {@link com.l2fprod.common.propertysheet.PropertySheetTableModel#setPropertySortingComparator(Comparator)}
  */
 public class FilteredPropertySheetPanel extends JPanel implements
-		PropertySheet, PropertyChangeListener {
+		PropertySheet, PropertyChangeListener
+{
 
 	private PropertySheetTable table;
 	private PropertySheetTableModel model;
@@ -85,11 +87,13 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	private JEditorPane descriptionPanel;
 	private JScrollPane descriptionScrollPane;
 
-	public FilteredPropertySheetPanel() {
+	public FilteredPropertySheetPanel()
+	{
 		this(new PropertySheetTable());
 	}
 
-	public FilteredPropertySheetPanel(final PropertySheetTable table) {
+	public FilteredPropertySheetPanel(final PropertySheetTable table)
+	{
 		buildUI();
 		setTable(table);
 	}
@@ -104,8 +108,10 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @param table
 	 */
-	public void setTable(final PropertySheetTable table) {
-		if (table == null) {
+	public void setTable(final PropertySheetTable table)
+	{
+		if (table == null)
+		{
 			throw new IllegalArgumentException("table must not be null");
 		}
 
@@ -134,14 +140,16 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * React to property changes by repainting.
 	 */
 	@Override
-	public void propertyChange(final PropertyChangeEvent evt) {
+	public void propertyChange(final PropertyChangeEvent evt)
+	{
 		repaint();
 	}
 
 	/**
 	 * @return the table used to edit/view Properties.
 	 */
-	public PropertySheetTable getTable() {
+	public PropertySheetTable getTable()
+	{
 		return table;
 	}
 
@@ -150,14 +158,17 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @param visible
 	 */
-	public void setDescriptionVisible(final boolean visible) {
-		if (visible) {
+	public void setDescriptionVisible(final boolean visible)
+	{
+		if (visible)
+		{
 			add("Center", split);
 			split.setTopComponent(tableScroll);
 			split.setBottomComponent(descriptionScrollPane);
 			// restore the divider location
 			split.setDividerLocation(split.getHeight() - lastDescriptionHeight);
-		} else {
+		} else
+		{
 			// save the size of the description pane to restore it later
 			lastDescriptionHeight = split.getHeight()
 					- split.getDividerLocation();
@@ -173,7 +184,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @param visible
 	 */
-	public void setToolBarVisible(final boolean visible) {
+	public void setToolBarVisible(final boolean visible)
+	{
 		actionPanel.setVisible(visible);
 		FilteredPropertySheetPanel.this.revalidate();
 	}
@@ -182,61 +194,65 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * Set the current mode, either {@link PropertySheet#VIEW_AS_CATEGORIES} or
 	 * {@link PropertySheet#VIEW_AS_FLAT_LIST}.
 	 */
-	public void setMode(final int mode) {
+	public void setMode(final int mode)
+	{
 		model.setMode(mode);
 		asCategoryButton.setSelected(PropertySheet.VIEW_AS_CATEGORIES == mode);
 	}
 
 	@Override
-	public void setProperties(final Property[] properties) {
+	public void setProperties(final Property[] properties)
+	{
 		model.setProperties(properties);
 	}
 
 	@Override
-	public Property[] getProperties() {
+	public Property[] getProperties()
+	{
 		return model.getProperties();
 	}
 
 	@Override
-	public void addProperty(final Property property) {
+	public void addProperty(final Property property)
+	{
 		model.addProperty(property);
 	}
 
 	@Override
-	public void addProperty(final int index, final Property property) {
+	public void addProperty(final int index, final Property property)
+	{
 		model.addProperty(index, property);
 	}
 
 	@Override
-	public void removeProperty(final Property property) {
+	public void removeProperty(final Property property)
+	{
 		model.removeProperty(property);
 	}
 
 	@Override
-	public int getPropertyCount() {
+	public int getPropertyCount()
+	{
 		return model.getPropertyCount();
 	}
 
 	@Override
-	public Iterator propertyIterator() {
+	public Iterator propertyIterator()
+	{
 		return model.propertyIterator();
 	}
 
-	public void setBeanInfo(final BeanInfo beanInfo) {
-		final PropertyDescriptor[] descriptors = beanInfo
-				.getPropertyDescriptors();
-		final Property[] properties = new Property[descriptors.length];
-		for (int i = 0, c = descriptors.length; i < c; i++) {
-			properties[i] = new PropertyDescriptorAdapter(descriptors[i],
-					beanInfo);
+	public void setBeanInfo(final BeanPropertyInfo beanInfo)
+	{
 
-		}
-		model.setProperties(properties);
+		model.setProperties(beanInfo.getAdaptedProperties());
 	}
 
-	public void setProperties(final PropertyDescriptor[] descriptors) {
+	public void setProperties(final PropertyDescriptor[] descriptors)
+	{
 		final Property[] properties = new Property[descriptors.length];
-		for (int i = 0, c = descriptors.length; i < c; i++) {
+		for (int i = 0, c = descriptors.length; i < c; i++)
+		{
 			properties[i] = new PropertyDescriptorAdapter(descriptors[i]);
 
 		}
@@ -249,12 +265,14 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @param data
 	 */
-	public void readFromObject(final Object data) {
+	public void readFromObject(final Object data)
+	{
 		// cancel pending edits
 		getTable().cancelEditing();
 
 		final Property[] properties = model.getProperties();
-		for (int i = 0, c = properties.length; i < c; i++) {
+		for (int i = 0, c = properties.length; i < c; i++)
+		{
 			properties[i].readFromObject(data);
 		}
 		repaint();
@@ -266,31 +284,37 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @param data
 	 */
-	public void writeToObject(final Object data) {
+	public void writeToObject(final Object data)
+	{
 		// ensure pending edits are committed
 		getTable().commitEditing();
 
 		final Property[] properties = getProperties();
-		for (int i = 0, c = properties.length; i < c; i++) {
+		for (int i = 0, c = properties.length; i < c; i++)
+		{
 			properties[i].writeToObject(data);
 		}
 	}
 
 	public void addPropertySheetChangeListener(
-			final PropertyChangeListener listener) {
+			final PropertyChangeListener listener)
+	{
 		model.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertySheetChangeListener(
-			final PropertyChangeListener listener) {
+			final PropertyChangeListener listener)
+	{
 		model.removePropertyChangeListener(listener);
 	}
 
-	public void setEditorFactory(final PropertyEditorFactory factory) {
+	public void setEditorFactory(final PropertyEditorFactory factory)
+	{
 		table.setEditorFactory(factory);
 	}
 
-	public PropertyEditorFactory getEditorFactory() {
+	public PropertyEditorFactory getEditorFactory()
+	{
 		return table.getEditorFactory();
 	}
 
@@ -299,7 +323,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param registry
 	 */
 	@Deprecated
-	public void setEditorRegistry(final PropertyEditorRegistry registry) {
+	public void setEditorRegistry(final PropertyEditorRegistry registry)
+	{
 		table.setEditorFactory(registry);
 	}
 
@@ -307,15 +332,18 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @deprecated use {@link #getEditorFactory()}
 	 */
 	@Deprecated
-	public PropertyEditorRegistry getEditorRegistry() {
+	public PropertyEditorRegistry getEditorRegistry()
+	{
 		return (PropertyEditorRegistry) table.getEditorFactory();
 	}
 
-	public void setRendererFactory(final PropertyRendererFactory factory) {
+	public void setRendererFactory(final PropertyRendererFactory factory)
+	{
 		table.setRendererFactory(factory);
 	}
 
-	public PropertyRendererFactory getRendererFactory() {
+	public PropertyRendererFactory getRendererFactory()
+	{
 		return table.getRendererFactory();
 	}
 
@@ -324,7 +352,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param registry
 	 */
 	@Deprecated
-	public void setRendererRegistry(final PropertyRendererRegistry registry) {
+	public void setRendererRegistry(final PropertyRendererRegistry registry)
+	{
 		table.setRendererRegistry(registry);
 	}
 
@@ -332,7 +361,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @deprecated use {@link #getRendererFactory()}
 	 */
 	@Deprecated
-	public PropertyRendererRegistry getRendererRegistry() {
+	public PropertyRendererRegistry getRendererRegistry()
+	{
 		return table.getRendererRegistry();
 	}
 
@@ -342,7 +372,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param value
 	 *            true to enable sorting
 	 */
-	public void setSortingCategories(final boolean value) {
+	public void setSortingCategories(final boolean value)
+	{
 		model.setSortingCategories(value);
 		sortButton.setSelected(isSorting());
 	}
@@ -352,7 +383,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @return true if category sorting is enabled
 	 */
-	public boolean isSortingCategories() {
+	public boolean isSortingCategories()
+	{
 		return model.isSortingCategories();
 	}
 
@@ -362,7 +394,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param value
 	 *            true to enable sorting
 	 */
-	public void setSortingProperties(final boolean value) {
+	public void setSortingProperties(final boolean value)
+	{
 		model.setSortingProperties(value);
 		sortButton.setSelected(isSorting());
 	}
@@ -372,7 +405,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * 
 	 * @return true if property sorting is enabled
 	 */
-	public boolean isSortingProperties() {
+	public boolean isSortingProperties()
+	{
 		return model.isSortingProperties();
 	}
 
@@ -382,7 +416,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param value
 	 *            true to enable sorting
 	 */
-	public void setSorting(final boolean value) {
+	public void setSorting(final boolean value)
+	{
 		model.setSortingCategories(value);
 		model.setSortingProperties(value);
 		sortButton.setSelected(value);
@@ -391,7 +426,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	/**
 	 * @return true if properties or categories are sorted.
 	 */
-	public boolean isSorting() {
+	public boolean isSorting()
+	{
 		return model.isSortingCategories() || model.isSortingProperties();
 	}
 
@@ -402,7 +438,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param comp
 	 *            java.util.Comparator used to compare categories
 	 */
-	public void setCategorySortingComparator(final Comparator comp) {
+	public void setCategorySortingComparator(final Comparator comp)
+	{
 		model.setCategorySortingComparator(comp);
 	}
 
@@ -412,11 +449,13 @@ public class FilteredPropertySheetPanel extends JPanel implements
 	 * @param comp
 	 *            java.util.Comparator used to compare Property-objects
 	 */
-	public void setPropertySortingComparator(final Comparator comp) {
+	public void setPropertySortingComparator(final Comparator comp)
+	{
 		model.setPropertySortingComparator(comp);
 	}
 
-	private void buildUI() {
+	private void buildUI()
+	{
 		LookAndFeelTweaks.setBorderLayout(this);
 		LookAndFeelTweaks.setBorder(this);
 
@@ -470,15 +509,18 @@ public class FilteredPropertySheetPanel extends JPanel implements
 		setToolBarVisible(true);
 	}
 
-	class SelectionListener implements ListSelectionListener {
+	class SelectionListener implements ListSelectionListener
+	{
 
 		@Override
-		public void valueChanged(final ListSelectionEvent e) {
+		public void valueChanged(final ListSelectionEvent e)
+		{
 			final int row = table.getSelectedRow();
 			Property prop = null;
 			if (row >= 0 && table.getRowCount() > row)
 				prop = model.getPropertySheetElement(row).getProperty();
-			if (prop != null) {
+			if (prop != null)
+			{
 				descriptionPanel.setText("<html>"
 						+ "<b>"
 						+ (prop.getDisplayName() == null ? "" : prop
@@ -486,7 +528,8 @@ public class FilteredPropertySheetPanel extends JPanel implements
 						+ "</b><br>"
 						+ (prop.getShortDescription() == null ? "" : prop
 								.getShortDescription()));
-			} else {
+			} else
+			{
 				descriptionPanel.setText("<html>");
 			}
 
@@ -495,9 +538,11 @@ public class FilteredPropertySheetPanel extends JPanel implements
 		}
 	}
 
-	class ToggleModeAction extends AbstractAction {
+	class ToggleModeAction extends AbstractAction
+	{
 
-		public ToggleModeAction() {
+		public ToggleModeAction()
+		{
 			super("toggle", IconPool.shared().get(
 					PropertySheet.class.getResource("icons/category.gif")));
 			putValue(
@@ -507,18 +552,23 @@ public class FilteredPropertySheetPanel extends JPanel implements
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e) {
-			if (asCategoryButton.isSelected()) {
+		public void actionPerformed(final ActionEvent e)
+		{
+			if (asCategoryButton.isSelected())
+			{
 				model.setMode(PropertySheet.VIEW_AS_CATEGORIES);
-			} else {
+			} else
+			{
 				model.setMode(PropertySheet.VIEW_AS_FLAT_LIST);
 			}
 		}
 	}
 
-	class ToggleDescriptionAction extends AbstractAction {
+	class ToggleDescriptionAction extends AbstractAction
+	{
 
-		public ToggleDescriptionAction() {
+		public ToggleDescriptionAction()
+		{
 			super("toggleDescription", IconPool.shared().get(
 					PropertySheet.class.getResource("icons/description.gif")));
 			putValue(
@@ -528,14 +578,17 @@ public class FilteredPropertySheetPanel extends JPanel implements
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e) {
+		public void actionPerformed(final ActionEvent e)
+		{
 			setDescriptionVisible(descriptionButton.isSelected());
 		}
 	}
 
-	class ToggleSortingAction extends AbstractAction {
+	class ToggleSortingAction extends AbstractAction
+	{
 
-		public ToggleSortingAction() {
+		public ToggleSortingAction()
+		{
 			super("toggleSorting", IconPool.shared().get(
 					PropertySheet.class.getResource("icons/sort.gif")));
 			putValue(
@@ -545,65 +598,77 @@ public class FilteredPropertySheetPanel extends JPanel implements
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e) {
+		public void actionPerformed(final ActionEvent e)
+		{
 			setSorting(sortButton.isSelected());
 		}
 	}
 
 }
 
-class PropertyDescriptorAdapter extends AbstractProperty {
+class PropertyDescriptorAdapter extends AbstractProperty
+{
 
 	private PropertyDescriptor descriptor;
 
 	private BeanInfo beanInfo;
 
-	public PropertyDescriptorAdapter() {
+	public PropertyDescriptorAdapter()
+	{
 		super();
 	}
 
-	public PropertyDescriptorAdapter(final PropertyDescriptor descriptor) {
+	public PropertyDescriptorAdapter(final PropertyDescriptor descriptor)
+	{
 		this();
 		setDescriptor(descriptor);
 
 	}
 
 	public PropertyDescriptorAdapter(
-			final PropertyDescriptor propertyDescriptor, final BeanInfo beanInfo) {
+			final PropertyDescriptor propertyDescriptor, final BeanInfo beanInfo)
+	{
 		descriptor = propertyDescriptor;
 		this.beanInfo = beanInfo;
 	}
 
-	public void setDescriptor(final PropertyDescriptor descriptor) {
+	public void setDescriptor(final PropertyDescriptor descriptor)
+	{
 		this.descriptor = descriptor;
 	}
 
-	public PropertyDescriptor getDescriptor() {
+	public PropertyDescriptor getDescriptor()
+	{
 		return descriptor;
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return descriptor.getName();
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getDisplayName()
+	{
 		return descriptor.getDisplayName();
 	}
 
 	@Override
-	public String getShortDescription() {
+	public String getShortDescription()
+	{
 		return descriptor.getShortDescription();
 	}
 
 	@Override
-	public Class getType() {
+	public Class getType()
+	{
 		return descriptor.getPropertyType();
 	}
 
 	@Override
-	public Object clone() {
+	public Object clone()
+	{
 		final PropertyDescriptorAdapter clone = new PropertyDescriptorAdapter(
 				descriptor);
 		clone.setValue(getValue());
@@ -611,17 +676,23 @@ class PropertyDescriptorAdapter extends AbstractProperty {
 	}
 
 	@Override
-	public void readFromObject(final Object object) {
-		try {
+	public void readFromObject(final Object object)
+	{
+		try
+		{
 			final Method method = descriptor.getReadMethod();
-			if (method != null) {
+			if (method != null)
+			{
 				setValue(method.invoke(object, null));
 			}
-		} catch (final Exception e) {
+		} catch (final Exception e)
+		{
 			String message = "Got exception when reading property " + getName();
-			if (object == null) {
+			if (object == null)
+			{
 				message += ", object was 'null'";
-			} else {
+			} else
+			{
 				message += ", object was " + String.valueOf(object);
 			}
 			throw new RuntimeException(message, e);
@@ -629,17 +700,24 @@ class PropertyDescriptorAdapter extends AbstractProperty {
 	}
 
 	@Override
-	public void writeToObject(final Object object) {
-		try {
+	public void writeToObject(final Object object)
+	{
+		try
+		{
 			final Method method = descriptor.getWriteMethod();
-			if (method != null) {
-				method.invoke(object, new Object[] { getValue() });
+			if (method != null)
+			{
+				method.invoke(object, new Object[]
+				{ getValue() });
 			}
-		} catch (final Exception e) {
+		} catch (final Exception e)
+		{
 			String message = "Got exception when writing property " + getName();
-			if (object == null) {
+			if (object == null)
+			{
 				message += ", object was 'null'";
-			} else {
+			} else
+			{
 				message += ", object was " + String.valueOf(object);
 			}
 			throw new RuntimeException(message, e);
@@ -647,16 +725,20 @@ class PropertyDescriptorAdapter extends AbstractProperty {
 	}
 
 	@Override
-	public boolean isEditable() {
+	public boolean isEditable()
+	{
 		return descriptor.getWriteMethod() != null;
 	}
 
 	@Override
-	public String getCategory() {
-		if (null != beanInfo) {
+	public String getCategory()
+	{
+		if (null != beanInfo)
+		{
 
 			final Class<?> type = beanInfo.getBeanDescriptor().getBeanClass();
-			if (null != type) {
+			if (null != type)
+			{
 				return type.getSimpleName();
 			}
 		}

@@ -1,4 +1,4 @@
-package com.baseoneonline.java.swing;
+package com.baseoneonline.java.swing.propertySheet;
 
 /*
  * ObjectInspectorJPanel.java
@@ -22,13 +22,11 @@ package com.baseoneonline.java.swing;
  * Copyright (C) 2007 Cheok YanCheng <yccheok@yahoo.com>
  */
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 
+import com.baseoneonline.java.swing.FilteredPropertySheetPanel;
 import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertyEditorRegistry;
 import com.l2fprod.common.propertysheet.PropertyRendererRegistry;
@@ -39,18 +37,18 @@ import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
  * 
  * @author yccheok
  */
-public class ObjectInspectorJPanel extends FilteredPropertySheetPanel {
+public class ObjectInspectorJPanel extends FilteredPropertySheetPanel
+{
 
 	/** Creates a new instance of ObjectInspectorJPanel */
-	public ObjectInspectorJPanel() {
+	public ObjectInspectorJPanel()
+	{
 
 		getTable().setEditorFactory(new PropertyEditorRegistryEx());
-		final PropertyEditorRegistry editor = (PropertyEditorRegistry) getTable()
-				.getEditorFactory();
+
 		final PropertyRendererRegistry renderer = (PropertyRendererRegistry) getTable()
 				.getRendererFactory();
-
-		editor.registerEditor(Enum.class, new EnumComboBoxPropertyEditor());
+		addPropertyEditor(Enum.class, new EnumComboBoxPropertyEditor());
 
 		final DefaultCellRenderer r = new DefaultCellRenderer();
 		r.setShowOddAndEvenRows(false);
@@ -64,24 +62,36 @@ public class ObjectInspectorJPanel extends FilteredPropertySheetPanel {
 		addPropertySheetChangeListener(listener);
 	}
 
-	PropertyChangeListener listener = new PropertyChangeListener() {
+	public void addPropertyEditor(Class<?> type, PropertyEditor editor)
+	{
+		final PropertyEditorRegistry editorReg = (PropertyEditorRegistry) getTable()
+				.getEditorFactory();
+		editorReg.registerEditor(type, editor);
+	}
+
+	PropertyChangeListener listener = new PropertyChangeListener()
+	{
 		@Override
-		public void propertyChange(final PropertyChangeEvent evt) {
+		public void propertyChange(final PropertyChangeEvent evt)
+		{
 			final Property prop = (Property) evt.getSource();
 			prop.writeToObject(bean);
 		}
 	};
 
 	private static class PropertyEditorRegistryEx extends
-			PropertyEditorRegistry {
+			PropertyEditorRegistry
+	{
 		// We will try to get the "nearest" super class.
 		@Override
-		public synchronized PropertyEditor getEditor(final Class type) {
+		public synchronized PropertyEditor getEditor(final Class type)
+		{
 			PropertyEditor editor = super.getEditor(type);
 
 			Class c = type;
 
-			while (editor == null) {
+			while (editor == null)
+			{
 				c = c.getSuperclass();
 
 				if (c == null)
@@ -94,28 +104,27 @@ public class ObjectInspectorJPanel extends FilteredPropertySheetPanel {
 		}
 	}
 
-	public void setBean(final Object bean) {
+	public void setBean(final Object bean)
+	{
 		this.bean = bean;
 
-		BeanInfo beanInfo = null;
+		BeanPropertyInfo beanInfo = null;
 
-		try {
-			beanInfo = Introspector.getBeanInfo(bean.getClass());
-		} catch (final IntrospectionException exp) {
-			throw new RuntimeException(exp);
-		}
+		beanInfo = BeanPropertyInfo.getInfo(bean.getClass());
 
 		setBeanInfo(beanInfo);
 
 		final Property[] properties = getProperties();
-		for (int i = 0, c = properties.length; i < c; i++) {
+		for (int i = 0, c = properties.length; i < c; i++)
+		{
 			properties[i].readFromObject(bean);
 		}
 
 		// sheet.revalidate();
 	}
 
-	public Object getBean() {
+	public Object getBean()
+	{
 		return bean;
 	}
 
