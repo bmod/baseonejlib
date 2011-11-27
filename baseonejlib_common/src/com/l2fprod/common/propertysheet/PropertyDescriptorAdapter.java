@@ -17,102 +17,112 @@
  */
 package com.l2fprod.common.propertysheet;
 
-import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
+
 /**
  * PropertyDescriptorAdapter.<br>
- *
+ * 
  */
-class PropertyDescriptorAdapter extends AbstractProperty {
+public class PropertyDescriptorAdapter extends AbstractProperty {
 
-  private PropertyDescriptor descriptor;
-  
-  public PropertyDescriptorAdapter() {
-    super();
-  }
-  
-  public PropertyDescriptorAdapter(PropertyDescriptor descriptor) {
-    this();
-    setDescriptor(descriptor);
-  }
+	private PropertyDescriptor descriptor;
 
-  public void setDescriptor(PropertyDescriptor descriptor) {
-    this.descriptor = descriptor;
-  }
-  
-  public PropertyDescriptor getDescriptor() {
-    return descriptor;
-  }
-  
-  public String getName() {
-    return descriptor.getName();
-  }
-  
-  public String getDisplayName() {
-    return descriptor.getDisplayName();
-  }
-  
-  public String getShortDescription() {
-    return descriptor.getShortDescription();
-  }
+	public PropertyDescriptorAdapter() {
+		super();
+	}
 
-  public Class getType() {
-    return descriptor.getPropertyType();
-  }
+	public PropertyDescriptorAdapter(final PropertyDescriptor descriptor) {
+		this();
+		setDescriptor(descriptor);
+	}
 
-  public Object clone() {
-    PropertyDescriptorAdapter clone = new PropertyDescriptorAdapter(descriptor);
-    clone.setValue(getValue());
-    return clone;
-  }
-  
-  public void readFromObject(Object object) {
-    try {
-      Method method = descriptor.getReadMethod();
-      if (method != null) {
-        setValue(method.invoke(object, null));
-      }
-    } catch (Exception e) {
-      String message = "Got exception when reading property " + getName();
-      if (object == null) {
-        message += ", object was 'null'";
-      } else {
-        message += ", object was " + String.valueOf(object);
-      }
-      throw new RuntimeException(message, e);
-    }
-  }
-  
-  public void writeToObject(Object object) {
-    try {
-      Method method = descriptor.getWriteMethod();
-      if (method != null) {
-        method.invoke(object, new Object[]{getValue()});
-      }
-    } catch (Exception e) {
-      String message = "Got exception when writing property " + getName();
-      if (object == null) {
-        message += ", object was 'null'";
-      } else {
-        message += ", object was " + String.valueOf(object);
-      }
-      throw new RuntimeException(message, e);
-    }
-  }
-  
-  public boolean isEditable() {
-    return descriptor.getWriteMethod() != null;
-  }
+	public void setDescriptor(final PropertyDescriptor descriptor) {
+		this.descriptor = descriptor;
+	}
 
-  public String getCategory() {
-    if (descriptor instanceof ExtendedPropertyDescriptor) {
-      return ((ExtendedPropertyDescriptor)descriptor).getCategory();
-    } else {
-      return null;
-    }
-  }
-  
+	public PropertyDescriptor getDescriptor() {
+		return descriptor;
+	}
+
+	@Override
+	public String getName() {
+		return descriptor.getName();
+	}
+
+	@Override
+	public String getDisplayName() {
+		return descriptor.getDisplayName();
+	}
+
+	@Override
+	public String getShortDescription() {
+		return descriptor.getShortDescription();
+	}
+
+	@Override
+	public Class getType() {
+		return descriptor.getPropertyType();
+	}
+
+	@Override
+	public Object clone() {
+		final PropertyDescriptorAdapter clone = new PropertyDescriptorAdapter(
+				descriptor);
+		clone.setValue(getValue());
+		return clone;
+	}
+
+	@Override
+	public void readFromObject(final Object object) {
+		try {
+			final Method method = descriptor.getReadMethod();
+			if (method != null) {
+				setValue(method.invoke(object, null));
+			}
+		} catch (final Exception e) {
+			String message = "Got exception when reading property " + getName();
+			if (object == null) {
+				message += ", object was 'null'";
+			} else {
+				message += ", object was " + String.valueOf(object);
+			}
+			throw new RuntimeException(message, e);
+		}
+	}
+
+	@Override
+	public void writeToObject(final Object object) {
+		try {
+			final Method method = descriptor.getWriteMethod();
+			if (method != null) {
+				method.invoke(object, new Object[] { getValue() });
+			}
+		} catch (final Exception e) {
+			String message = "Got exception when writing property " + getName();
+			if (object == null) {
+				message += ", object was 'null'";
+			} else {
+				message += ", object was " + String.valueOf(object);
+			}
+			throw new RuntimeException(message, e);
+		}
+	}
+
+	@Override
+	public boolean isEditable() {
+		return descriptor.getWriteMethod() != null;
+	}
+
+	@Override
+	public String getCategory() {
+		if (descriptor instanceof ExtendedPropertyDescriptor) {
+			return ((ExtendedPropertyDescriptor) descriptor).getCategory();
+		} else {
+			return null;
+		}
+	}
+
 }
