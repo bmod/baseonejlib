@@ -30,29 +30,24 @@ import com.l2fprod.common.beans.editor.ComboBoxPropertyEditor;
  * 
  * @author yccheok
  */
-public class EnumComboBoxPropertyEditor extends ComboBoxPropertyEditor
-{
+public class EnumComboBoxPropertyEditor extends ComboBoxPropertyEditor {
 
 	@Override
-	public void setValue(Object value)
-	{
-		JComboBox box = (JComboBox) editor;
+	public void setValue(final Object value) {
+		final JComboBox<?> box = (JComboBox<?>) editor;
 
 		// We need to remove the previous items. This is because if a
 		// property panel is having more than 1 enum type property, we
 		// may display wrong type of enum.
 		box.removeAllItems();
 
-		if (box.getItemCount() == 0)
-		{
-			try
-			{
-				java.lang.reflect.Method m = value.getClass().getMethod(
+		if (box.getItemCount() == 0) {
+			try {
+				final java.lang.reflect.Method m = value.getClass().getMethod(
 						"values");
-				Enum[] array = (Enum[]) m.invoke(null);
-				this.setAvailableValues(array);
-			} catch (Exception exp)
-			{
+				final Enum<?>[] array = (Enum[]) m.invoke(null);
+				setAvailableValues(array);
+			} catch (final Exception exp) {
 				throw new RuntimeException(exp);
 			}
 
@@ -61,8 +56,7 @@ public class EnumComboBoxPropertyEditor extends ComboBoxPropertyEditor
 	}
 
 	/** Creates a new instance of EnumComboBoxPropertyEditor */
-	public EnumComboBoxPropertyEditor()
-	{
+	public EnumComboBoxPropertyEditor() {
 	}
 
 }

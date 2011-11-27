@@ -33,63 +33,55 @@ import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertyEditorRegistry;
 import com.l2fprod.common.propertysheet.PropertyRendererRegistry;
 import com.l2fprod.common.propertysheet.PropertySheet;
-import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
 /**
  * 
  * @author yccheok
  */
-public class ObjectInspectorJPanel extends PropertySheetPanel
-{
+public class ObjectInspectorJPanel extends FilteredPropertySheetPanel {
 
 	/** Creates a new instance of ObjectInspectorJPanel */
-	public ObjectInspectorJPanel()
-	{
+	public ObjectInspectorJPanel() {
 
-		this.getTable().setEditorFactory(new PropertyEditorRegistryEx());
-		PropertyEditorRegistry editor = (PropertyEditorRegistry) this
-				.getTable().getEditorFactory();
-		PropertyRendererRegistry renderer = (PropertyRendererRegistry) this
-				.getTable().getRendererFactory();
+		getTable().setEditorFactory(new PropertyEditorRegistryEx());
+		final PropertyEditorRegistry editor = (PropertyEditorRegistry) getTable()
+				.getEditorFactory();
+		final PropertyRendererRegistry renderer = (PropertyRendererRegistry) getTable()
+				.getRendererFactory();
 
 		editor.registerEditor(Enum.class, new EnumComboBoxPropertyEditor());
 
-		DefaultCellRenderer r = new DefaultCellRenderer();
+		final DefaultCellRenderer r = new DefaultCellRenderer();
 		r.setShowOddAndEvenRows(false);
 		renderer.registerRenderer(Enum.class, r);
 
-		this.setMode(PropertySheet.VIEW_AS_FLAT_LIST);
-		this.setToolBarVisible(false);
-		this.setDescriptionVisible(false);
-		this.setToolBarVisible(true);
+		setMode(PropertySheet.VIEW_AS_FLAT_LIST);
+		setToolBarVisible(false);
+		setDescriptionVisible(false);
+		setToolBarVisible(true);
 
-		this.addPropertySheetChangeListener(listener);
+		addPropertySheetChangeListener(listener);
 	}
 
-	PropertyChangeListener listener = new PropertyChangeListener()
-	{
+	PropertyChangeListener listener = new PropertyChangeListener() {
 		@Override
-		public void propertyChange(PropertyChangeEvent evt)
-		{
-			Property prop = (Property) evt.getSource();
-			prop.writeToObject(ObjectInspectorJPanel.this.bean);
+		public void propertyChange(final PropertyChangeEvent evt) {
+			final Property prop = (Property) evt.getSource();
+			prop.writeToObject(bean);
 		}
 	};
 
 	private static class PropertyEditorRegistryEx extends
-			PropertyEditorRegistry
-	{
+			PropertyEditorRegistry {
 		// We will try to get the "nearest" super class.
 		@Override
-		public synchronized PropertyEditor getEditor(Class type)
-		{
+		public synchronized PropertyEditor getEditor(final Class type) {
 			PropertyEditor editor = super.getEditor(type);
 
 			Class c = type;
 
-			while (editor == null)
-			{
+			while (editor == null) {
 				c = c.getSuperclass();
 
 				if (c == null)
@@ -102,33 +94,28 @@ public class ObjectInspectorJPanel extends PropertySheetPanel
 		}
 	}
 
-	public void setBean(Object bean)
-	{
+	public void setBean(final Object bean) {
 		this.bean = bean;
 
 		BeanInfo beanInfo = null;
 
-		try
-		{
+		try {
 			beanInfo = Introspector.getBeanInfo(bean.getClass());
-		} catch (IntrospectionException exp)
-		{
+		} catch (final IntrospectionException exp) {
 			throw new RuntimeException(exp);
 		}
 
-		this.setBeanInfo(beanInfo);
+		setBeanInfo(beanInfo);
 
-		Property[] properties = this.getProperties();
-		for (int i = 0, c = properties.length; i < c; i++)
-		{
+		final Property[] properties = getProperties();
+		for (int i = 0, c = properties.length; i < c; i++) {
 			properties[i].readFromObject(bean);
 		}
 
 		// sheet.revalidate();
 	}
 
-	public Object getBean()
-	{
+	public Object getBean() {
 		return bean;
 	}
 
