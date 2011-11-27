@@ -1,4 +1,4 @@
-package com.baseoneonline.java.swing;
+package com.baseoneonline.java.swing.propertySheet;
 
 import javax.swing.JComboBox;
 
