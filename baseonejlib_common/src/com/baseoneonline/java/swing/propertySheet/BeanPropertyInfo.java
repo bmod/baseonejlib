@@ -97,10 +97,29 @@ public class BeanPropertyInfo
 			{
 
 				String methodName = readMethod.getName();
+				String propertyName = null;
+				Class<?> propertyType = null;
+
+				boolean isGetter = false;
 				if (methodName.startsWith("get") && methodName.length() > 3)
 				{
-					String propertyName = methodName.substring(3);
-					Class<?> propertyType = readMethod.getReturnType();
+					propertyName = methodName.substring(3);
+					propertyType = readMethod.getReturnType();
+					if (propertyType != boolean.class
+							|| propertyType != Boolean.class)
+						isGetter = true;
+				} else if (methodName.startsWith("is")
+						&& methodName.length() > 2)
+				{
+					propertyName = methodName.substring(2);
+					propertyType = readMethod.getReturnType();
+					if (propertyType == boolean.class
+							|| propertyType == Boolean.class)
+						isGetter = true;
+				}
+
+				if (isGetter)
+				{
 					Method writeMethod = getWriteMethod(exactType,
 							propertyName, propertyType);
 
