@@ -12,6 +12,7 @@ public class JTreePersistenceFactory implements PersistenceFactory<JTree>
 	public void store(Config conf, String key, JTree tree)
 	{
 		conf.putString(key + "ExpandedPaths", getExpansionState(tree, 0));
+
 	}
 
 	@Override
