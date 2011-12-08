@@ -1,20 +1,39 @@
 package test;
 
-import com.baseoneonline.java.swing.DockingFrame;
+import java.awt.BorderLayout;
 
-public class DockTest extends DockingFrame
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+
+import com.vlsolutions.swing.docking.DockingDesktop;
+
+public class DockTest extends JFrame
 {
 
-	@Override
-	protected void initFrame()
+	public static void main(String[] args)
 	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e)
+		{
+			// TODO: handle exception
+		}
 
+		DockTest app = new DockTest();
+		app.setVisible(true);
 	}
 
-	@Override
-	protected void frameClosing()
+	public DockTest()
 	{
+		initComponents();
+	}
 
+	private void initComponents()
+	{
+		setLayout(new BorderLayout());
+		DockingDesktop desk = new DockingDesktop();
+		add(desk);
 	}
 
 }
