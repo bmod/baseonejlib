@@ -6,11 +6,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
-
-import com.baseoneonline.java.tools.NumberUtils;
 
 @SuppressWarnings("unchecked")
 public class Config
@@ -19,7 +14,7 @@ public class Config
 	private static Class<?> applicationClass;
 
 	private static Config instance;
-	private final Preferences prefs;
+	private final PrefsAdapter prefs;
 
 	@SuppressWarnings("rawtypes")
 	private final List<PersistenceFactory> persistenceFactories = new ArrayList<PersistenceFactory>();
@@ -27,16 +22,8 @@ public class Config
 
 	private Config()
 	{
-		if (null == applicationClass)
-			Logger.getLogger(getClass().getName())
-					.severe("Application class was not set! Use Config.setApplicationClass() to do so. Now using generic app class, may collide.");
-		if (null != applicationClass)
-		{
-			prefs = Preferences.userNodeForPackage(applicationClass);
-		} else
-		{
-			prefs = Preferences.userNodeForPackage(getClass());
-		}
+		prefs = new PreferencesAdapter();
+		prefs.setReferenceClass(applicationClass);
 
 		addPersistenceFactory(new WindowPersistenceFactory());
 		addPersistenceFactory(new SplitPanePersistenceFactory());
@@ -98,7 +85,7 @@ public class Config
 		{
 			storePersistentObjects();
 			prefs.flush();
-		} catch (final BackingStoreException e)
+		} catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -133,7 +120,7 @@ public class Config
 
 	public File getFile(final String key)
 	{
-		final String filename = prefs.get(truncateKey(key), null);
+		final String filename = prefs.get(key, null);
 		if (null == filename)
 			return null;
 		return new File(filename);
@@ -141,13 +128,12 @@ public class Config
 
 	public File getFile(final String key, final File defaultValue)
 	{
-		return new File(prefs.get(truncateKey(key),
-				defaultValue.getAbsolutePath()));
+		return new File(prefs.get(key, defaultValue.getAbsolutePath()));
 	}
 
 	public void setFile(final String key, final File f)
 	{
-		prefs.put(truncateKey(key), f.getAbsolutePath());
+		prefs.put(key, f.getAbsolutePath());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -179,56 +165,40 @@ public class Config
 	public Rectangle getRectangle(final String key, final Rectangle defaultValue)
 	{
 		final Rectangle rect = new Rectangle();
-		rect.x = prefs.getInt(truncateKey(key + "X"), defaultValue.x);
-		rect.y = prefs.getInt(truncateKey(key + "Y"), defaultValue.y);
-		rect.width = prefs.getInt(truncateKey(key + "W"), defaultValue.width);
-		rect.height = prefs.getInt(truncateKey(key + "H"), defaultValue.height);
+		rect.x = prefs.getInt(key + "X", defaultValue.x);
+		rect.y = prefs.getInt(key + "Y", defaultValue.y);
+		rect.width = prefs.getInt(key + "W", defaultValue.width);
+		rect.height = prefs.getInt(key + "H", defaultValue.height);
 		return rect;
 	}
 
 	public void putRectangle(final String key, final Rectangle bounds)
 	{
-		prefs.putInt(truncateKey(key + "X"), bounds.x);
-		prefs.putInt(truncateKey(key + "Y"), bounds.y);
-		prefs.putInt(truncateKey(key + "W"), bounds.width);
-		prefs.putInt(truncateKey(key + "H"), bounds.height);
+		prefs.putInt(key + "X", bounds.x);
+		prefs.putInt(key + "Y", bounds.y);
+		prefs.putInt(key + "W", bounds.width);
+		prefs.putInt(key + "H", bounds.height);
 
 	}
 
 	public int getInt(final String key, final int defaultValue)
 	{
-		return prefs.getInt(truncateKey(key), defaultValue);
+		return prefs.getInt(key, defaultValue);
 	}
 
 	public int[] getIntArray(final String key, final int[] defaultValue)
 	{
-		byte[] bytes = new byte[0];
-		if (null != defaultValue)
-			bytes = NumberUtils.intsToBytes(defaultValue);
-		return NumberUtils.bytesToInts(prefs.getByteArray(truncateKey(key),
-				bytes));
+		return prefs.getIntArray(key, defaultValue);
 	}
 
 	public void putInt(final String key, final int value)
 	{
-		prefs.putInt(truncateKey(key), value);
+		prefs.putInt(key, value);
 	}
 
 	public void putIntArray(final String key, final int[] columnWidths)
 	{
-		prefs.putByteArray(truncateKey(key),
-				NumberUtils.intsToBytes(columnWidths));
-	}
-
-	private static String truncateKey(final String key)
-	{
-		if (key.length() > Preferences.MAX_KEY_LENGTH)
-		{
-			final int lastIndex = key.length() - 1;
-			return key.substring(lastIndex - Preferences.MAX_KEY_LENGTH,
-					lastIndex);
-		}
-		return key;
+		prefs.putIntArray(key, columnWidths);
 	}
 
 	public String getString(final String key, final String defaultvalue)
