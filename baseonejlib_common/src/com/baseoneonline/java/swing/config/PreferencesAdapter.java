@@ -81,4 +81,16 @@ public class PreferencesAdapter implements PrefsAdapter
 		}
 		return key;
 	}
+
+	@Override
+	public void putBytes(String key, byte[] value)
+	{
+		prefs.putByteArray(key, value);
+	}
+
+	@Override
+	public byte[] getBytes(String key, byte[] defaultValue)
+	{
+		return prefs.getByteArray(key, defaultValue);
+	}
 }

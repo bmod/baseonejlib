@@ -15,6 +15,14 @@
 	<classpathentry kind="lib" path="lib/glazedlists_java15-1.9-20110828.184933-10-sources.jar"/>
 	<classpathentry kind="lib" path="lib/org-netbeans-swing-outline.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-awt.jar"/>
-	<classpathentry kind="lib" path="lib/org-openide-util-enumerations.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/baseonejlib_common/lib/commons-codec-1.6-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/org-openide-windows.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-util.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-util-lookup.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-nodes.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

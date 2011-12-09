@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.baseoneonline.java.nanoxml.XMLElement;
 import com.baseoneonline.java.tools.StringUtils;
 
@@ -88,5 +90,21 @@ public class XMLPrefsAdapter implements PrefsAdapter
 			}
 		}
 		return ints;
+	}
+
+	@Override
+	public void putBytes(String key, byte[] value)
+	{
+		put(key, Base64.encodeBase64String(value));
+	}
+
+	@Override
+	public byte[] getBytes(String key, byte[] defaultValue)
+	{
+		String data = get(key, null);
+		if (null == data)
+			return defaultValue;
+
+		return Base64.decodeBase64(data);
 	}
 }

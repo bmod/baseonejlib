@@ -19,4 +19,8 @@ public interface PrefsAdapter
 
 	public int[] getIntArray(String key, int[] defaultValue);
 
+	public void putBytes(String key, byte[] value);
+
+	public byte[] getBytes(String key, byte[] defaultValue);
+
 }
