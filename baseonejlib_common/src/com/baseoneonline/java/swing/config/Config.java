@@ -29,6 +29,7 @@ public class Config
 		addPersistenceFactory(new SplitPanePersistenceFactory());
 		addPersistenceFactory(new JTablePersistenceFactory());
 		addPersistenceFactory(new JTreePersistenceFactory());
+		addPersistenceFactory(new DockingDesktopPersistenceFactory());
 
 	}
 
@@ -209,5 +210,15 @@ public class Config
 	public void putString(final String key, final String value)
 	{
 		prefs.put(key, value);
+	}
+
+	public void putBytes(String key, byte[] value)
+	{
+		prefs.putBytes(key, value);
+	}
+
+	public byte[] getBytes(String key, byte[] defaultValue)
+	{
+		return prefs.getBytes(key, defaultValue);
 	}
 }
