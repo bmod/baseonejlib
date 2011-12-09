@@ -25,6 +25,7 @@ package com.baseoneonline.java.swing.propertySheet;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
+import java.util.HashSet;
 
 import com.baseoneonline.java.swing.FilteredPropertySheetPanel;
 import com.l2fprod.common.propertysheet.Property;
@@ -39,6 +40,8 @@ import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
  */
 public class ObjectInspectorJPanel extends FilteredPropertySheetPanel
 {
+
+	private final HashSet<BeanListener> listeners = new HashSet<BeanListener>();
 
 	/** Creates a new instance of ObjectInspectorJPanel */
 	public ObjectInspectorJPanel()
@@ -62,6 +65,16 @@ public class ObjectInspectorJPanel extends FilteredPropertySheetPanel
 		addPropertySheetChangeListener(listener);
 	}
 
+	public void addBeanListener(BeanListener l)
+	{
+		listeners.add(l);
+	}
+
+	public void removeBeanListener(BeanListener l)
+	{
+		listeners.remove(l);
+	}
+
 	public void addPropertyEditor(Class<?> type, PropertyEditor editor)
 	{
 		final PropertyEditorRegistry editorReg = (PropertyEditorRegistry) getTable()
@@ -76,6 +89,7 @@ public class ObjectInspectorJPanel extends FilteredPropertySheetPanel
 		{
 			final Property prop = (Property) evt.getSource();
 			prop.writeToObject(bean);
+			fireBeanChanged(bean);
 		}
 	};
 
@@ -121,6 +135,12 @@ public class ObjectInspectorJPanel extends FilteredPropertySheetPanel
 		}
 
 		// sheet.revalidate();
+	}
+
+	public void fireBeanChanged(Object bean)
+	{
+		for (BeanListener l : listeners)
+			l.beanChanged(bean);
 	}
 
 	public Object getBean()
