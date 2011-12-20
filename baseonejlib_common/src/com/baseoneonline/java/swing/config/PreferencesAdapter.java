@@ -10,7 +10,7 @@ public class PreferencesAdapter implements PrefsAdapter
 	private Preferences prefs;
 
 	@Override
-	public void setReferenceClass(Class<?> applicationClass)
+	public void setReferenceClass(final Class<?> applicationClass)
 	{
 
 		if (null == applicationClass)
@@ -32,37 +32,37 @@ public class PreferencesAdapter implements PrefsAdapter
 	}
 
 	@Override
-	public String get(String key, String defaultValue)
+	public String get(final String key, final String defaultValue)
 	{
 		return prefs.get(truncateKey(key), defaultValue);
 	}
 
 	@Override
-	public void put(String key, String value)
+	public void put(final String key, final String value)
 	{
 		prefs.put(key, value);
 	}
 
 	@Override
-	public int getInt(String key, int defaultValue)
+	public int getInt(final String key, final int defaultValue)
 	{
 		return prefs.getInt(key, defaultValue);
 	}
 
 	@Override
-	public void putInt(String key, int value)
+	public void putInt(final String key, final int value)
 	{
 		prefs.putInt(truncateKey(key), value);
 	}
 
 	@Override
-	public void putIntArray(String key, int[] value)
+	public void putIntArray(final String key, final int[] value)
 	{
-		prefs.putByteArray(key, NumberUtils.intsToBytes(value));
+		prefs.putByteArray(truncateKey(key), NumberUtils.intsToBytes(value));
 	}
 
 	@Override
-	public int[] getIntArray(String key, int[] defaultValue)
+	public int[] getIntArray(final String key, final int[] defaultValue)
 	{
 		byte[] bytes = new byte[0];
 		if (null != defaultValue)
@@ -83,13 +83,13 @@ public class PreferencesAdapter implements PrefsAdapter
 	}
 
 	@Override
-	public void putBytes(String key, byte[] value)
+	public void putBytes(final String key, final byte[] value)
 	{
 		prefs.putByteArray(key, value);
 	}
 
 	@Override
-	public byte[] getBytes(String key, byte[] defaultValue)
+	public byte[] getBytes(final String key, final byte[] defaultValue)
 	{
 		return prefs.getByteArray(key, defaultValue);
 	}
