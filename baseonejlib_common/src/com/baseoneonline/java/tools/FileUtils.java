@@ -119,4 +119,28 @@ public class FileUtils
 		return null;
 	}
 
+	/**
+	 * @param f
+	 * @param directory
+	 * @return True if the specified file is inside the specified directory
+	 */
+	public static boolean isChildOf(File f, File directory)
+	{
+		if (!directory.isDirectory())
+			return false;
+
+		File current = f;
+		while (true)
+		{
+			File parent = current.getParentFile();
+			if (null == parent)
+				return false;
+			if (current.getParentFile().equals(directory))
+				return true;
+
+			current = parent;
+		}
+
+	}
+
 }

@@ -62,7 +62,9 @@ public class FileExtensionFilter extends javax.swing.filechooser.FileFilter
 		for (final String ext : extensions)
 		{
 			if (f.getName().toLowerCase().endsWith(ext))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
