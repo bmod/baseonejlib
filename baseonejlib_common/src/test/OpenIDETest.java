@@ -1,7 +1,6 @@
 package test;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 
 import javax.swing.JTree;
 
@@ -10,14 +9,13 @@ import org.openide.windows.WindowManager;
 
 public class OpenIDETest
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
-		WindowManager man = WindowManager.getDefault();
-		Frame frame = man.getMainWindow();
+		final WindowManager man = WindowManager.getDefault();
+		man.getMainWindow().setVisible(true);
 
-		frame.setVisible(true);
-		frame.add(new MyComponent());
-
+		final MyComponent comp = new MyComponent();
+		comp.requestActive();
 	}
 
 }
