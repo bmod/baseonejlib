@@ -10,81 +10,74 @@ import org.apache.commons.codec.binary.Base64;
 import com.baseoneonline.java.nanoxml.XMLElement;
 import com.baseoneonline.java.tools.StringUtils;
 
-public class XMLPrefsAdapter implements PrefsAdapter
-{
+public class XMLPrefsAdapter implements PrefsAdapter {
 
 	private XMLElement xml;
 	private File file;
 
 	@Override
-	public void setReferenceClass(Class<?> clazz)
-	{
-		String userHome = System.getProperty("user.home");
+	public void setReferenceClass(final Class<?> clazz) {
+		final String userHome = System.getProperty("user.home");
 		file = new File(userHome + "/" + clazz.getName() + ".conf");
-		xml = new XMLElement();
-		try
-		{
+
+		try {
+			xml = new XMLElement();
 			xml.parseFromReader(new FileReader(file));
-		} catch (Exception e)
-		{
+		} catch (final Exception e) {
 			Logger.getLogger(getClass().getName()).warning(
-					"Could not read config file: " + file);
+					"Could not read config file: " + file + "\n"
+							+ e.getMessage());
+			xml = new XMLElement("Config");
 		}
 	}
 
 	@Override
-	public void flush() throws Exception
-	{
-		xml.write(new FileWriter(file));
+	public void flush() throws Exception {
+		System.out.println("Flushing");
+		final FileWriter writer = new FileWriter(file);
+		xml.write(writer);
+		writer.flush();
+		writer.close();
 	}
 
 	@Override
-	public String get(String key, String defaultValue)
-	{
+	public String get(final String key, final String defaultValue) {
 		return xml.getStringAttribute(key, defaultValue);
 	}
 
 	@Override
-	public void put(String key, String value)
-	{
+	public void put(final String key, final String value) {
 		xml.setAttribute(key, value);
 	}
 
 	@Override
-	public int getInt(String key, int defaultValue)
-	{
+	public int getInt(final String key, final int defaultValue) {
 		return xml.getIntAttribute(key, defaultValue);
 	}
 
 	@Override
-	public void putInt(String key, int value)
-	{
+	public void putInt(final String key, final int value) {
 		xml.setIntAttribute(key, value);
 	}
 
 	@Override
-	public void putIntArray(String key, int[] value)
-	{
+	public void putIntArray(final String key, final int[] value) {
 		xml.setAttribute(key, StringUtils.join(value, ","));
 	}
 
 	@Override
-	public int[] getIntArray(String key, int[] defaultValue)
-	{
-		String value = xml.getStringAttribute(key, null);
+	public int[] getIntArray(final String key, final int[] defaultValue) {
+		final String value = xml.getStringAttribute(key, null);
 		if (null == value)
 			return defaultValue;
 
-		String[] values = value.split(",");
+		final String[] values = value.split(",");
 
-		int[] ints = new int[values.length];
-		for (int i = 0; i < ints.length; i++)
-		{
-			try
-			{
+		final int[] ints = new int[values.length];
+		for (int i = 0; i < ints.length; i++) {
+			try {
 				ints[i] = Integer.parseInt(values[i]);
-			} catch (Exception e)
-			{
+			} catch (final Exception e) {
 				Logger.getLogger(getClass().getName()).warning(
 						"Could not convert value to int: " + values[i]);
 			}
@@ -93,15 +86,13 @@ public class XMLPrefsAdapter implements PrefsAdapter
 	}
 
 	@Override
-	public void putBytes(String key, byte[] value)
-	{
+	public void putBytes(final String key, final byte[] value) {
 		put(key, Base64.encodeBase64String(value));
 	}
 
 	@Override
-	public byte[] getBytes(String key, byte[] defaultValue)
-	{
-		String data = get(key, null);
+	public byte[] getBytes(final String key, final byte[] defaultValue) {
+		final String data = get(key, null);
 		if (null == data)
 			return defaultValue;
 
