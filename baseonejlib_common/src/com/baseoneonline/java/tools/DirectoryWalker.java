@@ -11,16 +11,10 @@ public abstract class DirectoryWalker
 		FilesOnly, DirsOnly, FilesAndDirs
 	}
 
-	private File root;
 	private Mode visitMode = Mode.FilesOnly;
 	private boolean recursive = true;
 	private FileFilter fileFilter;
 	private FileFilter filter;
-
-	public DirectoryWalker(final File root)
-	{
-		setRoot(root);
-	}
 
 	public DirectoryWalker()
 	{
@@ -56,26 +50,9 @@ public abstract class DirectoryWalker
 		this.recursive = recursive;
 	}
 
-	public File getRoot()
-	{
-		return root;
-	}
-
-	public void setRoot(final File root)
-	{
-		this.root = root;
-	}
-
-	public void start() throws Exception
-	{
-		if (null == root)
-			throw new NullPointerException("Root must be set first.");
-		walk(root);
-	}
-
 	public abstract void visit(File f) throws Exception;
 
-	private void walk(final File dir) throws Exception
+	public void walk(final File dir) throws Exception
 	{
 		final File[] files = dir.listFiles(getFilter());
 		for (final File f : files)
