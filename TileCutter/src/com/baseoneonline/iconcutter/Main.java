@@ -40,7 +40,7 @@ public class Main extends JFrame {
 
 	private BufferedImage image;
 
-	private final CutterProps cutProps;
+	private final CutConfig cutProps;
 
 	private final ArrayList<BufferedImage> tiles = new ArrayList<BufferedImage>();
 
