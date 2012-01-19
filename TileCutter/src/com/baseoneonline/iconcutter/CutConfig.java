@@ -1,6 +1,6 @@
 package com.baseoneonline.iconcutter;
 
-public class CutterProps {
+public class CutConfig {
 	private int xOffset = 4;
 	private int yOffset = 4;
 	private int tileSizeX = 16;

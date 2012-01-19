@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 public class ImagePanel extends JPanel {
 
 	private BufferedImage image;
-	private CutterProps cutProps = new CutterProps();
+	private CutConfig cutProps = new CutConfig();
 
 	private final Color lineColor = new Color(1f, 0f, 0f);
 
@@ -30,11 +30,11 @@ public class ImagePanel extends JPanel {
 		repaint();
 	}
 
-	public void setCutProps(final CutterProps cutProps) {
+	public void setCutProps(final CutConfig cutProps) {
 		this.cutProps = cutProps;
 	}
 
-	public CutterProps getCutProps() {
+	public CutConfig getCutProps() {
 		return cutProps;
 	}
 

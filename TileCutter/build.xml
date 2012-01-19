@@ -1,0 +1,16 @@
+<project default="jar">
+	
+	<target name="build">
+		<delete dir="build" />
+		<mkdir dir="build"/>
+		
+		<javac srcdir="src"
+         destdir="build"
+         classpath="../baseonejlib_common/src"
+         debug="on"
+	/>
+	</target>
+	
+	<target name="jar" depends="build">
+	</target>
+</project>
