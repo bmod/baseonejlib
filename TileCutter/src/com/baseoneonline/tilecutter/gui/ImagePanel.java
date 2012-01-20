@@ -16,6 +16,11 @@ import com.baseoneonline.tilecutter.core.CutModelListener;
 
 public class ImagePanel extends JPanel implements CutModelListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6044491132232374890L;
+
 	private BufferedImage image;
 
 	private final Color lineColor = new Color(1f, 0f, 0f);

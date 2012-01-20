@@ -13,6 +13,10 @@ import javax.swing.JPanel;
  */
 class TilePanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3140659647042924201L;
 	private final BufferedImage image;
 
 	public TilePanel(final BufferedImage image) {

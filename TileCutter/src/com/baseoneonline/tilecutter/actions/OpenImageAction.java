@@ -16,6 +16,10 @@ import com.baseoneonline.tilecutter.core.CutModel;
 
 public class OpenImageAction extends AbstractAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5924452010486963904L;
 	private final CutModel model;
 
 	public OpenImageAction(final CutModel model) {
