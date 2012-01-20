@@ -1,6 +1,11 @@
-package com.baseoneonline.iconcutter;
+package com.baseoneonline.tilecutter.core;
 
-public class CutConfig {
+/**
+ * This class should be kept as a bean so we can easily serialize it.
+ * 
+ */
+public class CutMetrics {
+
 	private int xOffset = 4;
 	private int yOffset = 4;
 	private int tileSizeX = 16;
@@ -9,16 +14,6 @@ public class CutConfig {
 	private int countY = 8;
 	private int spacingX = 3;
 	private int spacingY = 3;
-
-	private String filenamePrefix = "tile_";
-
-	public void setFilenamePrefix(final String filenamePrefix) {
-		this.filenamePrefix = filenamePrefix;
-	}
-
-	public String getFilenamePrefix() {
-		return filenamePrefix;
-	}
 
 	public int getSpacingX() {
 		return spacingX;
@@ -83,4 +78,5 @@ public class CutConfig {
 	public int getCountY() {
 		return countY;
 	}
+
 }

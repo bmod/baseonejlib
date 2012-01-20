@@ -1,7 +1,6 @@
-package com.baseoneonline.iconcutter;
+package com.baseoneonline.tilecutter.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -11,31 +10,27 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-public class ImagePanel extends JPanel {
+import com.baseoneonline.tilecutter.core.CutModel;
+import com.baseoneonline.tilecutter.core.CutModel.Listener;
+
+public class ImagePanel extends JPanel implements Listener {
 
 	private BufferedImage image;
-	private CutConfig cutProps = new CutConfig();
 
 	private final Color lineColor = new Color(1f, 0f, 0f);
 
 	private final AffineTransform imageTransform = new AffineTransform();
 
+	private CutModel model;
+
 	public ImagePanel() {
 		addMouseMotionListener(mouseAdapter);
 	}
 
-	public void setImage(final BufferedImage image) {
-		this.image = image;
-		setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
-		repaint();
-	}
-
-	public void setCutProps(final CutConfig cutProps) {
-		this.cutProps = cutProps;
-	}
-
-	public CutConfig getCutProps() {
-		return cutProps;
+	public void setModel(final CutModel model) {
+		if (null != model)
+			model.removeListener(this);
+		model.addListener(this);
 	}
 
 	@Override
@@ -50,7 +45,7 @@ public class ImagePanel extends JPanel {
 
 				g.setColor(lineColor);
 				// Draw grid
-				for (final Rectangle rect : getRectangles()) {
+				for (final Rectangle rect : model.getRectangles()) {
 					g.drawRect(rect.x, rect.y, rect.width, rect.height);
 				}
 
@@ -59,27 +54,6 @@ public class ImagePanel extends JPanel {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Rectangle[] getRectangles() {
-		final Rectangle[] rects = new Rectangle[cutProps.getCountX()
-				* cutProps.getCountY()];
-		int i = 0;
-		final int offx = cutProps.getxOffset();
-		final int offy = cutProps.getyOffset();
-		final int tw = cutProps.getTileSizeX();
-		final int th = cutProps.getTileSizeY();
-		final int sx = cutProps.getSpacingX();
-		final int sy = cutProps.getSpacingY();
-
-		for (int x = 0; x < cutProps.getCountX(); x++) {
-			for (int y = 0; y < cutProps.getCountY(); y++) {
-				final int rx = offx + (x * (sx + tw));
-				final int ry = offy + (y * (sy + th));
-				rects[i++] = new Rectangle(rx, ry, tw, th);
-			}
-		}
-		return rects;
 	}
 
 	private final MouseAdapter mouseAdapter = new MouseAdapter() {
@@ -106,5 +80,16 @@ public class ImagePanel extends JPanel {
 
 		}
 	};
+
+	@Override
+	public void metricsChanged() {
+
+	}
+
+	@Override
+	public void imageChanged() {
+		image = model.getImage();
+		repaint();
+	}
 
 }
