@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+
+/**
+ * Displays one tile.
+ *
+ */
 class TilePanel extends JPanel {
 
 	private final BufferedImage image;
@@ -20,4 +25,5 @@ class TilePanel extends JPanel {
 		super.paintComponent(g);
 		g.drawImage(image, 0, 0, null);
 	}
+
 }

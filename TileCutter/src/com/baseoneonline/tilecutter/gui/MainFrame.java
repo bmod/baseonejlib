@@ -2,6 +2,7 @@ package com.baseoneonline.tilecutter.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -17,7 +18,8 @@ import com.baseoneonline.java.swing.propertySheet.ObjectInspectorJPanel;
 import com.baseoneonline.tilecutter.actions.OpenImageAction;
 import com.baseoneonline.tilecutter.actions.SaveTilesAction;
 import com.baseoneonline.tilecutter.core.CutModel;
-import com.baseoneonline.tilecutter.core.CutModel.Listener;
+import com.baseoneonline.tilecutter.core.CutModelListener;
+import java.awt.FlowLayout;
 
 public class MainFrame extends JFrame {
 
@@ -39,6 +41,9 @@ public class MainFrame extends JFrame {
 		imagePanel.setModel(model);
 	}
 
+	/**
+	 * Most of this is automatically generated
+	 */
 	private void initComponents() {
 		setMinimumSize(new Dimension(300, 300));
 
@@ -52,38 +57,40 @@ public class MainFrame extends JFrame {
 
 		mnFile.add(new SaveTilesAction(model));
 
-		final JSplitPane splitPane = new JSplitPane();
-		splitPane.setContinuousLayout(true);
-		getContentPane().add(splitPane, BorderLayout.CENTER);
+		final JSplitPane mainSplitPane = new JSplitPane();
+		mainSplitPane.setContinuousLayout(true);
+		getContentPane().add(mainSplitPane, BorderLayout.CENTER);
 
 		objectInspectorJPanel = new ObjectInspectorJPanel();
-		splitPane.setLeftComponent(objectInspectorJPanel);
-		splitPane.setDividerLocation(150);
+		mainSplitPane.setLeftComponent(objectInspectorJPanel);
+		mainSplitPane.setDividerLocation(150);
 
-		final JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setContinuousLayout(true);
-		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setRightComponent(splitPane_1);
+		final JSplitPane rightSplitPane = new JSplitPane();
+		rightSplitPane.setContinuousLayout(true);
+		rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mainSplitPane.setRightComponent(rightSplitPane);
 
-		final JScrollPane scrollPane_1 = new JScrollPane();
-		splitPane_1.setLeftComponent(scrollPane_1);
+		final JScrollPane scrollPaneCutter = new JScrollPane();
+		rightSplitPane.setLeftComponent(scrollPaneCutter);
 
 		imagePanel = new ImagePanel();
-		scrollPane_1.setViewportView(imagePanel);
+		scrollPaneCutter.setViewportView(imagePanel);
 
-		final JScrollPane scrollPane_2 = new JScrollPane();
-		splitPane_1.setRightComponent(scrollPane_2);
+		final JScrollPane scrollPaneTiles = new JScrollPane();
+		rightSplitPane.setRightComponent(scrollPaneTiles);
 
-		tilePanel = new JPanel(new WrapLayout());
+		WrapLayout wl_tilePanel = new WrapLayout();
+		wl_tilePanel.setAlignment(FlowLayout.LEFT);
+		tilePanel = new JPanel(wl_tilePanel);
 
-		scrollPane_2.setViewportView(tilePanel);
-		splitPane_1.setDividerLocation(250);
+		scrollPaneTiles.setViewportView(tilePanel);
+		rightSplitPane.setDividerLocation(250);
 
-		Config.get().persist("HSplitPane", splitPane);
-		Config.get().persist("VSplitPane", splitPane_1);
+		Config.get().persist("HSplitPane", mainSplitPane);
+		Config.get().persist("VSplitPane", rightSplitPane);
 	}
 
-	private final CutModel.Listener modelListener = new Listener() {
+	private final CutModelListener modelListener = new CutModelListener() {
 
 		@Override
 		public void metricsChanged() {
@@ -92,9 +99,30 @@ public class MainFrame extends JFrame {
 
 		@Override
 		public void imageChanged() {
+			// unused
+		}
+
+		@Override
+		public void tilesChanged() {
+			updateTilePanel();
 		}
 	};
+	
+	private void updateTilePanel() {
+		tilePanel.removeAll();
+		tilePanel.revalidate();
 
+		for (BufferedImage im : model.getTiles()) {
+			tilePanel.add(new TilePanel(im));
+		}
+		// Force validation
+		tilePanel.revalidate();
+		tilePanel.repaint();
+	}
+
+	/**
+	 * When our tile cutting properties have been changed
+	 */
 	private final BeanListener beanListener = new BeanListener() {
 
 		@Override

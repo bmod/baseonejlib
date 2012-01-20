@@ -32,7 +32,7 @@ public class OpenImageAction extends AbstractAction {
 				Application.ALLOWED_IMAGE_EXTENSIONS));
 
 		if (JFileChooser.APPROVE_OPTION != fc.showOpenDialog(Application.get()
-				.getFrame())) {
+				.getMainFrame())) {
 			return;
 		}
 
@@ -40,7 +40,7 @@ public class OpenImageAction extends AbstractAction {
 				fc.getSelectedFile().getParentFile());
 		final File f = fc.getSelectedFile();
 
-		BufferedImage image;
+		BufferedImage image = null;
 		try {
 			image = ImageIO.read(f);
 

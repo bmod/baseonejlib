@@ -24,17 +24,17 @@ public class Application {
 		}
 
 		Config.setApplicationClass(MainFrame.class);
-		Application.get().getFrame().setVisible(true);
+		Application.get().getMainFrame().setVisible(true);
 	}
 
+	// For use with Config
 	public static final String APPLICATION_TITLE = "Tile Cutter";
 	public static final String LAST_SELECTED_OUTPUT_DIR = "lastSelectedOutputDir";
 	public static final String LAST_OPENED_DIRECTORY = "lastOpenedDirectory";
-	public static final String[] ALLOWED_IMAGE_EXTENSIONS = {
-																"jpg",
-																"png",
-																"gif",
-																"jpeg" };
+	public static final String LAST_OPENED_IMAGE = "lastOpenedImage";
+
+	public static final String[] ALLOWED_IMAGE_EXTENSIONS = { "jpg", "png",
+			"gif", "jpeg" };
 	public static final String EXPORT_FILE_FORMAT = "png";
 
 	private static Application instance;
@@ -63,7 +63,7 @@ public class Application {
 		}
 	};
 
-	public Component getFrame() {
+	public Component getMainFrame() {
 		return frame;
 	}
 
@@ -71,18 +71,21 @@ public class Application {
 
 		@Override
 		public void publish(final LogRecord record) {
+			// Show a warning dialog when severity => WARNING
 			if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-				JOptionPane.showMessageDialog(getFrame(), record.getMessage(),
+				JOptionPane.showMessageDialog(getMainFrame(), record.getMessage(),
 						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
 		@Override
 		public void flush() {
+			// Unused
 		}
 
 		@Override
 		public void close() throws SecurityException {
+			// Unused
 		}
 	};
 
