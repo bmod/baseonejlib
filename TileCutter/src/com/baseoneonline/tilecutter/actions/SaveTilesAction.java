@@ -31,7 +31,7 @@ public class SaveTilesAction extends AbstractAction {
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		if (JFileChooser.APPROVE_OPTION != fc.showOpenDialog(Application.get()
-				.getFrame()))
+				.getMainFrame()))
 			return;
 
 		Config.get().setFile(Application.LAST_SELECTED_OUTPUT_DIR,

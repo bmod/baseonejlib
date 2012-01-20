@@ -1,6 +1,7 @@
 package com.baseoneonline.tilecutter.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -11,9 +12,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import com.baseoneonline.tilecutter.core.CutModel;
-import com.baseoneonline.tilecutter.core.CutModel.Listener;
+import com.baseoneonline.tilecutter.core.CutModelListener;
 
-public class ImagePanel extends JPanel implements Listener {
+public class ImagePanel extends JPanel implements CutModelListener {
 
 	private BufferedImage image;
 
@@ -30,6 +31,7 @@ public class ImagePanel extends JPanel implements Listener {
 	public void setModel(final CutModel model) {
 		if (null != model)
 			model.removeListener(this);
+		this.model = model;
 		model.addListener(this);
 	}
 
@@ -39,8 +41,6 @@ public class ImagePanel extends JPanel implements Listener {
 		final Graphics2D g = (Graphics2D) g1;
 		try {
 			if (null != image) {
-				// final AffineTransform original = g.getTransform();
-				// g.setTransform(imageTransform);
 				g.drawImage(image, 0, 0, null);
 
 				g.setColor(lineColor);
@@ -75,21 +75,27 @@ public class ImagePanel extends JPanel implements Listener {
 			first = false;
 		}
 
-		@Override
-		public void mouseReleased(final java.awt.event.MouseEvent arg0) {
-
-		}
+		
 	};
 
 	@Override
 	public void metricsChanged() {
-
+		// Repaint because we want to see our grid.
+		repaint();
 	}
 
 	@Override
 	public void imageChanged() {
 		image = model.getImage();
+		setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+		revalidate();
 		repaint();
+	}
+	
+	@Override
+	public void tilesChanged() {
+		// Unused
+		
 	}
 
 }
