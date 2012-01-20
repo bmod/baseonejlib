@@ -15,6 +15,10 @@ import com.baseoneonline.tilecutter.core.CutModel;
 
 public class SaveTilesAction extends AbstractAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2431488700060179711L;
 	private final CutModel model;
 
 	public SaveTilesAction(final CutModel model) {
