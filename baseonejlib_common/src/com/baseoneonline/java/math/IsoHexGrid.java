@@ -19,8 +19,8 @@ public class IsoHexGrid<T>
 	private final int base = 1024;
 	private final List<List<T>> _grid = new ArrayList<List<T>>(base * 2);
 
-	private static final IsoCoord[] deltas =
-	{ new IsoCoord(1, 0, -1), new IsoCoord(0, 1, -1), new IsoCoord(-1, 1, 0),
+	private static final IsoCoord[] deltas = { new IsoCoord(1, 0, -1),
+			new IsoCoord(0, 1, -1), new IsoCoord(-1, 1, 0),
 			new IsoCoord(-1, 0, 1), new IsoCoord(0, -1, 1),
 			new IsoCoord(1, -1, 0) };
 
@@ -58,8 +58,12 @@ public class IsoHexGrid<T>
 	{
 		if (null == out)
 			out = new double[2];
+
+		int z = -(c.x + c.y);
 		out[0] = (H * (c.x - c.y)) / 2;
 		out[1] = (c.x + c.y) * .75;
+		// out[1] = H * 2 * (z / 2 + c.x);
+		// out[0] = 3 / 2 * z;
 		return out;
 	}
 
@@ -80,8 +84,11 @@ public class IsoHexGrid<T>
 		if (null == out)
 			out = new IsoCoord();
 
-		out.x = (int) Math.ceil((x / H) + ((y * 2) / 3));
-		out.y = (int) Math.ceil(((2 * y) / 3) - (x / H));
+		out.x = (int) Math.round((x / H) + ((y * 2) / 3));
+		out.y = (int) Math.round(((2 * y) / 3) - (x / H));
+
+		// out.x = (int) Math.round((2 / (H * 2)) * y / 2);
+		// out.y = (int) Math.round((x - 2 * out.x * .5) / 2);
 
 		return out;
 	}
@@ -135,6 +142,17 @@ public class IsoHexGrid<T>
 		}
 
 		return pts;
+	}
+
+	public static int totalNodeCount(int numRings)
+	{
+		int count = 0;
+		for (int i = 0; i < numRings; i++)
+		{
+			count += ringSize(i);
+
+		}
+		return count;
 	}
 
 	/**
