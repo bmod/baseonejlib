@@ -34,7 +34,7 @@ public class EnumComboBoxPropertyEditor extends ComboBoxPropertyEditor {
 
 	@Override
 	public void setValue(final Object value) {
-		final JComboBox<?> box = (JComboBox<?>) editor;
+		final JComboBox box = (JComboBox) editor;
 
 		// We need to remove the previous items. This is because if a
 		// property panel is having more than 1 enum type property, we

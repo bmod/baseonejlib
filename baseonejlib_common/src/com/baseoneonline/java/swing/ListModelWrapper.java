@@ -11,86 +11,72 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class ListModelWrapper<T> implements ListModel<T>, List<T>
-{
+public class ListModelWrapper<T> implements ListModel, List<T> {
 
 	private final HashSet<ListDataListener> listeners = new HashSet<ListDataListener>();
 	private List<T> sourceData;
 
-	public ListModelWrapper(final List<T> source)
-	{
+	public ListModelWrapper(final List<T> source) {
 		this.sourceData = source;
 	}
 
-	public ListModelWrapper()
-	{
+	public ListModelWrapper() {
 		sourceData = new ArrayList<T>();
 	}
 
 	@Override
-	public int getSize()
-	{
+	public int getSize() {
 		return sourceData.size();
 	}
 
 	@Override
-	public T getElementAt(final int index)
-	{
+	public T getElementAt(final int index) {
 		return sourceData.get(index);
 	}
 
 	@Override
-	public void addListDataListener(final ListDataListener l)
-	{
+	public void addListDataListener(final ListDataListener l) {
 		listeners.add(l);
 	}
 
 	@Override
-	public void removeListDataListener(final ListDataListener l)
-	{
+	public void removeListDataListener(final ListDataListener l) {
 		listeners.remove(l);
 	}
 
 	@Override
-	public int size()
-	{
+	public int size() {
 		return sourceData.size();
 	}
 
 	@Override
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		return sourceData.isEmpty();
 	}
 
 	@Override
-	public boolean contains(final Object o)
-	{
+	public boolean contains(final Object o) {
 		return sourceData.contains(o);
 	}
 
 	@Override
-	public Iterator<T> iterator()
-	{
+	public Iterator<T> iterator() {
 		return sourceData.iterator();
 	}
 
 	@Override
-	public Object[] toArray()
-	{
+	public Object[] toArray() {
 		return sourceData.toArray();
 	}
 
 	@SuppressWarnings("hiding")
 	@Override
-	public <T> T[] toArray(final T[] a)
-	{
+	public <T> T[] toArray(final T[] a) {
 		return sourceData.toArray(a);
 	}
 
 	@Override
-	public boolean add(final T e)
-	{
+	public boolean add(final T e) {
 		final boolean re = sourceData.add(e);
 		if (re) {
 			final int index = sourceData.size() - 1;
@@ -100,8 +86,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public boolean remove(final Object o)
-	{
+	public boolean remove(final Object o) {
 		final int index = sourceData.indexOf(o);
 		if (-1 == index)
 			return false;
@@ -112,14 +97,12 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public boolean containsAll(final Collection<?> c)
-	{
+	public boolean containsAll(final Collection<?> c) {
 		return sourceData.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends T> c)
-	{
+	public boolean addAll(final Collection<? extends T> c) {
 		final boolean re = sourceData.addAll(c);
 		if (re)
 			fireContentsChanged(0, getSize() - 1);
@@ -127,8 +110,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public boolean addAll(final int index, final Collection<? extends T> c)
-	{
+	public boolean addAll(final int index, final Collection<? extends T> c) {
 		final boolean re = sourceData.addAll(index, c);
 		if (re)
 			fireContentsChanged(0, getSize() - 1);
@@ -136,8 +118,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public boolean removeAll(final Collection<?> c)
-	{
+	public boolean removeAll(final Collection<?> c) {
 		final boolean re = sourceData.removeAll(c);
 		if (re)
 			fireContentsChanged(0, getSize() - 1);
@@ -145,8 +126,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public boolean retainAll(final Collection<?> c)
-	{
+	public boolean retainAll(final Collection<?> c) {
 		final boolean re = sourceData.retainAll(c);
 		if (re)
 			fireContentsChanged(0, getSize() - 1);
@@ -154,68 +134,58 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	}
 
 	@Override
-	public void clear()
-	{
+	public void clear() {
 		sourceData.clear();
 		fireContentsChanged(0, 0);
 	}
 
 	@Override
-	public T get(final int index)
-	{
+	public T get(final int index) {
 		return sourceData.get(index);
 	}
 
 	@Override
-	public T set(final int index, final T element)
-	{
+	public T set(final int index, final T element) {
 		final T re = sourceData.set(index, element);
 		fireContentsChanged(index, index);
 		return re;
 	}
 
 	@Override
-	public void add(final int index, final T element)
-	{
+	public void add(final int index, final T element) {
 		sourceData.add(index, element);
 		fireIntervalAdded(index, index);
 	}
 
 	@Override
-	public T remove(final int index)
-	{
+	public T remove(final int index) {
 		final T re = sourceData.remove(index);
 		fireIntervalRemoved(index, index);
 		return re;
 	}
 
 	@Override
-	public int indexOf(final Object o)
-	{
+	public int indexOf(final Object o) {
 		return sourceData.indexOf(o);
 	}
 
 	@Override
-	public int lastIndexOf(final Object o)
-	{
+	public int lastIndexOf(final Object o) {
 		return sourceData.lastIndexOf(o);
 	}
 
 	@Override
-	public ListIterator<T> listIterator()
-	{
+	public ListIterator<T> listIterator() {
 		return sourceData.listIterator();
 	}
 
 	@Override
-	public ListIterator<T> listIterator(final int index)
-	{
+	public ListIterator<T> listIterator(final int index) {
 		return sourceData.listIterator(index);
 	}
 
 	@Override
-	public List<T> subList(final int fromIndex, final int toIndex)
-	{
+	public List<T> subList(final int fromIndex, final int toIndex) {
 		return sourceData.subList(fromIndex, toIndex);
 	}
 
@@ -226,8 +196,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	 * @param index0
 	 * @param index1
 	 */
-	private void fireIntervalRemoved(final int index0, final int index1)
-	{
+	private void fireIntervalRemoved(final int index0, final int index1) {
 		final ListDataEvent e = new ListDataEvent(this,
 				ListDataEvent.INTERVAL_REMOVED, index0, index1);
 		for (final ListDataListener l : listeners)
@@ -239,8 +208,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	 * in the data model. The new interval includes both index0 and index1.
 	 * 
 	 */
-	private void fireIntervalAdded(final int index0, final int index1)
-	{
+	private void fireIntervalAdded(final int index0, final int index1) {
 		final ListDataEvent e = new ListDataEvent(this,
 				ListDataEvent.INTERVAL_ADDED, index0, index1);
 		for (final ListDataListener l : listeners)
@@ -256,8 +224,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	 * @param index0
 	 * @param index1
 	 */
-	private void fireContentsChanged(final int index0, final int index1)
-	{
+	private void fireContentsChanged(final int index0, final int index1) {
 		final ListDataEvent e = new ListDataEvent(this,
 				ListDataEvent.CONTENTS_CHANGED, index0, index1);
 		for (final ListDataListener l : listeners)
@@ -269,8 +236,7 @@ public class ListModelWrapper<T> implements ListModel<T>, List<T>
 	 * 
 	 * @param newSource
 	 */
-	public void set(final List<T> newSource)
-	{
+	public void set(final List<T> newSource) {
 		this.sourceData = newSource;
 		fireContentsChanged(0, sourceData.size() - 1);
 	}

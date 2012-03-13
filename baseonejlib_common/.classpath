@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
 	<classpathentry kind="lib" path="lib/filedrop.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar"/>
@@ -25,5 +24,6 @@
 	<classpathentry kind="lib" path="lib/org-openide-util-lookup.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-nodes.jar"/>
 	<classpathentry kind="lib" path="lib/guava-r09.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
