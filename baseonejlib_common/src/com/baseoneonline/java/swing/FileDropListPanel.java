@@ -13,26 +13,22 @@ import javax.swing.event.ListSelectionListener;
 
 import net.iharder.dnd.FileDrop;
 
-public class FileDropListPanel extends JPanel
-{
+public class FileDropListPanel extends JPanel {
 
-	private final DefaultListModel<File> model = new DefaultListModel<File>();
-	private final JList<File> list;
+	private final DefaultListModel model = new DefaultListModel();
+	private final JList list;
 	private final boolean allowDuplicates = false;
 
-	public FileDropListPanel()
-	{
+	public FileDropListPanel() {
 		System.out.println(isFocusable());
 		setLayout(new BorderLayout());
-		list = new JList<File>(model);
+		list = new JList(model);
 		list.addListSelectionListener(listSelectionListener);
 		add(list);
 
-		list.addKeyListener(new KeyAdapter()
-		{
+		list.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(final KeyEvent e)
-			{
+			public void keyPressed(final KeyEvent e) {
 
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_DELETE:
@@ -46,14 +42,11 @@ public class FileDropListPanel extends JPanel
 			}
 		});
 
-		new FileDrop(this, new FileDrop.Listener()
-		{
+		new FileDrop(this, new FileDrop.Listener() {
 
 			@Override
-			public void filesDropped(final File[] arg0)
-			{
-				for (final File f : arg0)
-				{
+			public void filesDropped(final File[] arg0) {
+				for (final File f : arg0) {
 					add(f);
 				}
 			}
@@ -61,32 +54,26 @@ public class FileDropListPanel extends JPanel
 
 	}
 
-	private void add(final File f)
-	{
-		if (!allowDuplicates)
-		{
-			for (int i = 0; i < model.size(); i++)
-			{
-				if (f.getAbsolutePath().equals(model.get(i).getAbsolutePath()))
+	private void add(final File f) {
+		if (!allowDuplicates) {
+			for (int i = 0; i < model.size(); i++) {
+				if (f.getAbsolutePath().equals(
+						((File) model.get(i)).getAbsolutePath()))
 					return;
 			}
 		}
 		model.addElement(f);
 	}
 
-	private void removeSelected()
-	{
+	private void removeSelected() {
 		final int[] indices = list.getSelectedIndices();
-		for (int i = indices.length - 1; i >= 0; i--)
-		{
+		for (int i = indices.length - 1; i >= 0; i--) {
 			model.remove(indices[i]);
 		}
 	}
 
-	private final ListSelectionListener listSelectionListener = new ListSelectionListener()
-	{
-		public void valueChanged(final ListSelectionEvent e)
-		{
+	private final ListSelectionListener listSelectionListener = new ListSelectionListener() {
+		public void valueChanged(final ListSelectionEvent e) {
 
 		};
 	};
