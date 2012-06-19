@@ -2,11 +2,14 @@ package com.baseoneonline.java.tools;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class FileUtils
@@ -141,6 +144,94 @@ public class FileUtils
 			current = parent;
 		}
 
+	}
+
+	/**
+	 * Recursively searches through a directory and returns a list of empty
+	 * directories.
+	 * 
+	 * @param directory
+	 * @return
+	 */
+	public static List<File> findEmpty(File directory, DisposableFilter filter)
+	{
+		List<File> stor = new ArrayList<>();
+		findEmpty(directory, stor, filter);
+		return stor;
+	}
+
+	private static void findEmpty(File parent, List<File> stor,
+			DisposableFilter filter)
+	{
+		if (isEmpty(parent, filter))
+		{
+			stor.add(parent);
+			return;
+		}
+
+		for (File dir : parent.listFiles())
+		{
+
+			if (dir.isDirectory())
+			{
+				if (isEmpty(dir, filter))
+				{
+					System.out.println("Yes\t" + dir);
+					stor.add(dir);
+				} else
+				{
+					System.out.println("No\t" + dir);
+					findEmpty(dir, stor, filter);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Recursively searches for files in the provided directory to see if it's
+	 * empty.
+	 * 
+	 * 
+	 * @param dir
+	 *            The directory to search. If a file was provided, this method
+	 *            will return <code>false</code>.
+	 * @param disposableFilter
+	 *            Will determine whether a file is considered disposable. If the
+	 *            filter accepts a file, it will ignore the file. For example,
+	 *            when the filter accepts all files in a folder, the folder will
+	 *            be considered empty.
+	 * @return <code>true</code> if the provided directory contains no files or
+	 *         only empty directories.
+	 */
+	public static boolean isEmpty(File dir, DisposableFilter disposableFilter)
+	{
+		if (dir.isFile())
+			return false;
+
+		for (File f : dir.listFiles())
+		{
+			if (f.isFile() && !disposableFilter.isDisposable(f))
+				return false;
+
+			else if (f.isDirectory() && !isEmpty(f, disposableFilter))
+				return false;
+		}
+
+		return true;
+	}
+
+	public static interface DisposableFilter
+	{
+		/**
+		 * For use in {@link FileUtils#isEmpty(File, FileFilter)} and
+		 * {@link FileUtils#findEmpty(File)}. Determines whether a file should
+		 * be ignored when looking for empty directories.
+		 * 
+		 * @param f
+		 *            The file check for ignoring.
+		 * @return True if this file is considered disposable.
+		 */
+		public boolean isDisposable(File f);
 	}
 
 }
