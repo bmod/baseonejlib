@@ -160,7 +160,7 @@ public class FileUtils
 		return stor;
 	}
 
-	private static void findEmpty(File parent, List<File> stor,
+	public static void findEmpty(File parent, List<File> stor,
 			DisposableFilter filter)
 	{
 		if (isEmpty(parent, filter))
@@ -175,14 +175,10 @@ public class FileUtils
 			if (dir.isDirectory())
 			{
 				if (isEmpty(dir, filter))
-				{
-					System.out.println("Yes\t" + dir);
 					stor.add(dir);
-				} else
-				{
-					System.out.println("No\t" + dir);
+				else
 					findEmpty(dir, stor, filter);
-				}
+
 			}
 		}
 	}
@@ -232,6 +228,11 @@ public class FileUtils
 		 * @return True if this file is considered disposable.
 		 */
 		public boolean isDisposable(File f);
+	}
+
+	public static interface FileListener
+	{
+		public void onFile(File f);
 	}
 
 }
