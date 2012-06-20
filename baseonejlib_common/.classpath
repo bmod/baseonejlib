@@ -24,6 +24,7 @@
 	<classpathentry kind="lib" path="lib/org-openide-util-lookup.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-nodes.jar"/>
 	<classpathentry kind="lib" path="lib/guava-r09.jar"/>
+	<classpathentry kind="lib" path="lib/glazedlists-1.8.0_java15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

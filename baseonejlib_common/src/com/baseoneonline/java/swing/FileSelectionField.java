@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,6 +18,8 @@ public class FileSelectionField extends JPanel
 
 	private int fileSelectionMode;
 
+	private final HashSet<Listener> listeners = new HashSet<>();
+
 	/**
 	 * Create the panel.
 	 */
@@ -24,6 +27,16 @@ public class FileSelectionField extends JPanel
 	{
 
 		initComponents();
+	}
+
+	public void addListener(Listener l)
+	{
+		listeners.add(l);
+	}
+
+	public void removeListener(Listener l)
+	{
+		listeners.remove(l);
 	}
 
 	/**
@@ -53,6 +66,8 @@ public class FileSelectionField extends JPanel
 		{
 			textField.setText(f.getAbsolutePath());
 		}
+		for (Listener l : listeners)
+			l.fileChanged(f);
 	}
 
 	public File getFile()
@@ -94,5 +109,10 @@ public class FileSelectionField extends JPanel
 		}
 	};
 	private JButton button;
+
+	public static interface Listener
+	{
+		public void fileChanged(File f);
+	}
 
 }
