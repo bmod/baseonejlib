@@ -65,7 +65,8 @@ import com.ardor3d.util.stat.StatCollector;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-public abstract class GameBase implements Runnable {
+public abstract class GameBase implements Runnable
+{
 	private ParallelSplitShadowMapPass shadowPass;
 	private OutlinePass outlinePass;
 	private BasicPassManager passManager;
@@ -116,11 +117,14 @@ public abstract class GameBase implements Runnable {
 	protected Camera camera;
 
 	@Override
-	public void run() {
-		try {
+	public void run()
+	{
+		try
+		{
 			frameHandler.init();
 
-			while (!_exit) {
+			while (!_exit)
+			{
 				frameHandler.updateFrame();
 
 				Thread.yield();
@@ -130,26 +134,31 @@ public abstract class GameBase implements Runnable {
 			cr.makeCurrentContext();
 			quit(cr.getRenderer());
 			cr.releaseCurrentContext();
-			if (QUIT_VM_ON_EXIT) {
+			if (QUIT_VM_ON_EXIT)
+			{
 				System.exit(0);
 			}
-		} catch (final Throwable t) {
+		} catch (final Throwable t)
+		{
 			System.err.println("Throwable caught in MainThread - exiting");
 			t.printStackTrace(System.err);
 		}
 	}
 
-	public void exit() {
+	public void exit()
+	{
 		_exit = true;
 	}
 
-	protected void setShadowsEnabled(final boolean b) {
+	protected void setShadowsEnabled(final boolean b)
+	{
 		shadowPass.setEnabled(b);
 	}
 
 	protected abstract void init();
 
-	protected final void initExample() {
+	protected final void initExample()
+	{
 		// Setup main camera.
 		canvas.setTitle(getClass().getSimpleName());
 
@@ -216,10 +225,12 @@ public abstract class GameBase implements Runnable {
 
 	protected abstract void update(final ReadOnlyTimer timer);
 
-	private final Scene scene = new Scene() {
+	private final Scene scene = new Scene()
+	{
 
 		@Override
-		public boolean renderUnto(final Renderer renderer) {
+		public boolean renderUnto(final Renderer renderer)
+		{
 			// Execute renderQueue item
 			GameTaskQueueManager
 					.getManager(canvas.getCanvasRenderer().getRenderContext())
@@ -229,12 +240,14 @@ public abstract class GameBase implements Runnable {
 			ContextGarbageCollector.doRuntimeCleanup(renderer);
 
 			/** Draw the rootNode and all its children. */
-			if (!canvas.isClosing()) {
+			if (!canvas.isClosing())
+			{
 				/** Call renderExample in any derived classes. */
 				renderExample(renderer);
 				renderDebug(renderer);
 
-				if (doShot) {
+				if (doShot)
+				{
 					// force any waiting scene elements to be renderer.
 					renderer.renderBuckets();
 					ScreenExporter.exportCurrentScreen(canvas
@@ -242,27 +255,33 @@ public abstract class GameBase implements Runnable {
 					doShot = false;
 				}
 				return true;
-			} else {
+			} else
+			{
 				return false;
 			}
 		}
 
 		@Override
-		public PickResults doPick(final Ray3 pickRay) {
+		public PickResults doPick(final Ray3 pickRay)
+		{
 			return null;
 		}
 	};
 
-	protected void renderExample(final Renderer renderer) {
-		if (!shadowPass.isInitialised()) {
+	protected void renderExample(final Renderer renderer)
+	{
+		if (!shadowPass.isInitialised())
+		{
 			shadowPass.init(renderer);
 		}
 
 		// Update the shadowpass "light" position. Iow it's camera.
 		final Light light = lightState.get(0);
-		if (light instanceof PointLight) {
+		if (light instanceof PointLight)
+		{
 			((PointLight) light).setLocation(lightPosition);
-		} else if (light instanceof DirectionalLight) {
+		} else if (light instanceof DirectionalLight)
+		{
 			((DirectionalLight) light).setDirection(lightPosition.normalize(
 					null).negateLocal());
 		}
@@ -271,32 +290,40 @@ public abstract class GameBase implements Runnable {
 
 	}
 
-	protected void renderDebug(final Renderer renderer) {
-		if (showBounds) {
+	protected void renderDebug(final Renderer renderer)
+	{
+		if (showBounds)
+		{
 			Debugger.drawBounds(root, renderer, true);
 		}
 
-		if (showNormals) {
+		if (showNormals)
+		{
 			Debugger.drawNormals(root, renderer);
 			Debugger.drawTangents(root, renderer);
 		}
 
-		if (showDepth) {
+		if (showDepth)
+		{
 			renderer.renderBuckets();
 			Debugger.drawBuffer(TextureStoreFormat.Depth16, Debugger.NORTHEAST,
 					renderer);
 		}
 	}
 
-	private final Updater updater = new Updater() {
+	private final Updater updater = new Updater()
+	{
 
 		@Override
-		public void update(final ReadOnlyTimer timer) {
-			if (canvas.isClosing()) {
+		public void update(final ReadOnlyTimer timer)
+		{
+			if (canvas.isClosing())
+			{
 				exit();
 			}
 
-			if (Constants.stats) {
+			if (Constants.stats)
+			{
 				StatCollector.update();
 			}
 
@@ -312,7 +339,8 @@ public abstract class GameBase implements Runnable {
 
 			passManager.updatePasses(timer.getTimePerFrame());
 
-			if (updateLight) {
+			if (updateLight)
+			{
 				final double time = timer.getTimeInSeconds() * 0.2;
 				lightPosition.set(Math.sin(time) * 10000.0, 5000.0,
 						Math.cos(time) * 10000.0);
@@ -322,7 +350,8 @@ public abstract class GameBase implements Runnable {
 			root.updateGeometricState(timer.getTimePerFrame(), true);
 		}
 
-		private void initStates() {
+		private void initStates()
+		{
 			final ZBufferState buf = new ZBufferState();
 			buf.setEnabled(true);
 			buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
@@ -350,7 +379,8 @@ public abstract class GameBase implements Runnable {
 		}
 
 		@Override
-		public void init() {
+		public void init()
+		{
 
 			registerInputTriggers();
 
@@ -366,15 +396,26 @@ public abstract class GameBase implements Runnable {
 		}
 	};
 
-	protected void quit(final Renderer renderer) {
+	protected void quit(final Renderer renderer)
+	{
 		ContextGarbageCollector.doFinalCleanup(renderer);
 		canvas.close();
 	}
 
-	public void start() {
+	public void start(int width, int height, boolean fullscreen)
+	{
+		start(new DisplaySettings(width, height, colorDepth, framerate, 1, 8,
+				0, 1, fullscreen, false));
+	}
 
-		final DisplaySettings settings = new DisplaySettings(displayWidth,
-				displayHeight, colorDepth, framerate, 1, 8, 0, 1, false, false);
+	public void start()
+	{
+		start(new DisplaySettings(displayWidth, displayHeight, colorDepth,
+				framerate, 1, 8, 0, 1, false, false));
+	}
+
+	public void start(DisplaySettings settings)
+	{
 
 		displaySettings = settings;
 
@@ -400,22 +441,27 @@ public abstract class GameBase implements Runnable {
 		new Thread(this).start();
 	}
 
-	protected void registerInputTriggers() {
+	protected void registerInputTriggers()
+	{
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.ESCAPE), new TriggerAction() {
+				Key.ESCAPE), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				exit();
 			}
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.L), new TriggerAction() {
+				Key.L), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				lightState.setEnabled(!lightState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -424,19 +470,23 @@ public abstract class GameBase implements Runnable {
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F4), new TriggerAction() {
+				Key.F4), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				showDepth = !showDepth;
 			}
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.T), new TriggerAction() {
+				Key.T), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				wireframeState.setEnabled(!wireframeState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -445,38 +495,46 @@ public abstract class GameBase implements Runnable {
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.B), new TriggerAction() {
+				Key.B), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				showBounds = !showBounds;
 			}
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.C), new TriggerAction() {
+				Key.C), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				System.out.println("Camera: "
 						+ canvas.getCanvasRenderer().getCamera());
 			}
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.N), new TriggerAction() {
+				Key.N), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				showNormals = !showNormals;
 			}
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F1), new TriggerAction() {
+				Key.F1), new TriggerAction()
+		{
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf) {
+					final TwoInputStates inputState, final double tpf)
+			{
 				doShot = true;
 			}
 		}));
@@ -498,22 +556,28 @@ public abstract class GameBase implements Runnable {
 
 		logicalLayer.registerTrigger(new InputTrigger(
 				new MouseButtonPressedCondition(MouseButton.LEFT),
-				new TriggerAction() {
+				new TriggerAction()
+				{
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf) {
-						if (mouseManager.isSetGrabbedSupported()) {
+							final TwoInputStates inputState, final double tpf)
+					{
+						if (mouseManager.isSetGrabbedSupported())
+						{
 							mouseManager.setGrabbed(GrabbedState.GRABBED);
 						}
 					}
 				}));
 		logicalLayer.registerTrigger(new InputTrigger(
 				new MouseButtonReleasedCondition(MouseButton.LEFT),
-				new TriggerAction() {
+				new TriggerAction()
+				{
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf) {
-						if (mouseManager.isSetGrabbedSupported()) {
+							final TwoInputStates inputState, final double tpf)
+					{
+						if (mouseManager.isSetGrabbedSupported())
+						{
 							mouseManager.setGrabbed(GrabbedState.NOT_GRABBED);
 						}
 					}

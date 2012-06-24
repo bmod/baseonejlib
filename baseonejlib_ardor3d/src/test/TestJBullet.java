@@ -9,7 +9,7 @@ import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.controller.SpatialController;
 import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.util.ReadOnlyTimer;
-import com.baseoneonline.jlib.ardor3d.RandomRotationController;
+import com.baseoneonline.jlib.ardor3d.NoiseMotionController;
 import com.baseoneonline.jlib.ardor3d.jbullet.PhysicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
 
@@ -41,7 +41,7 @@ public class TestJBullet extends TestBase
 		body.setMassProps(0, new Vector3f());
 
 		Box obstacle = new Box("Obstacle", Vector3.ZERO, 2, 2, 2);
-		obstacle.addController(new RandomRotationController());
+		obstacle.addController(new NoiseMotionController());
 		root.attachChild(obstacle);
 
 		spawnInterval = new Interval(1)

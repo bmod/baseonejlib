@@ -1,5 +1,6 @@
 package com.baseoneonline.jlib.ardor3d;
 
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 import com.ardor3d.math.Vector2;
@@ -8,14 +9,14 @@ import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.math.type.ReadOnlyVector2;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.IndexMode;
+import com.ardor3d.util.geom.BufferUtils;
 
 public class ArdorUtil
 {
 	private static Random random = new Random();
 
 	private ArdorUtil()
-	{
-	}
+	{}
 
 	public static Vector3 randomize(final Vector3 v, final double extents)
 	{
@@ -66,5 +67,11 @@ public class ArdorUtil
 		for (int i = 0; i < size; i++)
 			arr[i] = element;
 		return arr;
+	}
+
+	public static FloatBuffer createFloatBuffer(ReadOnlyColorRGBA color,
+			int size)
+	{
+		return BufferUtils.createFloatBuffer(createArray(color, size));
 	}
 }
