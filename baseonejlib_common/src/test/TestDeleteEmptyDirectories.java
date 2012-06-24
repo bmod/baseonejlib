@@ -1,18 +1,21 @@
 package test;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.io.File;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
@@ -31,7 +34,7 @@ import com.baseoneonline.java.tools.FileUtils.DisposableFilter;
 
 public class TestDeleteEmptyDirectories extends JFrame
 {
-	private FileSelectionField fileSelectionField;
+	private final FileSelectionField fileSelectionField;
 
 	private final EventList<File> emptyDirs = GlazedLists
 			.threadSafeList(new BasicEventList<File>());
@@ -61,10 +64,51 @@ public class TestDeleteEmptyDirectories extends JFrame
 	{
 
 		initComponents();
-
+		fileSelectionField = new FileSelectionField();
+		fileSelectionField.addListener(directoryListener);
 		fileSelectionField.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 165, 416, 0 };
+		gridBagLayout.rowHeights = new int[] { 430, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		getContentPane().setLayout(gridBagLayout);
 
+		GridBagConstraints gbc_fileSelectionField = new GridBagConstraints();
+		gbc_fileSelectionField.insets = new Insets(0, 0, 0, 5);
+		gbc_fileSelectionField.gridx = 0;
+		gbc_fileSelectionField.gridy = 0;
+		getContentPane().add(fileSelectionField, gbc_fileSelectionField);
+
+		panel = new JPanel();
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.gridx = 1;
+		gbc_panel.gridy = 0;
+		getContentPane().add(panel, gbc_panel);
+
+		panel.setLayout(new BorderLayout(0, 0));
+
+		scrollPane = new JScrollPane();
+		panel.add(scrollPane);
+
+		list = new JList<File>();
+		scrollPane.setViewportView(list);
 		list.setModel(new EventListModel<File>(emptyDirs));
+
+		panel_1 = new JPanel();
+		panel.add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+
+		JButton btnScan = new JButton("Scan");
+		panel_1.add(btnScan);
+
+		lblStatus = new JLabel("Status");
+		panel_1.add(lblStatus);
+
+		JButton btnDeleteThoseEmpty = new JButton("Delete those empty dirs!");
+		panel_1.add(btnDeleteThoseEmpty);
+		progressBar = new JProgressBar();
+		panel_1.add(progressBar);
 
 		emptyDirs.addListEventListener(new ListEventListener<File>()
 		{
@@ -164,86 +208,6 @@ public class TestDeleteEmptyDirectories extends JFrame
 	private void initComponents()
 	{
 		setTitle("TestFindEmptyDirectories");
-
-		fileSelectionField = new FileSelectionField();
-
-		scrollPane = new JScrollPane();
-
-		list = new JList<File>();
-		scrollPane.setViewportView(list);
-		fileSelectionField.addListener(directoryListener);
-		progressBar = new JProgressBar();
-
-		lblStatus = new JLabel("Status");
-
-		JButton btnDeleteThoseEmpty = new JButton("Delete those empty dirs!");
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.TRAILING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.TRAILING)
-														.addComponent(
-																scrollPane,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																562,
-																Short.MAX_VALUE)
-														.addComponent(
-																fileSelectionField,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																562,
-																Short.MAX_VALUE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblStatus,
-																				GroupLayout.DEFAULT_SIZE,
-																				412,
-																				Short.MAX_VALUE)
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addComponent(
-																				progressBar,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																btnDeleteThoseEmpty))
-										.addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(fileSelectionField,
-								GroupLayout.PREFERRED_SIZE,
-								GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE,
-								330, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnDeleteThoseEmpty)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(
-								groupLayout
-										.createParallelGroup(Alignment.LEADING)
-										.addComponent(progressBar,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblStatus))
-						.addContainerGap()));
-		getContentPane().setLayout(groupLayout);
 	}
 
 	private final DisposableFilter filter = new DisposableFilter()
@@ -255,8 +219,10 @@ public class TestDeleteEmptyDirectories extends JFrame
 			return false;
 		}
 	};
-	private JList<File> list;
-	private JProgressBar progressBar;
-	private JScrollPane scrollPane;
-	private JLabel lblStatus;
+	private final JList<File> list;
+	private final JProgressBar progressBar;
+	private final JScrollPane scrollPane;
+	private final JLabel lblStatus;
+	private final JPanel panel_1;
+	private final JPanel panel;
 }
