@@ -99,6 +99,9 @@ public abstract class GameBase implements Runnable
 	protected boolean showNormals = false;
 	protected boolean showDepth = false;
 
+	protected boolean paused = false;
+	protected boolean stepping = false;
+
 	protected boolean doShot = false;
 
 	protected NativeCanvas canvas;
@@ -126,7 +129,6 @@ public abstract class GameBase implements Runnable
 			while (!_exit)
 			{
 				frameHandler.updateFrame();
-
 				Thread.yield();
 			}
 			// grab the graphics context so cleanup will work out.
@@ -243,7 +245,7 @@ public abstract class GameBase implements Runnable
 			if (!canvas.isClosing())
 			{
 				/** Call renderExample in any derived classes. */
-				renderExample(renderer);
+				renderBase(renderer);
 				renderDebug(renderer);
 
 				if (doShot)
@@ -268,7 +270,7 @@ public abstract class GameBase implements Runnable
 		}
 	};
 
-	protected void renderExample(final Renderer renderer)
+	protected void renderBase(final Renderer renderer)
 	{
 		if (!shadowPass.isInitialised())
 		{
@@ -330,12 +332,16 @@ public abstract class GameBase implements Runnable
 			logicalLayer.checkTriggers(timer.getTimePerFrame());
 
 			// Execute updateQueue item
-			GameTaskQueueManager
-					.getManager(canvas.getCanvasRenderer().getRenderContext())
-					.getQueue(GameTaskQueue.UPDATE).execute();
+			if (!paused || stepping)
+			{
+				GameTaskQueueManager
+						.getManager(
+								canvas.getCanvasRenderer().getRenderContext())
+						.getQueue(GameTaskQueue.UPDATE).execute();
 
-			/** Call simpleUpdate in any derived classes of ExampleBase. */
-			GameBase.this.update(timer);
+				/** Call simpleUpdate in any derived classes of ExampleBase. */
+				GameBase.this.update(timer);
+			}
 
 			passManager.updatePasses(timer.getTimePerFrame());
 
@@ -346,8 +352,12 @@ public abstract class GameBase implements Runnable
 						Math.cos(time) * 10000.0);
 			}
 
-			/** Update controllers/render states/transforms/bounds for rootNode. */
-			root.updateGeometricState(timer.getTimePerFrame(), true);
+			if (!paused || stepping)
+			{
+				root.updateGeometricState(timer.getTimePerFrame(), true);
+			}
+
+			stepping = false;
 		}
 
 		private void initStates()
@@ -402,7 +412,8 @@ public abstract class GameBase implements Runnable
 		canvas.close();
 	}
 
-	public void start(int width, int height, boolean fullscreen)
+	public void start(final int width, final int height,
+			final boolean fullscreen)
 	{
 		start(new DisplaySettings(width, height, colorDepth, framerate, 1, 8,
 				0, 1, fullscreen, false));
@@ -414,7 +425,7 @@ public abstract class GameBase implements Runnable
 				framerate, 1, 8, 0, 1, false, false));
 	}
 
-	public void start(DisplaySettings settings)
+	public void start(final DisplaySettings settings)
 	{
 
 		displaySettings = settings;
@@ -536,6 +547,30 @@ public abstract class GameBase implements Runnable
 					final TwoInputStates inputState, final double tpf)
 			{
 				doShot = true;
+			}
+		}));
+
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.P), new TriggerAction()
+		{
+
+			@Override
+			public void perform(final Canvas source,
+					final TwoInputStates inputStates, final double tpf)
+			{
+				paused = !paused;
+			}
+		}));
+
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.O), new TriggerAction()
+		{
+
+			@Override
+			public void perform(final Canvas source,
+					final TwoInputStates inputStates, final double tpf)
+			{
+				stepping = true;
 			}
 		}));
 
