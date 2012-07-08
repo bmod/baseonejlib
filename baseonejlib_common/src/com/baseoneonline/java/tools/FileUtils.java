@@ -235,4 +235,29 @@ public class FileUtils
 		public void onFile(File f);
 	}
 
+	public static File canonical(Object... args) throws IOException
+	{
+		String[] elements = new String[args.length];
+		for (int i = 0; i < args.length; i++)
+		{
+			Object o = args[i];
+			if (o instanceof Character)
+			{
+				elements[i] = Character.toString((char) o);
+			} else if (o instanceof String)
+			{
+				elements[i] = ((String) o).trim();
+			} else if (o instanceof File)
+			{
+				elements[i] = ((File) o).getAbsolutePath();
+			}
+		}
+		return new File(StringUtils.join(elements, "")).getCanonicalFile();
+	}
+
+	public static File relative(File f, File base)
+	{
+		return new File(f.toURI().relativize(base.toURI()).getPath());
+	}
+
 }
