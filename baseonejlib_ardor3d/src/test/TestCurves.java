@@ -39,12 +39,17 @@ public class TestCurves extends GameBase
 				new Vector3(0, sy, 0), new Vector3(0, -sy, 0),
 				new Vector3(sx, -sy, 0), new Vector3(sx, sy, 0) };
 
+		Vector3[] normals = { new Vector3(-1, 0, 0), new Vector3(-1, 0, 0),
+				new Vector3(0, 0, 1), new Vector3(0, 0, 1),
+				new Vector3(-1, 0, 0), new Vector3(-1, 0, 0) };
+
 		CurveNode cvNode;
 		Curve3 cv;
 
 		// Open
 
 		cv = new BSpline3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.OPEN);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -52,6 +57,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new Nurbs3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.OPEN);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -59,6 +65,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new CatmullRom3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.OPEN);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -68,6 +75,7 @@ public class TestCurves extends GameBase
 		// Clamped
 
 		cv = new BSpline3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.CLAMP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -75,6 +83,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new Nurbs3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.CLAMP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -82,6 +91,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new CatmullRom3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.CLAMP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -91,6 +101,7 @@ public class TestCurves extends GameBase
 		// Closed
 
 		cv = new BSpline3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.LOOP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -98,6 +109,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new Nurbs3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.LOOP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);
@@ -105,6 +117,7 @@ public class TestCurves extends GameBase
 		root.attachChild(cvNode);
 
 		cv = new CatmullRom3(points);
+		cv.setNormals(normals);
 		cv.setMode(Curve.LOOP);
 		cv.setDefaultNormal(Vector3.UNIT_Z);
 		cvNode = new CurveNode(points, cv);

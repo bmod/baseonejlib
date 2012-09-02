@@ -1,6 +1,6 @@
 package com.baseoneonline.jlib.ardor3d.controllers;
 
-import com.ardor3d.math.Quaternion;
+import com.ardor3d.math.Matrix3;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.controller.SpatialController;
@@ -12,7 +12,7 @@ public class CurveSpatialController implements SpatialController<Spatial>
 	private final Curve3 curve;
 	private double speed;
 	private double currentPosition = 0;
-	private boolean constantVelocity = true;
+	private boolean constantVelocity = false;
 
 	public CurveSpatialController(Curve3 curve, double speed)
 	{
@@ -44,7 +44,7 @@ public class CurveSpatialController implements SpatialController<Spatial>
 	public void update(double time, Spatial caller)
 	{
 		Vector3 pos = Vector3.fetchTempInstance();
-		Quaternion rot = Quaternion.fetchTempInstance();
+		Matrix3 rot = Matrix3.fetchTempInstance();
 
 		curve.getPoint(currentPosition, pos);
 		caller.setTranslation(pos);
@@ -53,6 +53,7 @@ public class CurveSpatialController implements SpatialController<Spatial>
 		caller.setRotation(rot);
 
 		Vector3.releaseTempInstance(pos);
+		Matrix3.releaseTempInstance(rot);
 
 		if (constantVelocity)
 			currentPosition += speed * time
