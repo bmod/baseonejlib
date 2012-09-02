@@ -37,15 +37,15 @@ public class FastNoise
 			int alt4 = (XYBASE_11 * (XYBASE_11 * XYBASE_11 * 15731 + 789221) + 1376312589);
 
 			/*
-			 * NOTE : on for true grandiant noise uncomment following block for
-			 * true gradiant we need to perform scalar product here, gradiant
+			 * NOTE : on for true gradient noise uncomment following block for
+			 * true gradient we need to perform scalar product here, gradient
 			 * vector are created/deducted using the above pseudo random values
 			 * (alt1...alt4) : by cutting thoses values in twice values to get
 			 * for each a fixed x,y vector gradX1= alt1&0xFF gradY1=
 			 * (alt1&0xFF00)>>8
 			 * 
 			 * the last part of the PRN (alt1&0xFF0000)>>8 is used as an offset
-			 * to correct one of the gradiant problem wich is zero on cell edge
+			 * to correct one of the gradient problem wich is zero on cell edge
 			 * 
 			 * source vector (sXN;sYN) for scalar product are computed using
 			 * (bX,bY)
