@@ -9,7 +9,7 @@ import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.controller.SpatialController;
 import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.util.ReadOnlyTimer;
-import com.baseoneonline.jlib.ardor3d.NoiseRotationController;
+import com.baseoneonline.jlib.ardor3d.controllers.NoiseRotationController;
 import com.baseoneonline.jlib.ardor3d.jbullet.PhysicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
 

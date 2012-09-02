@@ -173,7 +173,7 @@ public abstract class GameBase implements Runnable
 				/ (float) canvas.getCanvasRenderer().getCamera().getHeight(),
 				1.0, 10000);
 
-		camera.lookAt(new Vector3(0, 0, 0), Vector3.UNIT_Y);
+		camera.lookAt(Vector3.ZERO, Vector3.UNIT_Y);
 
 		// Setup some standard states for the scene.
 		final CullState cullFrontFace = new CullState();
@@ -220,7 +220,7 @@ public abstract class GameBase implements Runnable
 
 		passManager.add(rootPass);
 		// passManager.add(outlinePass);
-		passManager.add(shadowPass);
+		// passManager.add(shadowPass);
 
 		root.acceptVisitor(new UpdateModelBoundVisitor(), false);
 
@@ -285,8 +285,10 @@ public abstract class GameBase implements Runnable
 			((PointLight) light).setLocation(lightPosition);
 		} else if (light instanceof DirectionalLight)
 		{
-			((DirectionalLight) light).setDirection(lightPosition.normalize(
-					null).negateLocal());
+			Vector3 tmp = Vector3.fetchTempInstance();
+			lightPosition.normalize(tmp).negateLocal();
+			((DirectionalLight) light).setDirection(tmp);
+			Vector3.releaseTempInstance(tmp);
 		}
 
 		passManager.renderPasses(renderer);

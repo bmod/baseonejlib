@@ -30,7 +30,7 @@ public class Nurbs3 extends Curve3
 
 	private void rebuild()
 	{
-		if (mode == Clamped)
+		if (mode == CLAMP)
 		{
 			order = degree + 1;
 			final int numKnots = cvs.length + order;
@@ -64,9 +64,6 @@ public class Nurbs3 extends Curve3
 	@Override
 	public Vector3 getPoint(final double t, Vector3 store)
 	{
-		if (null == store)
-			store = new Vector3();
-
 		if (t <= 0)
 			return store.set(cvs[0]);
 		if (t >= 1)
@@ -88,6 +85,12 @@ public class Nurbs3 extends Curve3
 		Vector3.releaseTempInstance(tmp);
 		store.divideLocal(valSum);
 
+		return store;
+	}
+
+	@Override
+	public ReadOnlyVector3 getVelocity(double t, Vector3 store)
+	{
 		return store;
 	}
 
