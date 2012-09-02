@@ -14,7 +14,6 @@ import com.ardor3d.framework.lwjgl.LwjglCanvasRenderer;
 import com.ardor3d.image.TextureStoreFormat;
 import com.ardor3d.image.util.AWTImageLoader;
 import com.ardor3d.image.util.ScreenShotImageExporter;
-import com.ardor3d.input.GrabbedState;
 import com.ardor3d.input.Key;
 import com.ardor3d.input.MouseButton;
 import com.ardor3d.input.MouseManager;
@@ -23,8 +22,6 @@ import com.ardor3d.input.logical.InputTrigger;
 import com.ardor3d.input.logical.KeyPressedCondition;
 import com.ardor3d.input.logical.LogicalLayer;
 import com.ardor3d.input.logical.MouseButtonClickedCondition;
-import com.ardor3d.input.logical.MouseButtonPressedCondition;
-import com.ardor3d.input.logical.MouseButtonReleasedCondition;
 import com.ardor3d.input.logical.TriggerAction;
 import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.input.lwjgl.LwjglControllerWrapper;
@@ -112,12 +109,16 @@ public abstract class GameBase implements Runnable
 
 	protected PointLight light;
 
-	public static int displayWidth = 720;
-	public static int displayHeight = 406;
 	public static int framerate = 60;
 	public static int colorDepth = 32;
 
 	protected Camera camera;
+
+	public float getDisplayRatio()
+	{
+		return (float) displaySettings.getWidth()
+				/ (float) displaySettings.getHeight();
+	}
 
 	@Override
 	public void run()
@@ -421,8 +422,8 @@ public abstract class GameBase implements Runnable
 
 	public void start()
 	{
-		start(new DisplaySettings(displayWidth, displayHeight, colorDepth,
-				framerate, 1, 8, 0, 1, false, false));
+		start(new DisplaySettings(720, 406, colorDepth, framerate, 1, 8, 0, 1,
+				false, false));
 	}
 
 	public void start(final DisplaySettings settings)
@@ -589,34 +590,34 @@ public abstract class GameBase implements Runnable
 		// }
 		// }));
 
-		logicalLayer.registerTrigger(new InputTrigger(
-				new MouseButtonPressedCondition(MouseButton.LEFT),
-				new TriggerAction()
-				{
-					@Override
-					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf)
-					{
-						if (mouseManager.isSetGrabbedSupported())
-						{
-							mouseManager.setGrabbed(GrabbedState.GRABBED);
-						}
-					}
-				}));
-		logicalLayer.registerTrigger(new InputTrigger(
-				new MouseButtonReleasedCondition(MouseButton.LEFT),
-				new TriggerAction()
-				{
-					@Override
-					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf)
-					{
-						if (mouseManager.isSetGrabbedSupported())
-						{
-							mouseManager.setGrabbed(GrabbedState.NOT_GRABBED);
-						}
-					}
-				}));
+		// logicalLayer.registerTrigger(new InputTrigger(
+		// new MouseButtonPressedCondition(MouseButton.LEFT),
+		// new TriggerAction()
+		// {
+		// @Override
+		// public void perform(final Canvas source,
+		// final TwoInputStates inputState, final double tpf)
+		// {
+		// if (mouseManager.isSetGrabbedSupported())
+		// {
+		// mouseManager.setGrabbed(GrabbedState.GRABBED);
+		// }
+		// }
+		// }));
+		// logicalLayer.registerTrigger(new InputTrigger(
+		// new MouseButtonReleasedCondition(MouseButton.LEFT),
+		// new TriggerAction()
+		// {
+		// @Override
+		// public void perform(final Canvas source,
+		// final TwoInputStates inputState, final double tpf)
+		// {
+		// if (mouseManager.isSetGrabbedSupported())
+		// {
+		// mouseManager.setGrabbed(GrabbedState.NOT_GRABBED);
+		// }
+		// }
+		// }));
 
 		// logicalLayer.registerTrigger(new InputTrigger(new AnyKeyCondition(),
 		// new TriggerAction() {

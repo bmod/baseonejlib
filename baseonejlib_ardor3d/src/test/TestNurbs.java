@@ -11,14 +11,14 @@ import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
 import com.baseoneonline.jlib.ardor3d.Line;
-import com.baseoneonline.jlib.ardor3d.Nurbs3;
-import com.baseoneonline.jlib.ardor3d.math.BSplineCurve;
+import com.baseoneonline.jlib.ardor3d.math.BSpline3;
+import com.baseoneonline.jlib.ardor3d.math.Nurbs3;
 
 public class TestNurbs extends TestBase
 {
 
 	private static final Random random = new Random();
-	private BSplineCurve curve;
+	private BSpline3 curve;
 	private Spatial traveller;
 
 	public static void main(final String[] args)
@@ -52,7 +52,7 @@ public class TestNurbs extends TestBase
 			addPoint(cv);
 		}
 
-		curve = new BSplineCurve(cvs);
+		curve = new BSpline3(cvs);
 
 		createCurve(100);
 
@@ -93,8 +93,7 @@ public class TestNurbs extends TestBase
 		final ReadOnlyVector3[] curvePoints = new ReadOnlyVector3[samples + 1];
 		for (int i = 0; i <= samples; i++)
 		{
-			final double t = (double) i / (double) samples
-					* curve.getSegmentCount();
+			final double t = (double) i / (double) samples * curve.getCVCount();
 
 			final Vector3 pos = curve.getPoint(t, null);
 			curvePoints[i] = pos;
