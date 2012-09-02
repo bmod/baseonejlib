@@ -47,10 +47,16 @@ public class Vec2f
 		return new Vec2f(x - v.x, y - v.y);
 	}
 
-	public void divideLocal(final float valSum)
+	public void divideLocal(final float value)
 	{
-		x /= valSum;
-		y /= valSum;
+		x /= value;
+		y /= value;
+	}
+
+	public void divideLocal(final Vec2f value)
+	{
+		x /= value.x;
+		y /= value.y;
 	}
 
 	public float dot(Vec2f v)
@@ -70,6 +76,12 @@ public class Vec2f
 	public String toString()
 	{
 		return "[Vec2f x:" + x + ", y:" + y + "]";
+	}
+
+	public void multiplyLocal(float v)
+	{
+		x *= v;
+		y *= v;
 	}
 
 }
