@@ -1,6 +1,6 @@
 package com.baseoneonline.jlib.ardor3d.math;
 
-import com.ardor3d.math.Quaternion;
+import com.ardor3d.math.Matrix3;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.baseoneonline.java.math.Curve;
@@ -48,7 +48,7 @@ public abstract class Curve3 extends Curve<ReadOnlyVector3, Vector3>
 	 * @param store
 	 * @return
 	 */
-	public Quaternion getOrientation(double t, Quaternion store)
+	public Matrix3 getOrientation(double t, Matrix3 store)
 	{
 		Vector3 tangent = Vector3.fetchTempInstance();
 		Vector3 normal = Vector3.fetchTempInstance();
@@ -57,6 +57,7 @@ public abstract class Curve3 extends Curve<ReadOnlyVector3, Vector3>
 		getVelocity(t, tangent);
 		tangent.normalizeLocal();
 
+		// getNormal(t, normal);
 		normal.set(getDefaultNormal()); // TODO: Get actual normal
 
 		normal.cross(tangent, binormal);

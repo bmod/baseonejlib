@@ -131,8 +131,11 @@ public class CatmullRom3 extends Curve3
 
 	private double catmullRom(double a, double b, double c, double d, double t)
 	{
-		return 0.5 * ((2 * b) + (-a + c) * t + (2 * a - 5 * b + 4 * c - d)
-				* (t * t) + (-a + 3 * b - 3 * c + d) * (t * t * t));
+		double b0 = (2 * b);
+		double b1 = (-a + c) * t;
+		double b2 = (2 * a - 5 * b + 4 * c - d) * (t * t);
+		double b3 = (-a + 3 * b - 3 * c + d) * (t * t * t);
+		return 0.5 * (b0 + b1 + b2 + b3);
 	}
 
 	private double catmullRomDerived(double a, double b, double c, double d,
