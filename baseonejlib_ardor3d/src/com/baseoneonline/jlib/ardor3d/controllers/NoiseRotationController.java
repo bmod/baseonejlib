@@ -1,4 +1,4 @@
-package com.baseoneonline.jlib.ardor3d;
+package com.baseoneonline.jlib.ardor3d.controllers;
 
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Matrix3;

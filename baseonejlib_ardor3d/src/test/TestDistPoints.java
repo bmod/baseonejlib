@@ -11,7 +11,7 @@ import com.ardor3d.scenegraph.Point.PointType;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
-import com.baseoneonline.jlib.ardor3d.SimpleOrbitCameraController;
+import com.baseoneonline.jlib.ardor3d.controllers.SimpleOrbitCameraController;
 
 public class TestDistPoints extends TestBase
 {
