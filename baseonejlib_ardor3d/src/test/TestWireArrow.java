@@ -4,7 +4,7 @@ package test;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.util.ReadOnlyTimer;
-import com.baseoneonline.jlib.ardor3d.NoiseMotionController;
+import com.baseoneonline.jlib.ardor3d.NoiseRotationController;
 import com.baseoneonline.jlib.ardor3d.WireArrow;
 
 public class TestWireArrow extends TestBase
@@ -21,7 +21,7 @@ public class TestWireArrow extends TestBase
 		camera.lookAt(Vector3.ZERO, Vector3.UNIT_Y);
 
 		WireArrow arrow = new WireArrow();
-		arrow.addController(new NoiseMotionController());
+		arrow.addController(new NoiseRotationController());
 		arrow.setColor(ColorRGBA.YELLOW);
 		root.attachChild(arrow);
 	}
