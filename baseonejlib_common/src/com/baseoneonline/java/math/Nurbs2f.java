@@ -1,7 +1,6 @@
 package com.baseoneonline.java.math;
 
 /**
- * TODO: Allow for unevenly spaced knots
  * 
  */
 public class Nurbs2f extends Curve<Vec2f, Vec2f>
@@ -71,4 +70,9 @@ public class Nurbs2f extends Curve<Vec2f, Vec2f>
 		return store;
 	}
 
+	@Override
+	public Vec2f getVelocity(double t, Vec2f store)
+	{
+		throw new RuntimeException("Not implemented yet.");
+	}
 }

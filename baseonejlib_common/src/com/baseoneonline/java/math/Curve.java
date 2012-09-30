@@ -11,13 +11,13 @@ package com.baseoneonline.java.math;
 public abstract class Curve<T, U extends T>
 {
 
-	public static final int Open = 0;
-	public static final int Loop = 1;
-	public static final int Clamped = 2;
+	public static final int OPEN = 0;
+	public static final int LOOP = 1;
+	public static final int CLAMP = 2;
 
 	protected T[] cvs;
 
-	protected int mode = Open;
+	protected int mode = OPEN;
 
 	public Curve(T[] cvs)
 	{
@@ -71,5 +71,7 @@ public abstract class Curve<T, U extends T>
 	 * @return
 	 */
 	public abstract T getPoint(double t, U store);
+
+	public abstract T getVelocity(double t, U store);
 
 }
