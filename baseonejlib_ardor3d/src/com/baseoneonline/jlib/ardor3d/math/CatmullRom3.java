@@ -145,4 +145,38 @@ public class CatmullRom3 extends Curve3
 				* (2 * a - 5 * b + 4 * c - d) - a + c);
 	}
 
+	@Override
+	public Vector3 getNormal(double t, Vector3 store)
+	{
+		// How many segments does this curve have
+		int segCount = getSegmentCount();
+
+		// Calculate current segment and u value
+		double u = t * segCount;
+		double v = u % 1;
+		int seg = (int) u;
+
+		if (seg >= segCount)
+		{
+			v = 1;
+			seg = segCount - 1;
+		} else if (seg < 0)
+		{
+			v = 0;
+			seg = 0;
+		}
+
+		// Seek out which cv's affect the current u value
+		int[] idc = getAffectedCVS(seg, segCount);
+		ReadOnlyVector3 a = normals[idc[0]];
+		ReadOnlyVector3 b = normals[idc[1]];
+		ReadOnlyVector3 c = normals[idc[2]];
+		ReadOnlyVector3 d = normals[idc[3]];
+
+		return store.set(catmullRom(a.getX(), b.getX(), c.getX(), d.getX(), v),
+				catmullRom(a.getY(), b.getY(), c.getY(), d.getY(), v),
+				catmullRom(a.getZ(), b.getZ(), c.getZ(), d.getZ(), v))
+				.normalizeLocal();
+	}
+
 }

@@ -94,4 +94,10 @@ public class Nurbs3 extends Curve3
 		return store;
 	}
 
+	@Override
+	public Vector3 getNormal(double t, Vector3 store)
+	{
+		return store.set(getDefaultNormal());
+	}
+
 }

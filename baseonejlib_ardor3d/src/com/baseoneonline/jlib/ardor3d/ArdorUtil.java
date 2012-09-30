@@ -3,6 +3,8 @@ package com.baseoneonline.jlib.ardor3d;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
+import com.ardor3d.math.MathUtils;
+import com.ardor3d.math.Quaternion;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
@@ -73,5 +75,79 @@ public class ArdorUtil
 			int size)
 	{
 		return BufferUtils.createFloatBuffer(createArray(color, size));
+	}
+
+	public static Quaternion lerp(Quaternion q1, Quaternion q2, double t,
+			Quaternion store)
+	{
+		Quaternion c = Quaternion.fetchTempInstance();
+		Quaternion d = Quaternion.fetchTempInstance();
+
+		q1.multiply(1 - t, c);
+		q2.multiply(t, d);
+
+		q1.add(q2, store);
+		store.normalizeLocal();
+
+		Quaternion.releaseTempInstance(c);
+		Quaternion.releaseTempInstance(d);
+
+		return store;
+	}
+
+	public static Quaternion slerpNoInvert(Quaternion q1, Quaternion q2,
+			double t, Quaternion store)
+	{
+
+		Quaternion c = Quaternion.fetchTempInstance();
+		Quaternion d = Quaternion.fetchTempInstance();
+
+		double dot = q1.dot(q2);
+
+		if (dot > -0.95f && dot < 0.95f)
+		{
+			double angle = MathUtils.acos(dot);
+			q1.multiply(MathUtils.sin(angle * (1 - t)), c);
+			q2.multiply(MathUtils.sin(angle * t), d);
+			c.add(d, store);
+
+			divide(store, MathUtils.sin(angle), store);
+			store.normalizeLocal();
+		} else
+		{
+			lerp(q1, q2, t, store);
+		}
+
+		Quaternion.releaseTempInstance(c);
+		Quaternion.releaseTempInstance(d);
+
+		return store;
+	}
+
+	public static Quaternion divide(Quaternion a, double n, Quaternion store)
+	{
+		if (0 == n)
+			throw new ArithmeticException("Divide by zero!");
+		return store.set(store.getX() / n, store.getY() / n, store.getZ() / n,
+				store.getW() / n);
+
+	}
+
+	public static Quaternion squad(Quaternion q1, Quaternion q2, Quaternion a,
+			Quaternion b, double t, Quaternion store)
+	{
+		Quaternion c = Quaternion.fetchTempInstance();
+		Quaternion d = Quaternion.fetchTempInstance();
+
+		slerpNoInvert(q1, q2, t, c);
+
+		slerpNoInvert(a, b, t, d);
+
+		slerpNoInvert(c, d, 2 * t * (1 - t), store);
+
+		Quaternion.releaseTempInstance(c);
+		Quaternion.releaseTempInstance(d);
+
+		return store;
 	}
 }
