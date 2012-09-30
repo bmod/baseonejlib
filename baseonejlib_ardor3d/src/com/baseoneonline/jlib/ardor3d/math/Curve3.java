@@ -1,6 +1,7 @@
 package com.baseoneonline.jlib.ardor3d.math;
 
 import com.ardor3d.math.Matrix3;
+import com.ardor3d.math.Quaternion;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.baseoneonline.java.math.Curve;
@@ -8,7 +9,7 @@ import com.baseoneonline.java.math.Curve;
 public abstract class Curve3 extends Curve<ReadOnlyVector3, Vector3>
 {
 
-	private ReadOnlyVector3[] normals;
+	protected ReadOnlyVector3[] normals;
 	private ReadOnlyVector3 defaultNormal = Vector3.UNIT_Y;
 
 	public Curve3(ReadOnlyVector3[] cvs)
@@ -52,23 +53,38 @@ public abstract class Curve3 extends Curve<ReadOnlyVector3, Vector3>
 	{
 		Vector3 tangent = Vector3.fetchTempInstance();
 		Vector3 normal = Vector3.fetchTempInstance();
-		Vector3 binormal = Vector3.fetchTempInstance();
+		Quaternion q = Quaternion.fetchTempInstance();
 
 		getVelocity(t, tangent);
-		tangent.normalizeLocal();
+		getNormal(t, normal);
+		q.lookAt(tangent, normal);
+		store.set(q);
 
-		// getNormal(t, normal);
-		normal.set(getDefaultNormal()); // TODO: Get actual normal
+		Quaternion.releaseTempInstance(q);
+		Vector3.releaseTempInstance(tangent);
+		Vector3.releaseTempInstance(normal);
+		return store;
+	}
 
-		normal.cross(tangent, binormal);
+	public Quaternion getCVOrientation(int index, Quaternion store)
+	{
+		Vector3 tangent = Vector3.fetchTempInstance();
+		Vector3 normal = Vector3.fetchTempInstance();
 
-		store.fromAxes(binormal, normal, tangent);
+		double t = (double) index / (double) cvs.length;
+
+		getVelocity(t, tangent);
+		// tangent.normalizeLocal();
+
+		getNormal(t, normal);
+		store.lookAt(tangent, normal);
 
 		Vector3.releaseTempInstance(tangent);
 		Vector3.releaseTempInstance(normal);
-		Vector3.releaseTempInstance(binormal);
 		return store;
 	}
+
+	public abstract Vector3 getNormal(double t, Vector3 store);
 
 	public double getLinearVelocity(double t)
 	{

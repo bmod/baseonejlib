@@ -39,9 +39,9 @@ public class TestCurves extends GameBase
 				new Vector3(0, sy, 0), new Vector3(0, -sy, 0),
 				new Vector3(sx, -sy, 0), new Vector3(sx, sy, 0) };
 
-		Vector3[] normals = { new Vector3(-1, 0, 0), new Vector3(-1, 0, 0),
-				new Vector3(0, 0, 1), new Vector3(0, 0, 1),
-				new Vector3(-1, 0, 0), new Vector3(-1, 0, 0) };
+		Vector3[] normals = { new Vector3(-1, -1, 0), new Vector3(-1, 1, 0),
+				new Vector3(1, 1, 0), new Vector3(1, 1, 0),
+				new Vector3(-1, 1, 0), new Vector3(-1, -1, 0) };
 
 		CurveNode cvNode;
 		Curve3 cv;
@@ -141,8 +141,7 @@ public class TestCurves extends GameBase
 
 class CurveNode extends Node
 {
-	private final Line line;
-	private final Line curveLine;
+	private final double normalOffset = .3;
 	private final Spatial[] nodes;
 	private final int samples = 40;
 	private final Curve<ReadOnlyVector3, Vector3> curve;
@@ -150,23 +149,32 @@ class CurveNode extends Node
 	public CurveNode(ReadOnlyVector3[] points, Curve3 curve)
 	{
 		this.curve = curve;
-		line = createLine(points, ColorRGBA.DARK_GRAY);
+		Line line = createLine(points, ColorRGBA.DARK_GRAY);
 		line.getMeshData().setIndexMode(IndexMode.LineStrip);
 
 		attachChild(line);
 
 		ReadOnlyVector3[] curvePoints = new ReadOnlyVector3[samples + 1];
+		ReadOnlyVector3[] normalPoints = new ReadOnlyVector3[samples + 1];
 		for (int i = 0; i <= samples; i++)
 		{
 			double t = (float) i / (float) samples;
-			Vector3 v = new Vector3();
-			curve.getPoint(t, v);
-			curvePoints[i] = v;
+			Vector3 pos = new Vector3();
+			Vector3 nml = new Vector3();
+			curve.getPoint(t, pos);
+			curve.getNormal(t, nml);
+			nml.multiplyLocal(normalOffset).addLocal(pos);
+			curvePoints[i] = pos;
+			normalPoints[i] = nml;
 		}
 
-		curveLine = createLine(curvePoints, ColorRGBA.YELLOW);
+		Line curveLine = createLine(curvePoints, ColorRGBA.YELLOW);
 		curveLine.getMeshData().setIndexMode(IndexMode.LineStrip);
 		attachChild(curveLine);
+
+		Line normalLine = createLine(normalPoints, ColorRGBA.ORANGE);
+		normalLine.getMeshData().setIndexMode(IndexMode.LineStrip);
+		attachChild(normalLine);
 
 		nodes = new Spatial[points.length];
 		double boxSize = .03;
@@ -185,6 +193,7 @@ class CurveNode extends Node
 		// b.setDefaultColor(ColorRGBA.ORANGE);
 		b.addController(new CurveSpatialController(curve, .1));
 		attachChild(b);
+
 	}
 
 	public Curve<ReadOnlyVector3, Vector3> getCurve()
