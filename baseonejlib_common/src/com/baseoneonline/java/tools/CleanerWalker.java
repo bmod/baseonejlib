@@ -5,9 +5,6 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
-import com.baseoneonline.java.tools.DirectoryWalker;
-import com.baseoneonline.java.tools.DirectoryWalker.Mode;
-
 class CleanerWalker extends DirectoryWalker<File> {
 
 	private FileFilter keepFilter;
