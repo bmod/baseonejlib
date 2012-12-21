@@ -11,7 +11,7 @@ import com.ardor3d.scenegraph.Point.PointType;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
-import com.baseoneonline.jlib.ardor3d.controllers.SimpleOrbitCameraController;
+import com.baseoneonline.jlib.ardor3d.controllers.EditorCameraController;
 
 public class TestDistPoints extends TestBase
 {
@@ -22,7 +22,7 @@ public class TestDistPoints extends TestBase
 	}
 
 	private final Solver solver = new Solver();
-	private SimpleOrbitCameraController orbCam;
+	private EditorCameraController orbCam;
 
 	@Override
 	protected void init()
@@ -32,7 +32,7 @@ public class TestDistPoints extends TestBase
 		solver.setConstraint(new PlanarConstraint());
 
 		lightState.setEnabled(false);
-		orbCam = new SimpleOrbitCameraController(logicalLayer, camera);
+		orbCam = new EditorCameraController(logicalLayer, camera);
 	}
 
 	private void createPoints(final int num)

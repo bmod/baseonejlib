@@ -1,8 +1,11 @@
 package com.baseoneonline.jlib.ardor3d.controllers;
 
+import com.ardor3d.annotation.MainThread;
 import com.ardor3d.framework.Canvas;
+import com.ardor3d.input.Key;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.logical.InputTrigger;
+import com.ardor3d.input.logical.KeyPressedCondition;
 import com.ardor3d.input.logical.LogicalLayer;
 import com.ardor3d.input.logical.MouseMovedCondition;
 import com.ardor3d.input.logical.MouseWheelMovedCondition;
@@ -15,7 +18,7 @@ import com.ardor3d.math.Vector3;
 import com.ardor3d.renderer.Camera;
 import com.google.common.base.Predicates;
 
-public class SimpleOrbitCameraController
+public class EditorCameraController
 {
 	private final Camera cam;
 	private double distance = 10;
@@ -25,29 +28,55 @@ public class SimpleOrbitCameraController
 
 	private final double dollyMultiplier = .005;
 	private final double dollyWheelMultiplier = .002;
-	private final double orbitMultipler = .003;
+	private final double orbitMultipler = .007;
 	private final double panMultiplier = .002;
 
-	public SimpleOrbitCameraController(final LogicalLayer logicalLayer,
+	private boolean enabled = false;
+
+	private final LogicalLayer logicalLayer;
+
+	private final InputTrigger[] triggers;
+
+	public EditorCameraController(final LogicalLayer logicalLayer,
 			final Camera cam)
 	{
 		this.cam = cam;
 
-		logicalLayer.registerTrigger(new InputTrigger(Predicates.and(
-				new MouseMovedCondition(), TriggerConditions.leftButtonDown()),
-				orbitAction));
-		logicalLayer.registerTrigger(new InputTrigger(
-				Predicates.and(new MouseMovedCondition(),
-						TriggerConditions.middleButtonDown()), panAction));
-		logicalLayer.registerTrigger(new InputTrigger(
-				Predicates.and(new MouseMovedCondition(),
-						TriggerConditions.rightButtonDown()), dollyAction));
-		logicalLayer.registerTrigger(new InputTrigger(
-				new MouseWheelMovedCondition(), dollyAction));
+		this.logicalLayer = logicalLayer;
+
+		triggers = new InputTrigger[] {
+				new InputTrigger(Predicates.and(new MouseMovedCondition(),
+						TriggerConditions.leftButtonDown()), orbitAction),
+				new InputTrigger(Predicates.and(new MouseMovedCondition(),
+						TriggerConditions.middleButtonDown()), panAction),
+				new InputTrigger(Predicates.and(new MouseMovedCondition(),
+						TriggerConditions.rightButtonDown()), dollyAction),
+				new InputTrigger(new MouseWheelMovedCondition(), dollyAction),
+				new InputTrigger(new KeyPressedCondition(Key.HOME), homeAction) };
+
+		setEnabled(true);
 	}
 
-	private final TriggerAction dollyAction = new TriggerAction()
+	public void setEnabled(boolean enabled)
 	{
+		if (this.enabled == enabled)
+			return;
+		this.enabled = enabled;
+
+		if (enabled)
+			for (InputTrigger t : triggers)
+				logicalLayer.registerTrigger(t);
+		else
+			for (InputTrigger t : triggers)
+				logicalLayer.deregisterTrigger(t);
+	}
+
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	private final TriggerAction dollyAction = new TriggerAction() {
 
 		@Override
 		public void perform(final Canvas source,
@@ -60,8 +89,7 @@ public class SimpleOrbitCameraController
 		}
 	};
 
-	private final TriggerAction panAction = new TriggerAction()
-	{
+	private final TriggerAction panAction = new TriggerAction() {
 
 		@Override
 		public void perform(final Canvas source,
@@ -82,8 +110,7 @@ public class SimpleOrbitCameraController
 		}
 	};
 
-	private final TriggerAction orbitAction = new TriggerAction()
-	{
+	private final TriggerAction orbitAction = new TriggerAction() {
 
 		@Override
 		public void perform(final Canvas source,
@@ -93,6 +120,17 @@ public class SimpleOrbitCameraController
 			elevation += ms.getDy() * orbitMultipler;
 
 			heading -= ms.getDx() * orbitMultipler;
+		}
+	};
+
+	private final TriggerAction homeAction = new TriggerAction() {
+
+		@Override
+		@MainThread
+		public void perform(Canvas source, TwoInputStates inputStates,
+				double tpf)
+		{
+			orbitCenter.set(Vector3.ZERO);
 		}
 	};
 

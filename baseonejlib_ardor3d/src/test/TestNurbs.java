@@ -114,11 +114,6 @@ public class TestNurbs extends TestBase
 		root.attachChild(s);
 	}
 
-	private static Vector3 randomVector3(final double extents)
-	{
-		return randomize(new Vector3(), extents);
-	}
-
 	private static Vector3 randomize(final Vector3 store, final double extents)
 	{
 		return store.set(randRange(extents), randRange(extents),
