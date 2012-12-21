@@ -4,8 +4,8 @@ package test;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.util.ReadOnlyTimer;
-import com.baseoneonline.jlib.ardor3d.WireArrow;
 import com.baseoneonline.jlib.ardor3d.controllers.NoiseRotationController;
+import com.baseoneonline.jlib.ardor3d.spatials.WireArrow;
 
 public class TestWireArrow extends TestBase
 {

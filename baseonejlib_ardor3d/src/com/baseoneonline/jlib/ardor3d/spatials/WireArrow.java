@@ -1,4 +1,4 @@
-package com.baseoneonline.jlib.ardor3d;
+package com.baseoneonline.jlib.ardor3d.spatials;
 
 import java.nio.FloatBuffer;
 
