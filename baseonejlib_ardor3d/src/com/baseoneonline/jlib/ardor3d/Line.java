@@ -19,8 +19,6 @@ import com.ardor3d.util.geom.BufferUtils;
 public class Line extends Mesh
 {
 
-	private static final long serialVersionUID = 1L;
-
 	private float _lineWidth = 1.0f;
 	private short _stipplePattern = (short) 0xFFFF;
 	private int _stippleFactor = 1;

@@ -11,12 +11,12 @@ import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyMatrix3;
 import com.ardor3d.math.type.ReadOnlyTransform;
 import com.ardor3d.math.type.ReadOnlyVector3;
-import com.baseoneonline.jlib.ardor3d.math.VecMathPool;
 
 public class Convert
 {
 	private Convert()
-	{}
+	{
+	}
 
 	public static Vector3 toVector3(Vector3f v, Vector3 store)
 	{
@@ -38,7 +38,7 @@ public class Convert
 
 	public static Matrix3f toMatrix3f(ReadOnlyMatrix3 mtx, Matrix3f store)
 	{
-		Vector3f v3f = VecMathPool.VEC3F_POOL.fetch();
+		Vector3f v3f = new Vector3f();
 		Vector3 v3 = Vector3.fetchTempInstance();
 
 		mtx.getColumn(0, v3);
@@ -53,7 +53,6 @@ public class Convert
 		toVector3f(v3, v3f);
 		store.setColumn(2, v3f);
 
-		VecMathPool.VEC3F_POOL.release(v3f);
 		Vector3.releaseTempInstance(v3);
 
 		return store;

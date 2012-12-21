@@ -17,9 +17,6 @@ import com.google.common.base.Predicates;
 
 public class SimpleOrbitCameraController
 {
-	private final double minElevation = -MathUtils.PI * MathUtils.EPSILON;
-	private final double maxElevation = MathUtils.PI * MathUtils.EPSILON;
-
 	private final Camera cam;
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
