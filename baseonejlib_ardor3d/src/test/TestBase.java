@@ -42,7 +42,6 @@ import com.ardor3d.renderer.Renderer;
 import com.ardor3d.renderer.TextureRendererFactory;
 import com.ardor3d.renderer.lwjgl.LwjglTextureRendererProvider;
 import com.ardor3d.renderer.pass.BasicPassManager;
-import com.ardor3d.renderer.pass.OutlinePass;
 import com.ardor3d.renderer.pass.RenderPass;
 import com.ardor3d.renderer.queue.RenderBucketType;
 import com.ardor3d.renderer.state.CullState;
@@ -66,7 +65,6 @@ import com.google.common.base.Predicates;
 public abstract class TestBase implements Runnable
 {
 	private ParallelSplitShadowMapPass shadowPass;
-	private OutlinePass outlinePass;
 	private BasicPassManager passManager;
 
 	private final Vector3 lightPosition = new Vector3(10000, 5000, 10000);
@@ -226,8 +224,7 @@ public abstract class TestBase implements Runnable
 
 	protected abstract void update(final ReadOnlyTimer timer);
 
-	private final Scene scene = new Scene()
-	{
+	private final Scene scene = new Scene() {
 
 		@Override
 		public boolean renderUnto(final Renderer renderer)
@@ -304,8 +301,7 @@ public abstract class TestBase implements Runnable
 		}
 	}
 
-	private final Updater updater = new Updater()
-	{
+	private final Updater updater = new Updater() {
 
 		@Override
 		public void update(final ReadOnlyTimer timer)
@@ -403,7 +399,7 @@ public abstract class TestBase implements Runnable
 
 		final LwjglCanvasRenderer canvasRenderer = new LwjglCanvasRenderer(
 				scene);
-		canvas = new LwjglCanvas(canvasRenderer, settings);
+		canvas = new LwjglCanvas(settings, canvasRenderer);
 		physicalLayer = new PhysicalLayer(new LwjglKeyboardWrapper(),
 				new LwjglMouseWrapper(), new LwjglControllerWrapper(),
 				(LwjglCanvas) canvas);
@@ -426,8 +422,7 @@ public abstract class TestBase implements Runnable
 	{
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.ESCAPE), new TriggerAction()
-		{
+				Key.ESCAPE), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -437,8 +432,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.L), new TriggerAction()
-		{
+				Key.L), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -451,8 +445,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F4), new TriggerAction()
-		{
+				Key.F4), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -462,8 +455,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.T), new TriggerAction()
-		{
+				Key.T), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -476,8 +468,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.B), new TriggerAction()
-		{
+				Key.B), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -487,8 +478,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.C), new TriggerAction()
-		{
+				Key.C), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -499,8 +489,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.N), new TriggerAction()
-		{
+				Key.N), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -510,8 +499,7 @@ public abstract class TestBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F1), new TriggerAction()
-		{
+				Key.F1), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -525,8 +513,7 @@ public abstract class TestBase implements Runnable
 				new MouseButtonClickedCondition(MouseButton.RIGHT));
 
 		logicalLayer.registerTrigger(new InputTrigger(clickLeftOrRight,
-				new TriggerAction()
-				{
+				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf)
@@ -539,8 +526,7 @@ public abstract class TestBase implements Runnable
 
 		logicalLayer.registerTrigger(new InputTrigger(
 				new MouseButtonPressedCondition(MouseButton.LEFT),
-				new TriggerAction()
-				{
+				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
 							final TwoInputStates inputState, final double tpf)
@@ -553,8 +539,7 @@ public abstract class TestBase implements Runnable
 				}));
 		logicalLayer.registerTrigger(new InputTrigger(
 				new MouseButtonReleasedCondition(MouseButton.LEFT),
-				new TriggerAction()
-				{
+				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
 							final TwoInputStates inputState, final double tpf)
@@ -567,8 +552,7 @@ public abstract class TestBase implements Runnable
 				}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new AnyKeyCondition(),
-				new TriggerAction()
-				{
+				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
 							final TwoInputStates inputState, final double tpf)

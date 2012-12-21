@@ -86,7 +86,8 @@ public class TestNurbs extends TestBase
 
 	@Override
 	protected void update(final ReadOnlyTimer timer)
-	{}
+	{
+	}
 
 	private void createCurve(final int samples)
 	{

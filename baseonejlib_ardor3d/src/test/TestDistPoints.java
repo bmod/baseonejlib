@@ -77,13 +77,8 @@ class PlanarConstraint implements Constraint
 class AABBConstraint implements Constraint
 {
 
-	private final Vector3 min;
-	private final Vector3 max;
-
 	public AABBConstraint(final Vector3 min, final Vector3 max)
 	{
-		this.min = min;
-		this.max = max;
 	}
 
 	@Override

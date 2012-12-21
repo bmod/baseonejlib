@@ -40,7 +40,6 @@ import com.ardor3d.renderer.Renderer;
 import com.ardor3d.renderer.TextureRendererFactory;
 import com.ardor3d.renderer.lwjgl.LwjglTextureRendererProvider;
 import com.ardor3d.renderer.pass.BasicPassManager;
-import com.ardor3d.renderer.pass.OutlinePass;
 import com.ardor3d.renderer.pass.RenderPass;
 import com.ardor3d.renderer.queue.RenderBucketType;
 import com.ardor3d.renderer.state.CullState;
@@ -59,13 +58,11 @@ import com.ardor3d.util.Timer;
 import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.screen.ScreenExporter;
 import com.ardor3d.util.stat.StatCollector;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public abstract class GameBase implements Runnable
 {
 	private ParallelSplitShadowMapPass shadowPass;
-	private OutlinePass outlinePass;
 	private BasicPassManager passManager;
 
 	private final Vector3 lightPosition = new Vector3(10000, 5000, 10000);
@@ -228,8 +225,7 @@ public abstract class GameBase implements Runnable
 
 	protected abstract void update(final ReadOnlyTimer timer);
 
-	private final Scene scene = new Scene()
-	{
+	private final Scene scene = new Scene() {
 
 		@Override
 		public boolean renderUnto(final Renderer renderer)
@@ -316,8 +312,7 @@ public abstract class GameBase implements Runnable
 		}
 	}
 
-	private final Updater updater = new Updater()
-	{
+	private final Updater updater = new Updater() {
 
 		@Override
 		public void update(final ReadOnlyTimer timer)
@@ -435,7 +430,7 @@ public abstract class GameBase implements Runnable
 
 		final LwjglCanvasRenderer canvasRenderer = new LwjglCanvasRenderer(
 				scene);
-		canvas = new LwjglCanvas(canvasRenderer, settings);
+		canvas = new LwjglCanvas(settings, canvasRenderer);
 		canvas.setVSyncEnabled(true);
 		physicalLayer = new PhysicalLayer(new LwjglKeyboardWrapper(),
 				new LwjglMouseWrapper(), new LwjglControllerWrapper(),
@@ -459,8 +454,7 @@ public abstract class GameBase implements Runnable
 	{
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.ESCAPE), new TriggerAction()
-		{
+				Key.ESCAPE), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -470,8 +464,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.L), new TriggerAction()
-		{
+				Key.L), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -484,8 +477,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F4), new TriggerAction()
-		{
+				Key.F4), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -495,8 +487,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.T), new TriggerAction()
-		{
+				Key.T), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -509,8 +500,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.B), new TriggerAction()
-		{
+				Key.B), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -520,8 +510,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.C), new TriggerAction()
-		{
+				Key.C), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -532,8 +521,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.N), new TriggerAction()
-		{
+				Key.N), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -543,8 +531,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F1), new TriggerAction()
-		{
+				Key.F1), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf)
@@ -554,8 +541,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.P), new TriggerAction()
-		{
+				Key.P), new TriggerAction() {
 
 			@Override
 			public void perform(final Canvas source,
@@ -566,8 +552,7 @@ public abstract class GameBase implements Runnable
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.O), new TriggerAction()
-		{
+				Key.O), new TriggerAction() {
 
 			@Override
 			public void perform(final Canvas source,
@@ -577,8 +562,7 @@ public abstract class GameBase implements Runnable
 			}
 		}));
 
-		final Predicate<TwoInputStates> clickLeftOrRight = Predicates.or(
-				new MouseButtonClickedCondition(MouseButton.LEFT),
+		Predicates.or(new MouseButtonClickedCondition(MouseButton.LEFT),
 				new MouseButtonClickedCondition(MouseButton.RIGHT));
 
 		// logicalLayer.registerTrigger(new InputTrigger(clickLeftOrRight,

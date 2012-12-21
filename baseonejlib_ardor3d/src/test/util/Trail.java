@@ -20,15 +20,12 @@ import com.baseoneonline.java.tools.ArrayUtils;
 public class Trail extends Mesh
 {
 	private final FloatBuffer vertBuffer;
-	private final int samples;
 	private final Vector3[] points;
 
 	private final ColorRGBA baseColor;
 	private final ColorRGBA[] colors;
 
 	private final Spatial spatial;
-
-	private final int fadeOutExponent;
 
 	public Trail(final Spatial spatial)
 	{
@@ -40,9 +37,6 @@ public class Trail extends Mesh
 			final int samples, final int fadeOutExponent)
 	{
 		this.spatial = spatial;
-		this.samples = samples;
-		this.fadeOutExponent = fadeOutExponent;
-
 		points = new Vector3[samples];
 		colors = new ColorRGBA[samples];
 		baseColor = new ColorRGBA(col);
