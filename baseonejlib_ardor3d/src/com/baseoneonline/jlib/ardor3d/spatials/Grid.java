@@ -14,13 +14,11 @@ import com.ardor3d.scenegraph.hint.LightCombineMode;
 import com.ardor3d.util.geom.BufferUtils;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
 
-public class Grid extends Mesh
-{
+public class Grid extends Mesh {
 	private final int subdivs = 10;
 	private final ColorRGBA color = new ColorRGBA(1, 1, 1, .2f);
 
-	public Grid()
-	{
+	public Grid() {
 		rebuild();
 
 		WireframeState ws = new WireframeState();
@@ -37,13 +35,10 @@ public class Grid extends Mesh
 		updateWorldRenderStates(true);
 	}
 
-	private void rebuild()
-	{
+	private void rebuild() {
 		Vector3[] vertices = new Vector3[(subdivs * 2 + 1) * 4];
 		int i = 0;
-		for (int y = -subdivs; y <= subdivs; y++)
-		{
-			System.out.println(y);
+		for (int y = -subdivs; y <= subdivs; y++) {
 			vertices[i++] = new Vector3(-subdivs, 0, y);
 			vertices[i++] = new Vector3(subdivs, 0, y);
 			vertices[i++] = new Vector3(y, 0, -subdivs);
@@ -62,8 +57,7 @@ public class Grid extends Mesh
 
 	private void setupData(final FloatBuffer vertices,
 			final FloatBuffer normals, final FloatBuffer colors,
-			final FloatBufferData coords)
-	{
+			final FloatBufferData coords) {
 		_meshData.setVertexBuffer(vertices);
 		_meshData.setNormalBuffer(normals);
 		_meshData.setColorBuffer(colors);
