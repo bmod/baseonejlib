@@ -19,7 +19,12 @@ import com.ardor3d.math.Vector3;
 import com.ardor3d.renderer.Camera;
 import com.google.common.base.Predicates;
 
+/**
+ * Mouse/Keyboard camera orbit controller mimicking Maya's navigation controls.
+ * 
+ */
 public class EditorCameraController {
+
 	private final Camera cam;
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
