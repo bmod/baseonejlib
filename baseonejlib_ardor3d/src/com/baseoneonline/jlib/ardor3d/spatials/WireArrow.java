@@ -11,8 +11,11 @@ import com.ardor3d.scenegraph.Mesh;
 import com.ardor3d.scenegraph.hint.LightCombineMode;
 import com.ardor3d.util.geom.BufferUtils;
 
-public class WireArrow extends Mesh
-{
+/**
+ * Simple 3d arrow to visualize a vector.
+ * 
+ */
+public class WireArrow extends Mesh {
 	private float length = 1;
 	private float arrowSize = .2f;
 
@@ -25,8 +28,7 @@ public class WireArrow extends Mesh
 
 	private boolean geomDirty = true;
 
-	public WireArrow()
-	{
+	public WireArrow() {
 		_meshData.setIndexMode(IndexMode.Lines);
 		_meshData.setColorBuffer(null);
 		setDefaultColor(color);
@@ -35,18 +37,15 @@ public class WireArrow extends Mesh
 
 	}
 
-	public void setLength(float length)
-	{
+	public void setLength(float length) {
 		this.length = length;
 	}
 
-	public void setArrowSize(float arrowSize)
-	{
+	public void setArrowSize(float arrowSize) {
 		this.arrowSize = arrowSize;
 	}
 
-	private void rebuild()
-	{
+	private void rebuild() {
 		float s = arrowSize;
 		if (length < arrowSize)
 			s = length;
@@ -83,16 +82,13 @@ public class WireArrow extends Mesh
 		geomDirty = false;
 	}
 
-	public void setColor(ReadOnlyColorRGBA col)
-	{
+	public void setColor(ReadOnlyColorRGBA col) {
 		setDefaultColor(col);
 	}
 
 	@Override
-	public void draw(Renderer r)
-	{
-		if (geomDirty)
-		{
+	public void draw(Renderer r) {
+		if (geomDirty) {
 			rebuild();
 		}
 		super.draw(r);
