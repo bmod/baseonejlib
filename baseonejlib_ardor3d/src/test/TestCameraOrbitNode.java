@@ -14,12 +14,12 @@ import com.baseoneonline.jlib.ardor3d.GameBase;
 import com.baseoneonline.jlib.ardor3d.controllers.NoiseRotationController;
 import com.baseoneonline.jlib.ardor3d.math.Simplex;
 
-public class TestCamera extends GameBase
+public class TestCameraOrbitNode extends GameBase
 {
 
 	public static void main(final String[] args)
 	{
-		final TestCamera app = new TestCamera();
+		final TestCameraOrbitNode app = new TestCameraOrbitNode();
 
 		app.start(1280, 720, false);
 	}
