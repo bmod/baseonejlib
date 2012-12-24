@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/baseonejlib_common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ardor3d-awt"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ardor3d-collada"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
