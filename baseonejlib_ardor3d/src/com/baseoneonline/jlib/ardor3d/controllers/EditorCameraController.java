@@ -5,6 +5,7 @@ import com.ardor3d.framework.Canvas;
 import com.ardor3d.input.Key;
 import com.ardor3d.input.MouseState;
 import com.ardor3d.input.logical.InputTrigger;
+import com.ardor3d.input.logical.KeyHeldCondition;
 import com.ardor3d.input.logical.KeyPressedCondition;
 import com.ardor3d.input.logical.LogicalLayer;
 import com.ardor3d.input.logical.MouseMovedCondition;
@@ -18,8 +19,7 @@ import com.ardor3d.math.Vector3;
 import com.ardor3d.renderer.Camera;
 import com.google.common.base.Predicates;
 
-public class EditorCameraController
-{
+public class EditorCameraController {
 	private final Camera cam;
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
@@ -38,27 +38,34 @@ public class EditorCameraController
 	private final InputTrigger[] triggers;
 
 	public EditorCameraController(final LogicalLayer logicalLayer,
-			final Camera cam)
-	{
+			final Camera cam) {
 		this.cam = cam;
 
 		this.logicalLayer = logicalLayer;
 
-		triggers = new InputTrigger[] {
-				new InputTrigger(Predicates.and(new MouseMovedCondition(),
-						TriggerConditions.leftButtonDown()), orbitAction),
-				new InputTrigger(Predicates.and(new MouseMovedCondition(),
-						TriggerConditions.middleButtonDown()), panAction),
-				new InputTrigger(Predicates.and(new MouseMovedCondition(),
-						TriggerConditions.rightButtonDown()), dollyAction),
-				new InputTrigger(new MouseWheelMovedCondition(), dollyAction),
-				new InputTrigger(new KeyPressedCondition(Key.HOME), homeAction) };
+		triggers = getTriggers();
 
 		setEnabled(true);
 	}
 
-	public void setEnabled(boolean enabled)
-	{
+	@SuppressWarnings("unchecked")
+	private InputTrigger[] getTriggers() {
+		KeyHeldCondition modifierKey = new KeyHeldCondition(Key.LMENU);
+		return new InputTrigger[] {
+				new InputTrigger(Predicates.and(modifierKey,
+						new MouseMovedCondition(),
+						TriggerConditions.leftButtonDown()), orbitAction),
+				new InputTrigger(Predicates.and(modifierKey,
+						new MouseMovedCondition(),
+						TriggerConditions.middleButtonDown()), panAction),
+				new InputTrigger(Predicates.and(modifierKey,
+						new MouseMovedCondition(),
+						TriggerConditions.rightButtonDown()), dollyAction),
+				new InputTrigger(new MouseWheelMovedCondition(), dollyAction),
+				new InputTrigger(new KeyPressedCondition(Key.HOME), homeAction) };
+	}
+
+	public void setEnabled(boolean enabled) {
 		if (this.enabled == enabled)
 			return;
 		this.enabled = enabled;
@@ -71,8 +78,7 @@ public class EditorCameraController
 				logicalLayer.deregisterTrigger(t);
 	}
 
-	public boolean isEnabled()
-	{
+	public boolean isEnabled() {
 		return enabled;
 	}
 
@@ -80,8 +86,7 @@ public class EditorCameraController
 
 		@Override
 		public void perform(final Canvas source,
-				final TwoInputStates inputStates, final double tpf)
-		{
+				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 
 			distance -= ms.getDx() * distance * dollyMultiplier;
@@ -93,8 +98,7 @@ public class EditorCameraController
 
 		@Override
 		public void perform(final Canvas source,
-				final TwoInputStates inputStates, final double tpf)
-		{
+				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			final Vector3 tmp = Vector3.fetchTempInstance();
 
@@ -114,8 +118,7 @@ public class EditorCameraController
 
 		@Override
 		public void perform(final Canvas source,
-				final TwoInputStates inputStates, final double tpf)
-		{
+				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			elevation += ms.getDy() * orbitMultipler;
 
@@ -128,14 +131,15 @@ public class EditorCameraController
 		@Override
 		@MainThread
 		public void perform(Canvas source, TwoInputStates inputStates,
-				double tpf)
-		{
+				double tpf) {
 			orbitCenter.set(Vector3.ZERO);
 		}
 	};
 
-	public void update()
-	{
+	public void update() {
+		if (!enabled)
+			return;
+
 		heading %= MathUtils.TWO_PI;
 		// elevation = MathUtils.clamp(elevation, minElevation, maxElevation);
 
