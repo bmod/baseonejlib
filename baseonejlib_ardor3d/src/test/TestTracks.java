@@ -3,8 +3,11 @@ package test;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Matrix3;
+import com.ardor3d.math.Quaternion;
+import com.ardor3d.math.Transform;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.math.type.ReadOnlyTransform;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.Camera;
 import com.ardor3d.renderer.state.WireframeState;
@@ -39,10 +42,12 @@ public class TestTracks extends GameBase {
 		sphere.getSceneHints().setLightCombineMode(LightCombineMode.Off);
 		final WireframeState ws = new WireframeState();
 		sphere.setRenderState(ws);
-		sphere.addController(new RoadController(road));
+
+		final RoadController roadCtrl = new RoadController(road);
+		sphere.addController(roadCtrl);
 		root.attachChild(sphere);
 
-		camCtrl = new CameraController(sphere, camera);
+		camCtrl = new CameraController(roadCtrl, camera);
 		camCtrl.setFOV(90);
 	}
 
@@ -66,6 +71,46 @@ class Road extends Node {
 		attachChild(createCurve(1200));
 	}
 
+	public Transform getTransform(final ReadOnlyVector3 input,
+			final Transform store) {
+		final Vector3 pos = Vector3.fetchTempInstance();
+		final Matrix3 rot = Matrix3.fetchTempInstance();
+		final Vector3 tmp = Vector3.fetchTempInstance();
+		final Vector3 vel = Vector3.fetchTempInstance();
+
+		final double t = input.getZ() / getSegments();
+
+		curve.getPoint(t, pos);
+		curve.getVelocity(t, vel);
+		rot.lookAt(vel, Vector3.UNIT_Y);
+
+		rot.getColumn(0, tmp);
+		tmp.multiplyLocal(input.getX());
+		pos.addLocal(tmp);
+
+		rot.getColumn(1, tmp);
+		tmp.multiplyLocal(input.getY());
+		pos.addLocal(tmp);
+
+		store.setTranslation(pos);
+		store.setRotation(rot);
+
+		Vector3.releaseTempInstance(pos);
+		Matrix3.releaseTempInstance(rot);
+		Vector3.releaseTempInstance(tmp);
+		Vector3.releaseTempInstance(vel);
+
+		return store;
+	}
+
+	public Vector3 getPoint(final Vector3 input, final Vector3 store) {
+		final Transform tmp = Transform.fetchTempInstance();
+		getTransform(input, tmp);
+		store.set(tmp.getTranslation());
+		Transform.releaseTempInstance(tmp);
+		return store;
+	}
+
 	private Spatial createCurve(final int samples) {
 		final Vector3[] pts = new Vector3[samples + 1];
 
@@ -87,13 +132,30 @@ class Road extends Node {
 
 	private static ReadOnlyVector3[] createPoints(final int num,
 			final double spacing) {
-		final double deviate = 10;
+		final double maxAngle = 90;
+		final double angleChance = .8;
 
 		final Vector3[] pts = new Vector3[num];
+		final Vector3 pos = new Vector3();
+		final Quaternion q = new Quaternion();
+		final Quaternion tmp = new Quaternion();
+		final Vector3 tmpPos = new Vector3();
+		double heading;
+
 		for (int i = 0; i < pts.length; i++) {
-			final double rx = (MathUtils.rand.nextDouble() * 2 - 1) * deviate;
-			final double ry = (MathUtils.rand.nextDouble() * 2 - 1) * deviate;
-			pts[i] = new Vector3(rx, ry, i * spacing);
+			if (MathUtils.rand.nextDouble() <= angleChance)
+				heading = ArdorUtil.randRange(0, maxAngle)
+						* MathUtils.DEG_TO_RAD;
+			else
+				heading = 0;
+
+			tmp.fromEulerAngles(heading, 0, 0);
+			q.multiplyLocal(tmp);
+			q.apply(Vector3.UNIT_Z, tmpPos);
+			tmpPos.multiplyLocal(spacing);
+			pos.addLocal(tmpPos);
+			pos.setY(ArdorUtil.randRange(0, 10));
+			pts[i] = new Vector3(pos);
 		}
 		return pts;
 	}
@@ -111,6 +173,7 @@ class Road extends Node {
 		Vector3.releaseTempInstance(vel);
 
 	}
+
 }
 
 class RoadController implements SpatialController<Spatial> {
@@ -121,29 +184,67 @@ class RoadController implements SpatialController<Spatial> {
 	private final Road road;
 	private final Vector3 pos = new Vector3();
 	private final Matrix3 rot = new Matrix3();
+	private Spatial caller;
 
 	public RoadController(final Road road) {
 		this.road = road;
 	}
 
+	public double getDistance() {
+		return distance;
+	}
+
+	public Road getRoad() {
+		return road;
+	}
+
 	@Override
 	public void update(final double time, final Spatial caller) {
-		distance += speed * time;
+		this.caller = caller;
+		distance += speed * 1d / 60d;
 
 		road.getTransform(distance, pos, rot);
 		caller.setTranslation(pos);
 		caller.setRotation(rot);
 	}
+
+	public Spatial getOwner() {
+		return caller;
+	}
 }
 
 class CameraController {
-	private final Spatial target;
-	private final Camera cam;
-	private final Vector3 camPos = new Vector3();
 
-	public CameraController(final Spatial target, final Camera cam) {
-		this.target = target;
+	final double rotationSmoothing = .1;
+	private final double distance = 10;
+
+	private final RoadController roadCtrl;
+	private final Vector3 aimOffset = new Vector3(0, 2, 1);
+	private final Camera cam;
+
+	private final Vector3 camPos = new Vector3();
+	private final Vector3 aimPos = new Vector3();
+	private final Vector3 up = new Vector3(Vector3.UNIT_Y);
+
+	private final Quaternion currRot = new Quaternion();
+	private final Quaternion nextRot = new Quaternion();
+	private final Quaternion elevRot = new Quaternion();
+
+	private final Quaternion tmpRot = new Quaternion();
+	private final Vector3 tmpPos = new Vector3();
+
+	public CameraController(final RoadController ctrl, final Camera cam) {
+		roadCtrl = ctrl;
 		this.cam = cam;
+		setElevation(30 * MathUtils.DEG_TO_RAD);
+	}
+
+	/**
+	 * @param elevation
+	 *            Radians
+	 */
+	public void setElevation(final double elevation) {
+		elevRot.fromEulerAngles(0, 0, elevation);
 	}
 
 	public void setFOV(final double fov) {
@@ -154,9 +255,25 @@ class CameraController {
 	}
 
 	public void update(final double t) {
-		camPos.set(target.getWorldTranslation());
-		camPos.addLocal(0, 6, -10);
+		final ReadOnlyTransform targetXform = roadCtrl.getOwner()
+				.getWorldTransform();
+
+		nextRot.fromRotationMatrix(targetXform.getMatrix());
+		nextRot.multiplyLocal(elevRot);
+
+		Quaternion.slerp(currRot, nextRot, rotationSmoothing, tmpRot);
+		Quaternion.slerp(tmpRot, nextRot, rotationSmoothing, currRot);
+
+		camPos.set(0, 0, -distance);
+		currRot.apply(camPos, camPos);
+		camPos.addLocal(targetXform.getTranslation());
+
 		cam.setLocation(camPos);
-		cam.lookAt(target.getWorldTranslation(), Vector3.UNIT_Y);
+
+		tmpPos.set(aimOffset);
+		tmpPos.addLocal(0, 0, roadCtrl.getDistance());
+		roadCtrl.getRoad().getPoint(tmpPos, aimPos);
+
+		cam.lookAt(aimPos, up);
 	}
 }
