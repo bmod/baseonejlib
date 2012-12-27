@@ -13,31 +13,36 @@ import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.IndexMode;
 import com.ardor3d.util.geom.BufferUtils;
 
-public class ArdorUtil
-{
+public class ArdorUtil {
 	private static Random random = new Random();
 
-	private ArdorUtil()
-	{}
-
-	public static Vector3 randomize(final Vector3 v, final double extents)
-	{
-		return v.addLocal(randRange(0, extents), randRange(0, extents),
-				randRange(0, extents));
+	private ArdorUtil() {
 	}
 
-	public static double randRange(final double center, final double extents)
-	{
-		return center + ((random.nextDouble() * 2 - 1) * extents);
+	public static Vector3 randomize(final Vector3 v, final double extents) {
+		return v.addLocal(ArdorUtil.randRange(0, extents),
+				ArdorUtil.randRange(0, extents),
+				ArdorUtil.randRange(0, extents));
+	}
+
+	public static double randRange(final double center, final double extents) {
+		return center + (random.nextDouble() * 2 - 1) * extents;
+	}
+
+	public static double lerp2(final double percentage, final double start,
+			final double end) {
+		final double tmp = MathUtils.lerp(percentage, start, end);
+		return MathUtils.lerp(percentage, tmp, end);
 	}
 
 	public static Line createLine(final String name,
-			final ReadOnlyVector3[] points, final ReadOnlyColorRGBA color)
-	{
-		final ReadOnlyVector3[] normals = createArray(Vector3.UNIT_Y,
+			final ReadOnlyVector3[] points, final ReadOnlyColorRGBA color) {
+		final ReadOnlyVector3[] normals = ArdorUtil.createArray(Vector3.UNIT_Y,
 				points.length);
-		final ReadOnlyColorRGBA[] cols = createArray(color, points.length);
-		final ReadOnlyVector2[] tex = createArray(Vector2.ZERO, points.length);
+		final ReadOnlyColorRGBA[] cols = ArdorUtil.createArray(color,
+				points.length);
+		final ReadOnlyVector2[] tex = ArdorUtil.createArray(Vector2.ZERO,
+				points.length);
 
 		final Line line = new Line(name, points, normals, cols, tex,
 				IndexMode.LineStrip);
@@ -45,8 +50,7 @@ public class ArdorUtil
 	}
 
 	public static ReadOnlyVector3[] createArray(final ReadOnlyVector3 element,
-			final int size)
-	{
+			final int size) {
 		final ReadOnlyVector3[] arr = new ReadOnlyVector3[size];
 		for (int i = 0; i < size; i++)
 			arr[i] = element;
@@ -54,8 +58,7 @@ public class ArdorUtil
 	}
 
 	public static ReadOnlyVector2[] createArray(final ReadOnlyVector2 element,
-			final int size)
-	{
+			final int size) {
 		final ReadOnlyVector2[] arr = new ReadOnlyVector2[size];
 		for (int i = 0; i < size; i++)
 			arr[i] = element;
@@ -63,25 +66,23 @@ public class ArdorUtil
 	}
 
 	public static ReadOnlyColorRGBA[] createArray(
-			final ReadOnlyColorRGBA element, final int size)
-	{
+			final ReadOnlyColorRGBA element, final int size) {
 		final ReadOnlyColorRGBA[] arr = new ReadOnlyColorRGBA[size];
 		for (int i = 0; i < size; i++)
 			arr[i] = element;
 		return arr;
 	}
 
-	public static FloatBuffer createFloatBuffer(ReadOnlyColorRGBA color,
-			int size)
-	{
-		return BufferUtils.createFloatBuffer(createArray(color, size));
+	public static FloatBuffer createFloatBuffer(final ReadOnlyColorRGBA color,
+			final int size) {
+		return BufferUtils
+				.createFloatBuffer(ArdorUtil.createArray(color, size));
 	}
 
-	public static Quaternion lerp(Quaternion q1, Quaternion q2, double t,
-			Quaternion store)
-	{
-		Quaternion c = Quaternion.fetchTempInstance();
-		Quaternion d = Quaternion.fetchTempInstance();
+	public static Quaternion lerp(final Quaternion q1, final Quaternion q2,
+			final double t, final Quaternion store) {
+		final Quaternion c = Quaternion.fetchTempInstance();
+		final Quaternion d = Quaternion.fetchTempInstance();
 
 		q1.multiply(1 - t, c);
 		q2.multiply(t, d);
@@ -95,27 +96,24 @@ public class ArdorUtil
 		return store;
 	}
 
-	public static Quaternion slerpNoInvert(Quaternion q1, Quaternion q2,
-			double t, Quaternion store)
-	{
+	public static Quaternion slerpNoInvert(final Quaternion q1,
+			final Quaternion q2, final double t, final Quaternion store) {
 
-		Quaternion c = Quaternion.fetchTempInstance();
-		Quaternion d = Quaternion.fetchTempInstance();
+		final Quaternion c = Quaternion.fetchTempInstance();
+		final Quaternion d = Quaternion.fetchTempInstance();
 
-		double dot = q1.dot(q2);
+		final double dot = q1.dot(q2);
 
-		if (dot > -0.95f && dot < 0.95f)
-		{
-			double angle = MathUtils.acos(dot);
+		if (dot > -0.95f && dot < 0.95f) {
+			final double angle = MathUtils.acos(dot);
 			q1.multiply(MathUtils.sin(angle * (1 - t)), c);
 			q2.multiply(MathUtils.sin(angle * t), d);
 			c.add(d, store);
 
-			divide(store, MathUtils.sin(angle), store);
+			ArdorUtil.divide(store, MathUtils.sin(angle), store);
 			store.normalizeLocal();
-		} else
-		{
-			lerp(q1, q2, t, store);
+		} else {
+			ArdorUtil.lerp(q1, q2, t, store);
 		}
 
 		Quaternion.releaseTempInstance(c);
@@ -124,8 +122,8 @@ public class ArdorUtil
 		return store;
 	}
 
-	public static Quaternion divide(Quaternion a, double n, Quaternion store)
-	{
+	public static Quaternion divide(final Quaternion a, final double n,
+			final Quaternion store) {
 		if (0 == n)
 			throw new ArithmeticException("Divide by zero!");
 		return store.set(store.getX() / n, store.getY() / n, store.getZ() / n,
@@ -133,17 +131,17 @@ public class ArdorUtil
 
 	}
 
-	public static Quaternion squad(Quaternion q1, Quaternion q2, Quaternion a,
-			Quaternion b, double t, Quaternion store)
-	{
-		Quaternion c = Quaternion.fetchTempInstance();
-		Quaternion d = Quaternion.fetchTempInstance();
+	public static Quaternion squad(final Quaternion q1, final Quaternion q2,
+			final Quaternion a, final Quaternion b, final double t,
+			final Quaternion store) {
+		final Quaternion c = Quaternion.fetchTempInstance();
+		final Quaternion d = Quaternion.fetchTempInstance();
 
-		slerpNoInvert(q1, q2, t, c);
+		ArdorUtil.slerpNoInvert(q1, q2, t, c);
 
-		slerpNoInvert(a, b, t, d);
+		ArdorUtil.slerpNoInvert(a, b, t, d);
 
-		slerpNoInvert(c, d, 2 * t * (1 - t), store);
+		ArdorUtil.slerpNoInvert(c, d, 2 * t * (1 - t), store);
 
 		Quaternion.releaseTempInstance(c);
 		Quaternion.releaseTempInstance(d);

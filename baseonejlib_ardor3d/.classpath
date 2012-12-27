@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/baseonejlib_common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ardor3d-awt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ardor3d-collada"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ardor3d-terrain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
