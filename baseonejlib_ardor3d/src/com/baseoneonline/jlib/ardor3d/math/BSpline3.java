@@ -114,7 +114,7 @@ public class BSpline3 extends Curve3 {
 
 	}
 
-	private int getSegmentCount() {
+	public int getSegmentCount() {
 		switch (mode) {
 		case CLAMP:
 			return cvs.length - 1;
