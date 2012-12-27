@@ -1,5 +1,21 @@
 package test;
 
+import com.ardor3d.annotation.MainThread;
+import com.ardor3d.bounding.BoundingBox;
+import com.ardor3d.bounding.BoundingSphere;
+import com.ardor3d.bounding.CollisionTree;
+import com.ardor3d.bounding.CollisionTreeManager;
+import com.ardor3d.framework.Canvas;
+import com.ardor3d.input.Key;
+import com.ardor3d.input.logical.InputTrigger;
+import com.ardor3d.input.logical.KeyPressedCondition;
+import com.ardor3d.input.logical.TriggerAction;
+import com.ardor3d.input.logical.TwoInputStates;
+import com.ardor3d.intersection.CollisionData;
+import com.ardor3d.intersection.CollisionResults;
+import com.ardor3d.intersection.PickingUtil;
+import com.ardor3d.intersection.PrimitiveCollisionResults;
+import com.ardor3d.intersection.PrimitiveKey;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Matrix3;
@@ -7,15 +23,19 @@ import com.ardor3d.math.Quaternion;
 import com.ardor3d.math.Transform;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
-import com.ardor3d.math.type.ReadOnlyTransform;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.Camera;
+import com.ardor3d.renderer.state.FogState;
+import com.ardor3d.renderer.state.FogState.DensityFunction;
 import com.ardor3d.renderer.state.WireframeState;
 import com.ardor3d.scenegraph.Line;
+import com.ardor3d.scenegraph.MeshData;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.controller.SpatialController;
+import com.ardor3d.scenegraph.hint.CullHint;
 import com.ardor3d.scenegraph.hint.LightCombineMode;
+import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.scenegraph.shape.Sphere;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
@@ -25,114 +45,136 @@ import com.baseoneonline.jlib.ardor3d.math.BSpline3;
 public class TestTracks extends GameBase {
 
 	public static void main(final String[] args) {
+		// new TestTracks().start(1280, 720, true);
 		new TestTracks().start();
 	}
 
-	private Sphere sphere;
+	private Sphere player;
 	private Road road;
 	private CameraController camCtrl;
+	private VehicleController roadCtrl;
+	private final CollisionResults results = new PrimitiveCollisionResults();
+	private Node obstacles;
 
 	@Override
 	protected void init() {
+		CollisionTreeManager.getInstance().setTreeType(CollisionTree.Type.AABB);
+		CollisionTreeManager.getInstance().setDoSort(true);
 
-		road = new Road();
+		road = new Road(TestTracks.createPoints(100, 60));
 		root.attachChild(road);
 
-		sphere = new Sphere("Ball", 4, 6, 1);
-		sphere.getSceneHints().setLightCombineMode(LightCombineMode.Off);
-		final WireframeState ws = new WireframeState();
-		sphere.setRenderState(ws);
+		obstacles = TestTracks.createObstacles(road);
+		root.attachChild(obstacles);
 
-		final RoadController roadCtrl = new RoadController(road);
-		sphere.addController(roadCtrl);
-		root.attachChild(sphere);
+		player = new Sphere("Ball", 4, 6, 1);
+		player.setScale(1, .5, 1);
+		player.setModelBound(new BoundingSphere());
+		player.updateModelBound();
+		player.getSceneHints().setLightCombineMode(LightCombineMode.Off);
+		final WireframeState ws = new WireframeState();
+		player.setRenderState(ws);
+
+		roadCtrl = new VehicleController(road);
+		player.addController(roadCtrl);
+		root.attachChild(player);
 
 		camCtrl = new CameraController(roadCtrl, camera);
+
 		camCtrl.setFOV(90);
+
+		final FogState fs = new FogState();
+		fs.setColor(ColorRGBA.BLACK);
+		fs.setEnd(200);
+		fs.setDensityFunction(DensityFunction.Linear);
+		fs.setStart(0);
+		root.setRenderState(fs);
+
+		camera.setFrustumFar(fs.getEnd());
+
+		root.getSceneHints().setCullHint(CullHint.Dynamic);
+
+		initInput();
 	}
 
 	@Override
 	protected void update(final ReadOnlyTimer timer) {
+		results.clear();
+		PickingUtil.findCollisions(player, obstacles, results);
+		for (int i = 0; i < results.getNumber(); i++) {
+			final CollisionData data = results.getCollisionData(i);
+			for (final PrimitiveKey k : data.getSourcePrimitives()) {
+				final MeshData md = data.getSourceMesh().getMeshData();
+				final Vector3[] verts = md.getPrimitiveVertices(
+						k.getPrimitiveIndex(), k.getSection(), null);
+
+				for (final Vector3 v : verts) {
+					player.getWorldTransform().applyForward(v, v);
+					createExplosion(v);
+				}
+			}
+		}
+	}
+
+	private void createExplosion(final ReadOnlyVector3 location) {
+		final Sphere s = new Sphere("Sphere", 4, 4, 1);
+		s.getSceneHints().setLightCombineMode(LightCombineMode.Off);
+		s.setDefaultColor(ColorRGBA.ORANGE);
+		s.setTranslation(location);
+		s.addController(new SpatialController<Spatial>() {
+
+			double scale = ArdorUtil.randRange(1, 1);
+
+			@Override
+			public void update(final double time, final Spatial caller) {
+				scale -= .1;
+				caller.setScale(scale);
+
+				if (scale <= 0) {
+					root.detachChild(s);
+				}
+			}
+		});
+		root.attachChild(s);
 	}
 
 	@Override
 	protected void lateUpdate(final ReadOnlyTimer timer) {
 		camCtrl.update(timer.getTimePerFrame());
 	}
-}
 
-class Road extends Node {
+	private static Node createObstacles(final Road road) {
+		final Node parent = new Node("Obstacles");
+		double distance = 0;
+		final double spacing = .3;
+		final Transform tmp = new Transform();
+		final Vector3 input = new Vector3();
+		while (distance < road.getSegmentCount()) {
+			distance += spacing;
 
-	private final BSpline3 curve;
+			final int track = MathUtils.rand.nextInt(road.getTrackCount());
+			input.set(track, 0, distance);
+			road.getTransform(input, tmp);
 
-	public Road() {
-		final ReadOnlyVector3[] pts = Road.createPoints(100, 60);
-		curve = new BSpline3(pts);
-		attachChild(createCurve(1200));
-	}
+			final Box obstacle = new Box("Obstacle", Vector3.ZERO, 1, 1, 1);
+			obstacle.setTransform(tmp);
 
-	public Transform getTransform(final ReadOnlyVector3 input,
-			final Transform store) {
-		final Vector3 pos = Vector3.fetchTempInstance();
-		final Matrix3 rot = Matrix3.fetchTempInstance();
-		final Vector3 tmp = Vector3.fetchTempInstance();
-		final Vector3 vel = Vector3.fetchTempInstance();
+			obstacle.setDefaultColor(ColorRGBA.RED);
+			obstacle.setModelBound(new BoundingBox());
+			obstacle.updateModelBound();
+			parent.attachChild(obstacle);
 
-		final double t = input.getZ() / getSegments();
-
-		curve.getPoint(t, pos);
-		curve.getVelocity(t, vel);
-		rot.lookAt(vel, Vector3.UNIT_Y);
-
-		rot.getColumn(0, tmp);
-		tmp.multiplyLocal(input.getX());
-		pos.addLocal(tmp);
-
-		rot.getColumn(1, tmp);
-		tmp.multiplyLocal(input.getY());
-		pos.addLocal(tmp);
-
-		store.setTranslation(pos);
-		store.setRotation(rot);
-
-		Vector3.releaseTempInstance(pos);
-		Matrix3.releaseTempInstance(rot);
-		Vector3.releaseTempInstance(tmp);
-		Vector3.releaseTempInstance(vel);
-
-		return store;
-	}
-
-	public Vector3 getPoint(final Vector3 input, final Vector3 store) {
-		final Transform tmp = Transform.fetchTempInstance();
-		getTransform(input, tmp);
-		store.set(tmp.getTranslation());
-		Transform.releaseTempInstance(tmp);
-		return store;
-	}
-
-	private Spatial createCurve(final int samples) {
-		final Vector3[] pts = new Vector3[samples + 1];
-
-		for (int i = 0; i <= samples; i++) {
-			final double t = (double) i / (double) samples;
-			pts[i] = curve.getPoint(t, new Vector3());
 		}
+		parent.getSceneHints().setLightCombineMode(LightCombineMode.Off);
+		final WireframeState ws = new WireframeState();
+		parent.setRenderState(ws);
 
-		final Line line = new Line("MyLine", pts, ArdorUtil.createArray(
-				Vector3.UNIT_Y, pts.length), ArdorUtil.createArray(
-				ColorRGBA.YELLOW, pts.length), ArdorUtil.createArray(
-				Vector2.ZERO, pts.length));
-		return line;
-	}
-
-	private int getSegments() {
-		return curve.getCVCount() - 3;
+		return parent;
 	}
 
 	private static ReadOnlyVector3[] createPoints(final int num,
 			final double spacing) {
-		final double maxAngle = 90;
+		final double maxAngle = 40;
 		final double angleChance = .8;
 
 		final Vector3[] pts = new Vector3[num];
@@ -160,38 +202,121 @@ class Road extends Node {
 		return pts;
 	}
 
-	public void getTransform(final double dist, final Vector3 pos,
-			final Matrix3 rot) {
-		final Vector3 vel = Vector3.fetchTempInstance();
+	private void initInput() {
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.A), new TriggerAction() {
 
-		final double t = dist / getSegments();
+			@Override
+			@MainThread
+			public void perform(final Canvas source,
+					final TwoInputStates inputStates, final double tpf) {
+				roadCtrl.shiftTrack(-1);
+			}
+		}));
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.D), new TriggerAction() {
 
-		curve.getPoint(t, pos);
-		curve.getVelocity(t, vel);
-		rot.lookAt(vel, Vector3.UNIT_Y);
+			@Override
+			@MainThread
+			public void perform(final Canvas source,
+					final TwoInputStates inputStates, final double tpf) {
+				roadCtrl.shiftTrack(1);
+			}
+		}));
+	}
+}
 
-		Vector3.releaseTempInstance(vel);
+class Road extends Node {
 
+	private final BSpline3 curve;
+	private final int trackCount = 5;
+	private final float trackSpacing = 3;
+
+	public Road(final ReadOnlyVector3[] pts) {
+		curve = new BSpline3(pts);
+		for (final Spatial cv : createCurves(1200)) {
+			attachChild(cv);
+		}
+
+	}
+
+	public Vector3 getPoint(final Vector3 input, final Vector3 store) {
+		final Transform tmp = Transform.fetchTempInstance();
+		getTransform(input, tmp);
+		store.set(tmp.getTranslation());
+		Transform.releaseTempInstance(tmp);
+		return store;
+	}
+
+	public Transform getTransform(final ReadOnlyVector3 input,
+			final Transform store) {
+		final Vector3 tmp = Vector3.fetchTempInstance();
+		tmp.set(input.getX() * trackSpacing, input.getY(), input.getZ()
+				/ getSegmentCount());
+		curve.getTransform(tmp, Vector3.UNIT_Y, store);
+
+		Vector3.releaseTempInstance(tmp);
+		return store;
+	}
+
+	private Spatial[] createCurves(final int samples) {
+
+		final Spatial[] lines = new Spatial[trackCount];
+		final Vector3 input = new Vector3();
+		for (int tk = 0; tk < trackCount; tk++) {
+			final Vector3[] pts = new Vector3[samples + 1];
+			for (int i = 0; i <= samples; i++) {
+				final double t = (double) i / (double) samples
+						* getSegmentCount();
+				input.set(tk, 0, t);
+				pts[i] = getPoint(input, new Vector3());
+			}
+
+			lines[tk] = new Line("MyLine", pts, ArdorUtil.createArray(
+					Vector3.UNIT_Y, pts.length), ArdorUtil.createArray(
+					ColorRGBA.YELLOW, pts.length), ArdorUtil.createArray(
+					Vector2.ZERO, pts.length));
+		}
+		return lines;
+	}
+
+	public int getSegmentCount() {
+		return curve.getCVCount() - 3;
+	}
+
+	public int getTrackCount() {
+		return trackCount;
 	}
 
 }
 
-class RoadController implements SpatialController<Spatial> {
+class VehicleController implements SpatialController<Spatial> {
 
-	private final double track = 0;
-	private double distance = 0;
+	private double nextTrack = 0;
 	private final double speed = 1;
 	private final Road road;
-	private final Vector3 pos = new Vector3();
-	private final Matrix3 rot = new Matrix3();
+	private final Transform xform = new Transform();
+	private final Vector3 input = new Vector3();
 	private Spatial caller;
+	private final double maxBank = -170 * MathUtils.DEG_TO_RAD;
+	private double bank = 0;
+	private final double trackShiftSmoothing = .1;
+	private final double bankSmoothing = .2;
 
-	public RoadController(final Road road) {
+	public VehicleController(final Road road) {
 		this.road = road;
 	}
 
-	public double getDistance() {
-		return distance;
+	public void shiftTrack(final int i) {
+		final double n = nextTrack + i;
+		if (n >= 0 && n < road.getTrackCount()) {
+			nextTrack = n;
+			bank = maxBank * i;
+		}
+	}
+
+	public Vector3 getInput() {
+		return input;
 	}
 
 	public Road getRoad() {
@@ -201,11 +326,24 @@ class RoadController implements SpatialController<Spatial> {
 	@Override
 	public void update(final double time, final Spatial caller) {
 		this.caller = caller;
-		distance += speed * 1d / 60d;
 
-		road.getTransform(distance, pos, rot);
-		caller.setTranslation(pos);
-		caller.setRotation(rot);
+		input.setX(ArdorUtil.lerp2(trackShiftSmoothing, input.getX(), nextTrack));
+		input.addLocal(0, 0, speed * 1d / 60d);
+
+		bank = MathUtils.lerp(bankSmoothing, bank, 0);
+
+		road.getTransform(input, xform);
+
+		caller.setTranslation(xform.getTranslation());
+
+		final Matrix3 tmp = Matrix3.fetchTempInstance().set(xform.getMatrix());
+		final Matrix3 bankRot = Matrix3.fetchTempInstance();
+		bankRot.fromAngles(0, 0, bank);
+		tmp.multiplyLocal(bankRot);
+		caller.setRotation(tmp);
+
+		Matrix3.releaseTempInstance(tmp);
+		Matrix3.releaseTempInstance(bankRot);
 	}
 
 	public Spatial getOwner() {
@@ -215,25 +353,24 @@ class RoadController implements SpatialController<Spatial> {
 
 class CameraController {
 
-	final double rotationSmoothing = .1;
-	private final double distance = 10;
+	private final double rotationSmoothing = .1;
+	private final double trackSmoothing = .02;
 
-	private final RoadController roadCtrl;
-	private final Vector3 aimOffset = new Vector3(0, 2, 1);
+	private final VehicleController roadCtrl;
+	private final Vector3 input = new Vector3();
+	private final Vector3 aimOffset = new Vector3(0, -20, 1);
+	private final Vector3 camOffset = new Vector3(0, 5, -.15);
 	private final Camera cam;
 
 	private final Vector3 camPos = new Vector3();
 	private final Vector3 aimPos = new Vector3();
 	private final Vector3 up = new Vector3(Vector3.UNIT_Y);
 
-	private final Quaternion currRot = new Quaternion();
-	private final Quaternion nextRot = new Quaternion();
 	private final Quaternion elevRot = new Quaternion();
 
-	private final Quaternion tmpRot = new Quaternion();
 	private final Vector3 tmpPos = new Vector3();
 
-	public CameraController(final RoadController ctrl, final Camera cam) {
+	public CameraController(final VehicleController ctrl, final Camera cam) {
 		roadCtrl = ctrl;
 		this.cam = cam;
 		setElevation(30 * MathUtils.DEG_TO_RAD);
@@ -255,23 +392,21 @@ class CameraController {
 	}
 
 	public void update(final double t) {
-		final ReadOnlyTransform targetXform = roadCtrl.getOwner()
-				.getWorldTransform();
+		final ReadOnlyVector3 nextInput = roadCtrl.getInput();
 
-		nextRot.fromRotationMatrix(targetXform.getMatrix());
-		nextRot.multiplyLocal(elevRot);
+		final double x = ArdorUtil.lerp2(trackSmoothing, input.getX(),
+				nextInput.getX());
 
-		Quaternion.slerp(currRot, nextRot, rotationSmoothing, tmpRot);
-		Quaternion.slerp(tmpRot, nextRot, rotationSmoothing, currRot);
+		input.set(nextInput);
+		input.setX(x);
 
-		camPos.set(0, 0, -distance);
-		currRot.apply(camPos, camPos);
-		camPos.addLocal(targetXform.getTranslation());
-
+		tmpPos.set(input);
+		tmpPos.addLocal(camOffset);
+		roadCtrl.getRoad().getPoint(tmpPos, camPos);
 		cam.setLocation(camPos);
 
-		tmpPos.set(aimOffset);
-		tmpPos.addLocal(0, 0, roadCtrl.getDistance());
+		tmpPos.set(input);
+		tmpPos.addLocal(aimOffset);
 		roadCtrl.getRoad().getPoint(tmpPos, aimPos);
 
 		cam.lookAt(aimPos, up);
