@@ -1,98 +1,39 @@
 package com.baseoneonline.jlib.ardor3d.math;
 
 import com.ardor3d.math.Matrix3;
-import com.ardor3d.math.Quaternion;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
-import com.baseoneonline.java.math.Curve;
 
-public abstract class Curve3 extends Curve<ReadOnlyVector3, Vector3>
-{
+public interface Curve3 {
 
-	protected ReadOnlyVector3[] normals;
-	private ReadOnlyVector3 defaultNormal = Vector3.UNIT_Y;
-
-	public Curve3(ReadOnlyVector3[] cvs)
-	{
-		super(cvs);
+	public enum Mode {
+		Open, Clamp, Loop
 	}
 
-	public void setNormals(ReadOnlyVector3[] normals)
-	{
-		this.normals = normals;
-	}
+	public abstract int getCVCount();
 
-	public void setDefaultNormal(ReadOnlyVector3 defaultNormal)
-	{
-		if (null == defaultNormal)
-			throw new IllegalArgumentException("Cannot provide a null normal");
-		this.defaultNormal = defaultNormal;
-	}
+	public abstract ReadOnlyVector3 getCV(int i);
 
-	public ReadOnlyVector3 getDefaultNormal()
-	{
-		return defaultNormal;
-	}
+	public abstract void setCVs(ReadOnlyVector3[] cvs);
 
-	public ReadOnlyVector3 getCVNormal(int index)
-	{
-		if (null == normals)
-			return defaultNormal;
-		return normals[index];
-	}
+	public abstract void setMode(Mode mode);
 
-	/**
-	 * Calculates the orientation at the provided time on the curve. Z-axis will
-	 * point towards the curve end. Y-axis will be aligned with the normal.
-	 * 
-	 * @param t
-	 * @param store
-	 * @return
-	 */
-	public Matrix3 getOrientation(double t, Matrix3 store)
-	{
-		Vector3 tangent = Vector3.fetchTempInstance();
-		Vector3 normal = Vector3.fetchTempInstance();
-		Quaternion q = Quaternion.fetchTempInstance();
+	public abstract Mode getMode();
 
-		getVelocity(t, tangent);
-		getNormal(t, normal);
-		q.lookAt(tangent, normal);
-		store.set(q);
+	public abstract ReadOnlyVector3 getCVNormal(int index);
 
-		Quaternion.releaseTempInstance(q);
-		Vector3.releaseTempInstance(tangent);
-		Vector3.releaseTempInstance(normal);
-		return store;
-	}
-
-	public Quaternion getCVOrientation(int index, Quaternion store)
-	{
-		Vector3 tangent = Vector3.fetchTempInstance();
-		Vector3 normal = Vector3.fetchTempInstance();
-
-		double t = (double) index / (double) cvs.length;
-
-		getVelocity(t, tangent);
-		// tangent.normalizeLocal();
-
-		getNormal(t, normal);
-		store.lookAt(tangent, normal);
-
-		Vector3.releaseTempInstance(tangent);
-		Vector3.releaseTempInstance(normal);
-		return store;
-	}
+	public abstract void setNormals(ReadOnlyVector3[] normals);
 
 	public abstract Vector3 getNormal(double t, Vector3 store);
 
-	public double getLinearVelocity(double t)
-	{
-		Vector3 tmp = Vector3.fetchTempInstance();
-		getVelocity(t, tmp);
-		double velocity = tmp.length();
-		Vector3.releaseTempInstance(tmp);
-		return velocity;
-	}
+	public abstract ReadOnlyVector3 getVelocity(double t, Vector3 store);
+
+	public abstract ReadOnlyVector3 getPoint(double t, Vector3 store);
+
+	public abstract void setDefaultNormal(ReadOnlyVector3 unitZ);
+
+	public abstract double getLinearVelocity(double currentPosition);
+
+	public abstract Matrix3 getOrientation(double currentPosition, Matrix3 rot);
 
 }

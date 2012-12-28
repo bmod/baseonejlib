@@ -7,7 +7,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import com.ardor3d.scenegraph.Node;
 import com.baseoneonline.java.swing.config.Config;
@@ -37,8 +36,7 @@ public class ToolsWindow extends JFrame {
 			try {
 				UIManager.setLookAndFeel(UIManager
 						.getSystemLookAndFeelClassName());
-			} catch (ClassNotFoundException | InstantiationException
-					| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			window = new ToolsWindow();
