@@ -19,6 +19,12 @@ public class ArdorUtil {
 	private ArdorUtil() {
 	}
 
+	public static double map(double inMin, double inMax, double outMin,
+			double outMax, double value) {
+		return outMin
+				+ ((outMax - outMin) * ((value - inMin) / (inMax - inMin)));
+	}
+
 	public static Vector3 randomize(final Vector3 v, final double extents) {
 		return v.addLocal(ArdorUtil.randRange(0, extents),
 				ArdorUtil.randRange(0, extents),

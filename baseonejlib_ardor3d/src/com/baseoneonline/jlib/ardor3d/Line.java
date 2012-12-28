@@ -16,16 +16,14 @@ import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.geom.BufferUtils;
 
-public class Line extends Mesh
-{
+public class Line extends Mesh {
 
 	private float _lineWidth = 1.0f;
 	private short _stipplePattern = (short) 0xFFFF;
 	private int _stippleFactor = 1;
 	private boolean _antialiased = false;
 
-	public Line()
-	{
+	public Line() {
 		this("line");
 	}
 
@@ -36,11 +34,14 @@ public class Line extends Mesh
 	 * @param name
 	 *            The name of the line.
 	 */
-	public Line(final String name)
-	{
+	public Line(final String name) {
 		super(name);
 
 		_meshData.setIndexMode(IndexMode.LineStrip);
+	}
+
+	public void setIndexMode(IndexMode mode) {
+		_meshData.setIndexMode(mode);
 	}
 
 	/**
@@ -62,8 +63,7 @@ public class Line extends Mesh
 	 */
 	public Line(final String name, final ReadOnlyVector3[] vertex,
 			final ReadOnlyVector3[] normal, final ReadOnlyColorRGBA[] color,
-			final ReadOnlyVector2[] texture, final IndexMode indexMode)
-	{
+			final ReadOnlyVector2[] texture, final IndexMode indexMode) {
 		super(name);
 		setupData(BufferUtils.createFloatBuffer(vertex),
 				BufferUtils.createFloatBuffer(normal),
@@ -82,13 +82,16 @@ public class Line extends Mesh
 	 */
 	private void setupData(final FloatBuffer vertices,
 			final FloatBuffer normals, final FloatBuffer colors,
-			final FloatBufferData coords)
-	{
+			final FloatBufferData coords) {
 		_meshData.setVertexBuffer(vertices);
 		_meshData.setNormalBuffer(normals);
 		_meshData.setColorBuffer(colors);
 		_meshData.setTextureCoords(coords, 0);
 		_meshData.setIndices(null);
+	}
+
+	protected void setVertices(ReadOnlyVector3[] vtc) {
+		_meshData.setVertexBuffer(BufferUtils.createFloatBuffer(vtc));
 	}
 
 	/**
@@ -107,8 +110,7 @@ public class Line extends Mesh
 	 *            false for normal winding (ccw), true for clockwise winding
 	 */
 	public void appendCircle(final double radius, final double x,
-			final double y, final int segments, final boolean insideOut)
-	{
+			final double y, final int segments, final boolean insideOut) {
 		final int requiredFloats = segments * 2 * 3;
 		final FloatBuffer verts = BufferUtils.ensureLargeEnough(
 				_meshData.getVertexBuffer(), requiredFloats);
@@ -118,14 +120,12 @@ public class Line extends Mesh
 		_meshData.setNormalBuffer(normals);
 		double angle = 0;
 		final double step = MathUtils.PI * 2 / segments;
-		for (int i = 0; i < segments; i++)
-		{
+		for (int i = 0; i < segments; i++) {
 			final double dx = MathUtils.cos(insideOut ? -angle : angle)
 					* radius;
 			final double dy = MathUtils.sin(insideOut ? -angle : angle)
 					* radius;
-			if (i > 0)
-			{
+			if (i > 0) {
 				verts.put((float) (dx + x)).put((float) (dy + y)).put(0);
 				normals.put((float) dx).put((float) dy).put(0);
 			}
@@ -140,8 +140,7 @@ public class Line extends Mesh
 	/**
 	 * @return true if points are to be drawn antialiased
 	 */
-	public boolean isAntialiased()
-	{
+	public boolean isAntialiased() {
 		return _antialiased;
 	}
 
@@ -154,16 +153,14 @@ public class Line extends Mesh
 	 * @param antialiased
 	 *            true if the line should be antialiased.
 	 */
-	public void setAntialiased(final boolean antialiased)
-	{
+	public void setAntialiased(final boolean antialiased) {
 		_antialiased = antialiased;
 	}
 
 	/**
 	 * @return the width of this line.
 	 */
-	public float getLineWidth()
-	{
+	public float getLineWidth() {
 		return _lineWidth;
 	}
 
@@ -174,16 +171,14 @@ public class Line extends Mesh
 	 * @param lineWidth
 	 *            The lineWidth to set.
 	 */
-	public void setLineWidth(final float lineWidth)
-	{
+	public void setLineWidth(final float lineWidth) {
 		_lineWidth = lineWidth;
 	}
 
 	/**
 	 * @return the set stipplePattern. 0xFFFF means no stipple.
 	 */
-	public short getStipplePattern()
-	{
+	public short getStipplePattern() {
 		return _stipplePattern;
 	}
 
@@ -195,16 +190,14 @@ public class Line extends Mesh
 	 *            a 16bit short whose bits describe the pattern to use when
 	 *            drawing this line
 	 */
-	public void setStipplePattern(final short stipplePattern)
-	{
+	public void setStipplePattern(final short stipplePattern) {
 		_stipplePattern = stipplePattern;
 	}
 
 	/**
 	 * @return the set stippleFactor.
 	 */
-	public int getStippleFactor()
-	{
+	public int getStippleFactor() {
 		return _stippleFactor;
 	}
 
@@ -212,14 +205,12 @@ public class Line extends Mesh
 	 * @param stippleFactor
 	 *            magnification factor to apply to the stipple pattern.
 	 */
-	public void setStippleFactor(final int stippleFactor)
-	{
+	public void setStippleFactor(final int stippleFactor) {
 		_stippleFactor = stippleFactor;
 	}
 
 	@Override
-	public void write(final OutputCapsule capsule) throws IOException
-	{
+	public void write(final OutputCapsule capsule) throws IOException {
 		super.write(capsule);
 		capsule.write(_lineWidth, "lineWidth", 1);
 		capsule.write(_stipplePattern, "stipplePattern", (short) 0xFFFF);
@@ -227,8 +218,7 @@ public class Line extends Mesh
 	}
 
 	@Override
-	public void read(final InputCapsule capsule) throws IOException
-	{
+	public void read(final InputCapsule capsule) throws IOException {
 		super.read(capsule);
 		_lineWidth = capsule.readFloat("lineWidth", 1);
 		_stipplePattern = capsule.readShort("stipplePattern", (short) 0xFFFF);
@@ -236,8 +226,7 @@ public class Line extends Mesh
 	}
 
 	@Override
-	public void render(final Renderer renderer)
-	{
+	public void render(final Renderer renderer) {
 		renderer.setupLineParameters(getLineWidth(), getStippleFactor(),
 				getStipplePattern(), isAntialiased());
 
