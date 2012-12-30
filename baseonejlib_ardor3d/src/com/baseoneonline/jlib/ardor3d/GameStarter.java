@@ -112,7 +112,7 @@ public class GameStarter implements Runnable, IGame {
 
 	private final StatsInterface stats;
 
-	public GameStarter(IGameContainer game) {
+	public GameStarter(final IGameContainer game) {
 		this.game = game;
 		stats = new StatsInterface(this, game);
 	}
@@ -389,7 +389,7 @@ public class GameStarter implements Runnable, IGame {
 	}
 
 	public void start() {
-		start(new DisplaySettings(720, 406, colorDepth, framerate, 1, 8, 0, 1,
+		start(new DisplaySettings(720, 406, colorDepth, framerate, 1, 8, 0, 0,
 				false, false));
 	}
 
@@ -426,8 +426,8 @@ public class GameStarter implements Runnable, IGame {
 
 			@Override
 			@MainThread
-			public void perform(Canvas source, TwoInputStates inputStates,
-					double tpf) {
+			public void perform(final Canvas source,
+					final TwoInputStates inputStates, final double tpf) {
 				stats.toggle();
 			}
 		}));

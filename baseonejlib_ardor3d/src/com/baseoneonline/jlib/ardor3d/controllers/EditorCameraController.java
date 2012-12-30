@@ -129,7 +129,6 @@ public class EditorCameraController {
 				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			elevation += ms.getDy() * orbitMultipler;
-
 			heading -= ms.getDx() * orbitMultipler;
 		}
 	};
@@ -159,5 +158,9 @@ public class EditorCameraController {
 		cam.setLocation(pos);
 		cam.lookAt(orbitCenter, Vector3.UNIT_Y);
 
+	}
+
+	public Camera getCamera() {
+		return cam;
 	}
 }
