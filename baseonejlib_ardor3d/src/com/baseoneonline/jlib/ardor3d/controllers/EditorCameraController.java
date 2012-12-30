@@ -42,6 +42,9 @@ public class EditorCameraController {
 
 	private final InputTrigger[] triggers;
 
+	private final Vector3 pos = new Vector3();
+	private final Matrix3 orient = new Matrix3();
+
 	public EditorCameraController(final LogicalLayer logicalLayer,
 			final Camera cam) {
 		this.cam = cam;
@@ -55,7 +58,7 @@ public class EditorCameraController {
 
 	@SuppressWarnings("unchecked")
 	private InputTrigger[] getTriggers() {
-		KeyHeldCondition modifierKey = new KeyHeldCondition(Key.LMENU);
+		final KeyHeldCondition modifierKey = new KeyHeldCondition(Key.LMENU);
 		return new InputTrigger[] {
 				new InputTrigger(Predicates.and(modifierKey,
 						new MouseMovedCondition(),
@@ -70,16 +73,16 @@ public class EditorCameraController {
 				new InputTrigger(new KeyPressedCondition(Key.HOME), homeAction) };
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		if (this.enabled == enabled)
 			return;
 		this.enabled = enabled;
 
 		if (enabled)
-			for (InputTrigger t : triggers)
+			for (final InputTrigger t : triggers)
 				logicalLayer.registerTrigger(t);
 		else
-			for (InputTrigger t : triggers)
+			for (final InputTrigger t : triggers)
 				logicalLayer.deregisterTrigger(t);
 	}
 
@@ -135,8 +138,8 @@ public class EditorCameraController {
 
 		@Override
 		@MainThread
-		public void perform(Canvas source, TwoInputStates inputStates,
-				double tpf) {
+		public void perform(final Canvas source,
+				final TwoInputStates inputStates, final double tpf) {
 			orbitCenter.set(Vector3.ZERO);
 		}
 	};
@@ -148,9 +151,6 @@ public class EditorCameraController {
 		heading %= MathUtils.TWO_PI;
 		// elevation = MathUtils.clamp(elevation, minElevation, maxElevation);
 
-		final Vector3 pos = Vector3.fetchTempInstance();
-		final Matrix3 orient = Matrix3.fetchTempInstance();
-
 		pos.set(0, 0, distance);
 		orient.fromAngles(elevation, heading, 0);
 		orient.applyPost(pos, pos);
@@ -158,9 +158,6 @@ public class EditorCameraController {
 		pos.addLocal(orbitCenter);
 		cam.setLocation(pos);
 		cam.lookAt(orbitCenter, Vector3.UNIT_Y);
-
-		Vector3.releaseTempInstance(pos);
-		Matrix3.releaseTempInstance(orient);
 
 	}
 }
