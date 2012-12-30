@@ -1,5 +1,6 @@
 package com.baseoneonline.jlib.ardor3d;
 
+import com.ardor3d.annotation.MainThread;
 import com.ardor3d.extension.shadow.map.ParallelSplitShadowMapPass;
 import com.ardor3d.extension.shadow.map.ParallelSplitShadowMapPass.Filter;
 import com.ardor3d.framework.Canvas;
@@ -49,7 +50,6 @@ import com.ardor3d.renderer.state.ZBufferState;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.event.DirtyType;
 import com.ardor3d.scenegraph.visitor.UpdateModelBoundVisitor;
-import com.ardor3d.util.Constants;
 import com.ardor3d.util.ContextGarbageCollector;
 import com.ardor3d.util.GameTaskQueue;
 import com.ardor3d.util.GameTaskQueueManager;
@@ -57,7 +57,6 @@ import com.ardor3d.util.ReadOnlyTimer;
 import com.ardor3d.util.Timer;
 import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.screen.ScreenExporter;
-import com.ardor3d.util.stat.StatCollector;
 import com.google.common.base.Predicates;
 
 public class GameStarter implements Runnable, IGame {
@@ -111,8 +110,11 @@ public class GameStarter implements Runnable, IGame {
 	protected Camera camera;
 	private final IGameContainer game;
 
+	private final StatsInterface stats;
+
 	public GameStarter(IGameContainer game) {
 		this.game = game;
+		stats = new StatsInterface(this, game);
 	}
 
 	public float getDisplayRatio() {
@@ -233,7 +235,8 @@ public class GameStarter implements Runnable, IGame {
 				/** Call renderExample in any derived classes. */
 				game.render(renderer);
 				// renderBase(renderer);
-				renderDebug(renderer);
+				stats.render(renderer);
+				// renderDebug(renderer);
 
 				if (doShot) {
 					// force any waiting scene elements to be renderer.
@@ -299,9 +302,7 @@ public class GameStarter implements Runnable, IGame {
 				exit();
 			}
 
-			if (Constants.stats) {
-				StatCollector.update();
-			}
+			stats.update(timer);
 
 			logicalLayer.checkTriggers(timer.getTimePerFrame());
 
@@ -326,7 +327,7 @@ public class GameStarter implements Runnable, IGame {
 
 			if (!paused || stepping) {
 				root.updateGeometricState(timer.getTimePerFrame(), true);
-				game.lateUpdate(timer.getTimePerFrame());
+				game.postUpdate(timer.getTimePerFrame());
 			}
 
 			stepping = false;
@@ -419,6 +420,17 @@ public class GameStarter implements Runnable, IGame {
 	}
 
 	protected void registerInputTriggers() {
+
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.GRAVE), new TriggerAction() {
+
+			@Override
+			@MainThread
+			public void perform(Canvas source, TwoInputStates inputStates,
+					double tpf) {
+				stats.toggle();
+			}
+		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
 				Key.ESCAPE), new TriggerAction() {
