@@ -14,6 +14,7 @@ import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.renderer.Renderer;
 import com.ardor3d.renderer.queue.RenderBucketType;
 import com.ardor3d.renderer.state.BlendState;
+import com.ardor3d.renderer.state.WireframeState;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.ui.text.BasicText;
 import com.ardor3d.util.ReadOnlyTimer;
@@ -32,10 +33,11 @@ public class StatsInterface {
 	private boolean showNormals = false;
 	private boolean showBounds = false;
 	private boolean showDepth = false;
+	private WireframeState wireframeState;
 
 	private List<InputTrigger> inputMap;
 
-	public StatsInterface(IGame game, IGameContainer gameContainer) {
+	public StatsInterface(final IGame game, final IGameContainer gameContainer) {
 		this.game = game;
 		this.gameContainer = gameContainer;
 	}
@@ -44,7 +46,7 @@ public class StatsInterface {
 		setEnabled(!enabled);
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		if (this.enabled == enabled)
 			return;
 		this.enabled = enabled;
@@ -59,16 +61,20 @@ public class StatsInterface {
 		StatCollector.addStatListener(statListener);
 
 		root = new Node("Root");
-		BlendState bs = new BlendState();
+		final BlendState bs = new BlendState();
 		bs.setEnabled(true);
 		bs.setBlendEnabled(true);
 		root.setRenderState(bs);
 		root.getSceneHints().setRenderBucketType(RenderBucketType.Ortho);
 
-		BasicText text = BasicText.createDefaultTextLabel("MyText", "Ohay!");
+		final BasicText text = BasicText.createDefaultTextLabel("MyText",
+				"Ohay!");
 		root.attachChild(text);
 
 		root.updateWorldRenderStates(true);
+
+		wireframeState = new WireframeState();
+		wireframeState.setEnabled(false);
 
 		registerInput();
 	}
@@ -80,8 +86,8 @@ public class StatsInterface {
 
 					@Override
 					@MainThread
-					public void perform(Canvas source,
-							TwoInputStates inputStates, double tpf) {
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
 						showBounds = !showBounds;
 					}
 				}));
@@ -90,8 +96,8 @@ public class StatsInterface {
 
 					@Override
 					@MainThread
-					public void perform(Canvas source,
-							TwoInputStates inputStates, double tpf) {
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
 						showDepth = !showDepth;
 					}
 				}));
@@ -100,33 +106,44 @@ public class StatsInterface {
 
 					@Override
 					@MainThread
-					public void perform(Canvas source,
-							TwoInputStates inputStates, double tpf) {
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
 						showNormals = !showNormals;
 					}
 				}));
 
-		for (InputTrigger t : inputMap)
+		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F4),
+				new TriggerAction() {
+
+					@Override
+					@MainThread
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
+						showNormals = !showNormals;
+					}
+				}));
+		for (final InputTrigger t : inputMap)
 			game.getLogicalLayer().registerTrigger(t);
 	}
 
 	private void deregisterInput() {
-		for (InputTrigger t : inputMap)
+		for (final InputTrigger t : inputMap)
 			game.getLogicalLayer().deregisterTrigger(t);
 		inputMap.clear();
 	}
 
 	private void stop() {
 		StatCollector.removeStatListener(statListener);
+
 		root = null;
 		deregisterInput();
 	}
 
-	public void render(Renderer renderer) {
+	public void render(final Renderer renderer) {
 		if (!enabled)
 			return;
 
-		Node scene = gameContainer.getSceneRoot();
+		final Node scene = gameContainer.getSceneRoot();
 
 		if (showBounds) {
 			Debugger.drawBounds(scene, renderer, true);
@@ -146,7 +163,7 @@ public class StatsInterface {
 		root.onDraw(renderer);
 	}
 
-	public void update(ReadOnlyTimer timer) {
+	public void update(final ReadOnlyTimer timer) {
 		if (!enabled)
 			return;
 
