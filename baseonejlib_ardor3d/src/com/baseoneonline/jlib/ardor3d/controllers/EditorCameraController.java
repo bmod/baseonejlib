@@ -16,6 +16,7 @@ import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Matrix3;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.Camera;
 import com.google.common.base.Predicates;
 
@@ -42,6 +43,8 @@ public class EditorCameraController {
 
 	private final InputTrigger[] triggers;
 
+	private double fov = 60;
+
 	private final Vector3 pos = new Vector3();
 	private final Matrix3 orient = new Matrix3();
 
@@ -54,6 +57,22 @@ public class EditorCameraController {
 		triggers = getTriggers();
 
 		setEnabled(true);
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setFov(double fov) {
+		this.fov = fov;
+	}
+
+	public double getFov() {
+		return fov;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -143,7 +162,7 @@ public class EditorCameraController {
 		}
 	};
 
-	public void update() {
+	public void postUpdate() {
 		if (!enabled)
 			return;
 
@@ -158,9 +177,20 @@ public class EditorCameraController {
 		cam.setLocation(pos);
 		cam.lookAt(orbitCenter, Vector3.UNIT_Y);
 
+		double aspect = (double) cam.getWidth() / (double) cam.getHeight();
+		cam.setFrustumPerspective(fov, aspect, cam.getFrustumNear(),
+				cam.getFrustumFar());
 	}
 
 	public Camera getCamera() {
 		return cam;
+	}
+
+	public void setCenter(ReadOnlyVector3 center) {
+		orbitCenter.set(center);
+	}
+
+	public ReadOnlyVector3 getCenter() {
+		return orbitCenter;
 	}
 }

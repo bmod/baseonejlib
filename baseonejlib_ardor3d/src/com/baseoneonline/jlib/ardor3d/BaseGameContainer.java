@@ -8,13 +8,13 @@ import com.ardor3d.scenegraph.Node;
 
 public abstract class BaseGameContainer implements IGameContainer {
 
-	protected Node root;
+	protected Node root = new Node("Root");
 	protected IGame game;
 
 	@Override
 	public void init(final IGame game) {
 		this.game = game;
-		root = new Node("Root");
+
 		final ZBufferState buf = new ZBufferState();
 		buf.setEnabled(true);
 		buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
