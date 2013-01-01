@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 
+import com.ardor3d.bounding.BoundingBox;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
@@ -98,6 +99,7 @@ public class TrailMesh extends Mesh {
 		}
 
 		setData();
+		setModelBound(new BoundingBox());
 	}
 
 	/**

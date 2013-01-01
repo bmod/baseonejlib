@@ -301,10 +301,9 @@ public class GameStarter implements Runnable, IGame {
 			if (canvas.isClosing()) {
 				exit();
 			}
+			double tpf = timer.getTimePerFrame();
 
-			stats.update(timer);
-
-			logicalLayer.checkTriggers(timer.getTimePerFrame());
+			logicalLayer.checkTriggers(tpf);
 
 			// Execute updateQueue item
 			if (!paused || stepping) {
@@ -314,10 +313,13 @@ public class GameStarter implements Runnable, IGame {
 						.getQueue(GameTaskQueue.UPDATE).execute();
 
 				/** Call simpleUpdate in any derived classes of ExampleBase. */
-				game.update(timer.getTimePerFrame());
+				game.update(tpf);
 			}
 
-			passManager.updatePasses(timer.getTimePerFrame());
+			if (stats.isEnabled())
+				stats.update(timer);
+
+			passManager.updatePasses(tpf);
 
 			if (updateLight) {
 				final double time = timer.getTimeInSeconds() * 0.2;
@@ -326,9 +328,12 @@ public class GameStarter implements Runnable, IGame {
 			}
 
 			if (!paused || stepping) {
-				root.updateGeometricState(timer.getTimePerFrame(), true);
-				game.postUpdate(timer.getTimePerFrame());
+				root.updateGeometricState(tpf, true);
+				game.postUpdate(tpf);
 			}
+
+			if (stats.isEnabled())
+				stats.postUpdate(tpf);
 
 			stepping = false;
 		}
@@ -503,7 +508,7 @@ public class GameStarter implements Runnable, IGame {
 		}));
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
-				Key.F1), new TriggerAction() {
+				Key.F9), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
 					final TwoInputStates inputState, final double tpf) {
