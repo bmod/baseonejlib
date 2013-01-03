@@ -179,6 +179,7 @@ public class TrailMesh extends Mesh {
 			} else {
 				updateInterpolate(camPos);
 			}
+			updateModelBound();
 			invalid = false;
 		}
 	}
