@@ -59,7 +59,7 @@ import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.screen.ScreenExporter;
 import com.google.common.base.Predicates;
 
-public class GameStarter implements Runnable, IGame {
+public class BaseGame implements Runnable, IGame {
 	private ParallelSplitShadowMapPass shadowPass;
 	private BasicPassManager passManager;
 
@@ -107,14 +107,14 @@ public class GameStarter implements Runnable, IGame {
 	public static int framerate = 60;
 	public static int colorDepth = 32;
 
-	protected Camera camera;
+	protected Camera mainCamera;
 	private final IGameContainer game;
 
-	private final StatsInterface stats;
+	private final DebugInterface stats;
 
-	public GameStarter(final IGameContainer game) {
+	public BaseGame(final IGameContainer game) {
 		this.game = game;
-		stats = new StatsInterface(this, game);
+		stats = new DebugInterface(this, game);
 	}
 
 	public float getDisplayRatio() {
@@ -157,15 +157,15 @@ public class GameStarter implements Runnable, IGame {
 		// Setup main camera.
 		canvas.setTitle(getClass().getSimpleName());
 
-		camera = canvas.getCanvasRenderer().getCamera();
-		camera.setLocation(new Vector3(250, 200, -250));
+		mainCamera = canvas.getCanvasRenderer().getCamera();
+		mainCamera.setLocation(new Vector3(250, 200, -250));
 
-		camera.setFrustumPerspective(45.0, (float) canvas.getCanvasRenderer()
-				.getCamera().getWidth()
+		mainCamera.setFrustumPerspective(45.0, (float) canvas
+				.getCanvasRenderer().getCamera().getWidth()
 				/ (float) canvas.getCanvasRenderer().getCamera().getHeight(),
 				1.0, 10000);
 
-		camera.lookAt(Vector3.ZERO, Vector3.UNIT_Y);
+		mainCamera.lookAt(Vector3.ZERO, Vector3.UNIT_Y);
 
 		// Setup some standard states for the scene.
 		final CullState cullFrontFace = new CullState();
@@ -301,7 +301,7 @@ public class GameStarter implements Runnable, IGame {
 			if (canvas.isClosing()) {
 				exit();
 			}
-			double tpf = timer.getTimePerFrame();
+			final double tpf = timer.getTimePerFrame();
 
 			logicalLayer.checkTriggers(tpf);
 
@@ -376,7 +376,7 @@ public class GameStarter implements Runnable, IGame {
 
 			initExample();
 
-			game.init(GameStarter.this);
+			game.init(BaseGame.this);
 
 			root.updateGeometricState(0);
 		}
@@ -542,8 +542,8 @@ public class GameStarter implements Runnable, IGame {
 	}
 
 	@Override
-	public Camera getCamera() {
-		return camera;
+	public Camera getMainCamera() {
+		return mainCamera;
 	}
 
 	@Override

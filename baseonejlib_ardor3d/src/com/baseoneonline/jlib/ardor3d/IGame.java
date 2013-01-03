@@ -5,7 +5,7 @@ import com.ardor3d.renderer.Camera;
 
 public interface IGame {
 
-	Camera getCamera();
+	Camera getMainCamera();
 
 	LogicalLayer getLogicalLayer();
 
