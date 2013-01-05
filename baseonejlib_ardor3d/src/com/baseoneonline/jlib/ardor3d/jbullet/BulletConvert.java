@@ -11,7 +11,9 @@ import com.ardor3d.math.type.ReadOnlyMatrix4;
 import com.ardor3d.math.type.ReadOnlyTransform;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.scenegraph.shape.Box;
+import com.ardor3d.scenegraph.shape.Sphere;
 import com.bulletphysics.collision.shapes.BoxShape;
+import com.bulletphysics.collision.shapes.SphereShape;
 
 public class BulletConvert {
 
@@ -73,6 +75,10 @@ public class BulletConvert {
 				(float) b.getYExtent(), (float) b.getZExtent()));
 	}
 
+	public static SphereShape createSphereShape(Sphere s) {
+		return new SphereShape((float) s.getRadius());
+	}
+
 	public static Vector3 convert(Vector3f from, Vector3 store) {
 		return store.set(from.x, from.y, from.z);
 	}
@@ -80,4 +86,5 @@ public class BulletConvert {
 	public static ColorRGBA convert(Vector3f col, ColorRGBA store) {
 		return store.set(col.x, col.y, col.z, 1);
 	}
+
 }
