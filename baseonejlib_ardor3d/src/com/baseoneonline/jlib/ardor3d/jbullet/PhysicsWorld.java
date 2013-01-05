@@ -1,20 +1,26 @@
 package com.baseoneonline.jlib.ardor3d.jbullet;
 
+import java.util.List;
+
 import javax.vecmath.Vector3f;
 
 import com.ardor3d.math.Vector3;
 import com.ardor3d.renderer.Renderer;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.shape.Box;
+import com.ardor3d.scenegraph.shape.Sphere;
 import com.baseoneonline.jlib.ardor3d.tools.DebugDraw;
 import com.bulletphysics.collision.broadphase.AxisSweep3;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.Dispatcher;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.dispatch.GhostObject;
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
@@ -59,6 +65,11 @@ public class PhysicsWorld {
 		return addShape(b, mass, boxShape);
 	}
 
+	public RigidBody addSphere(Sphere s, double mass) {
+		SphereShape sphereShape = BulletConvert.createSphereShape(s);
+		return addShape(s, mass, sphereShape);
+	}
+
 	public RigidBody addShape(Spatial spatial, double mass, CollisionShape shape) {
 
 		MotionState motionState = new BulletMotionState(spatial);
@@ -81,5 +92,20 @@ public class PhysicsWorld {
 
 	public void render() {
 		world.debugDrawWorld();
+	}
+
+	public List<CollisionObject> getCollisionObjects() {
+		return world.getCollisionObjectArray();
+	}
+
+	public GhostObject addTrigger(SphereShape trigger) {
+		GhostObject ob = new GhostObject();
+		ob.setCollisionShape(trigger);
+		world.addCollisionObject(ob);
+		return ob;
+	}
+
+	public void addTrigger(GhostObject ob) {
+		world.addCollisionObject(ob);
 	}
 }
