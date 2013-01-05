@@ -1,0 +1,85 @@
+package com.baseoneonline.jlib.ardor3d.jbullet;
+
+import javax.vecmath.Vector3f;
+
+import com.ardor3d.math.Vector3;
+import com.ardor3d.renderer.Renderer;
+import com.ardor3d.scenegraph.Spatial;
+import com.ardor3d.scenegraph.shape.Box;
+import com.baseoneonline.jlib.ardor3d.tools.DebugDraw;
+import com.bulletphysics.collision.broadphase.AxisSweep3;
+import com.bulletphysics.collision.broadphase.BroadphaseInterface;
+import com.bulletphysics.collision.broadphase.Dispatcher;
+import com.bulletphysics.collision.dispatch.CollisionConfiguration;
+import com.bulletphysics.collision.dispatch.CollisionDispatcher;
+import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.shapes.BoxShape;
+import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
+import com.bulletphysics.dynamics.DynamicsWorld;
+import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
+import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
+import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
+import com.bulletphysics.linearmath.MotionState;
+import com.bulletphysics.linearmath.Transform;
+
+public class PhysicsWorld {
+
+	private final DynamicsWorld world;
+
+	/**
+	 * 
+	 */
+	public PhysicsWorld(Renderer r) {
+		float size = 1000;
+		Vector3f min = new Vector3f(size, size, size);
+		Vector3f max = new Vector3f(size, size, size);
+
+		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
+		Dispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
+		BroadphaseInterface pairCache = new AxisSweep3(min, max);
+		ConstraintSolver constraintSolver = new SequentialImpulseConstraintSolver();
+		world = new DiscreteDynamicsWorld(dispatcher, pairCache,
+				constraintSolver, collisionConfiguration);
+
+		world.setDebugDrawer(new DebugDraw(r));
+	}
+
+	public void update(double t) {
+		world.stepSimulation((float) t);
+	}
+
+	public void setGravity(Vector3 v) {
+		world.setGravity(BulletConvert.convert(v, new Vector3f()));
+	}
+
+	public RigidBody addBox(Box b, double mass) {
+		BoxShape boxShape = BulletConvert.createBoxShape(b);
+		return addShape(b, mass, boxShape);
+	}
+
+	public RigidBody addShape(Spatial spatial, double mass, CollisionShape shape) {
+
+		MotionState motionState = new BulletMotionState(spatial);
+
+		boolean isDynamic = (mass != 0);
+		Vector3f localInertia = new Vector3f(0, 0, 0);
+		if (isDynamic) {
+			shape.calculateLocalInertia((float) mass, localInertia);
+		}
+
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(
+				(float) mass, motionState, shape, localInertia);
+		RigidBody body = new RigidBody(info);
+
+		body.setWorldTransform(body.getMotionState().getWorldTransform(
+				new Transform()));
+		world.addRigidBody(body);
+		return body;
+	}
+
+	public void render() {
+		world.debugDrawWorld();
+	}
+}

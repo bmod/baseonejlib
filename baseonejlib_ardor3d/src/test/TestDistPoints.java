@@ -61,7 +61,7 @@ public class TestDistPoints extends TestBase
 	protected void update(final ReadOnlyTimer timer)
 	{
 		solver.update();
-		orbCam.postUpdate();
+		orbCam.update();
 	}
 }
 

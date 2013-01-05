@@ -23,6 +23,7 @@ import com.ardor3d.intersection.PickResults;
 import com.ardor3d.intersection.Pickable;
 import com.ardor3d.intersection.PickingUtil;
 import com.ardor3d.intersection.PrimitivePickResults;
+import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Ray3;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.type.ReadOnlyVector3;
@@ -58,10 +59,8 @@ public class DebugInterface {
 	private WireframeState wireframeState;
 	private List<InputTrigger> inputMap;
 	private EditorCameraController camCtrl;
-	private BMText txtCamera;
-	private BMText txtSelection;
+	private BMText txtLabel;
 	private final List<Spatial> selection = new ArrayList<Spatial>();
-	private final List<BMText> txtsSelections = new ArrayList<BMText>();
 
 	/**
 	 * @warning Please initialize in {@link #start()}
@@ -103,8 +102,8 @@ public class DebugInterface {
 		uiNode.setRenderState(bs);
 		uiNode.getSceneHints().setRenderBucketType(RenderBucketType.Ortho);
 
-		txtCamera = addText(0);
-		txtSelection = addText(20);
+		txtLabel = addText();
+		txtLabel.setTranslation(8, 8, 0);
 
 		uiNode.updateWorldRenderStates(true);
 
@@ -124,12 +123,11 @@ public class DebugInterface {
 		focusAll();
 	}
 
-	private BasicText addText(final int y) {
-		final BasicText text = BasicText.createDefaultTextLabel("MyText",
+	private BMText addText() {
+		final BMText label = BasicText.createDefaultTextLabel("MyText",
 				"Ohay!", 12);
-		text.setTranslation(0, y, 0);
-		uiNode.attachChild(text);
-		return text;
+		uiNode.attachChild(label);
+		return label;
 	}
 
 	private void stop() {
@@ -242,6 +240,8 @@ public class DebugInterface {
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf) {
 						showDebugCamera = !showDebugCamera;
+						if (showDebugCamera)
+							focusSelection();
 					}
 				}));
 
@@ -261,6 +261,7 @@ public class DebugInterface {
 
 		final Node scene = gameContainer.getSceneRoot();
 
+		Debugger.setBoundsColor(ColorRGBA.BLUE);
 		if (showBounds) {
 			Debugger.drawBounds(scene, renderer, true);
 		}
@@ -276,6 +277,7 @@ public class DebugInterface {
 					renderer);
 		}
 
+		Debugger.setBoundsColor(ColorRGBA.YELLOW);
 		for (final Spatial s : selection) {
 			Debugger.drawBounds(s, renderer, true);
 			Debugger.drawAxis(s, renderer);
@@ -288,19 +290,30 @@ public class DebugInterface {
 
 		uiNode.updateGeometricState(timer.getTimePerFrame(), true);
 
+		StringBuffer buf = new StringBuffer();
+		// Selection
+		if (selection.size() > 0) {
+			buf.append("Selection:\n");
+			for (Spatial s : selection)
+				buf.append("\t" + s.toString() + '\n');
+			buf.append("\n");
+		}
+
+		// Camera
 		final Camera cam = game.getMainCamera();
 		final ReadOnlyVector3 pos = cam.getLocation();
 		final ReadOnlyVector3 aim = camCtrl.getCenter();
-		txtCamera.setText(String.format(
+		buf.append(String.format(
 				"Camera: (%.2f, %.2f, %.2f) Target:  (%.2f, %.2f, %.2f)",
 				pos.getX(), pos.getY(), pos.getZ(), aim.getX(), aim.getY(),
 				aim.getZ()));
 
+		txtLabel.setText(buf.toString());
 	}
 
 	public void postUpdate(final double tpf) {
 		if (showDebugCamera)
-			camCtrl.postUpdate();
+			camCtrl.update();
 	}
 
 	private final StatListener statListener = new StatListener() {
@@ -313,21 +326,10 @@ public class DebugInterface {
 
 	private void clearSelection() {
 		selection.clear();
-		txtsSelections.clear();
 	}
 
 	private void addSelection(final Spatial s) {
 		selection.add(s);
-		txtsSelections.add(addText(s.toString()));
-		txtSelection.setText(getSelectionString());
-
-	}
-
-	private String getSelectionString() {
-		final StringBuffer buf = new StringBuffer();
-		for (final Spatial spatial : selection)
-			buf.append(spatial.toString());
-		return buf.toString();
 	}
 
 	private Spatial findSpatialUnderMouse(final MouseState ms) {
@@ -378,6 +380,10 @@ public class DebugInterface {
 				checkInfinityBounds(s);
 
 		final BoundingVolume bounds = spatial.getWorldBound();
+
+		if (bounds == null)
+			throw new RuntimeException("Spatial has no bounds: " + spatial);
+
 		if (Double.isInfinite(bounds.getRadius()))
 			throw new RuntimeException("Spatial has inifintely large bounds: "
 					+ spatial);

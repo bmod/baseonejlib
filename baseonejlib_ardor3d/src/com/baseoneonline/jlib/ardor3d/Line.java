@@ -90,7 +90,7 @@ public class Line extends Mesh {
 		_meshData.setIndices(null);
 	}
 
-	protected void setVertices(ReadOnlyVector3[] vtc) {
+	public void setVertices(ReadOnlyVector3[] vtc) {
 		_meshData.setVertexBuffer(BufferUtils.createFloatBuffer(vtc));
 	}
 
