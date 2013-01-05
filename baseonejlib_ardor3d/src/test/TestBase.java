@@ -1,5 +1,6 @@
 package test;
 
+import com.ardor3d.annotation.MainThread;
 import com.ardor3d.extension.shadow.map.ParallelSplitShadowMapPass;
 import com.ardor3d.extension.shadow.map.ParallelSplitShadowMapPass.Filter;
 import com.ardor3d.framework.Canvas;
@@ -62,8 +63,7 @@ import com.ardor3d.util.stat.StatCollector;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-public abstract class TestBase implements Runnable
-{
+public abstract class TestBase implements Runnable {
 	private ParallelSplitShadowMapPass shadowPass;
 	private BasicPassManager passManager;
 
@@ -94,7 +94,7 @@ public abstract class TestBase implements Runnable
 	protected boolean showBounds = false;
 	protected boolean showNormals = false;
 	protected boolean showDepth = false;
-
+	protected boolean paused = false;
 	protected boolean doShot = false;
 
 	protected NativeCanvas canvas;
@@ -111,14 +111,11 @@ public abstract class TestBase implements Runnable
 	protected Camera camera;
 
 	@Override
-	public void run()
-	{
-		try
-		{
+	public void run() {
+		try {
 			frameHandler.init();
 
-			while (!_exit)
-			{
+			while (!_exit) {
 				frameHandler.updateFrame();
 				Thread.yield();
 			}
@@ -127,36 +124,30 @@ public abstract class TestBase implements Runnable
 			cr.makeCurrentContext();
 			quit(cr.getRenderer());
 			cr.releaseCurrentContext();
-			if (QUIT_VM_ON_EXIT)
-			{
+			if (QUIT_VM_ON_EXIT) {
 				System.exit(0);
 			}
-		} catch (final Throwable t)
-		{
+		} catch (final Throwable t) {
 			System.err.println("Throwable caught in MainThread - exiting");
 			t.printStackTrace(System.err);
 		}
 	}
 
-	public void exit()
-	{
+	public void exit() {
 		_exit = true;
 	}
 
-	protected void setShadowDistance(final double dist)
-	{
+	protected void setShadowDistance(final double dist) {
 		shadowPass.setMaxShadowDistance(dist);
 	}
 
-	protected void setShadowsEnabled(final boolean b)
-	{
+	protected void setShadowsEnabled(final boolean b) {
 		shadowPass.setEnabled(b);
 	}
 
 	protected abstract void init();
 
-	protected final void initExample()
-	{
+	protected final void initExample() {
 		// Setup main camera.
 		canvas.setTitle("Parallel Split Shadow Maps - Example");
 
@@ -224,11 +215,14 @@ public abstract class TestBase implements Runnable
 
 	protected abstract void update(final ReadOnlyTimer timer);
 
+	protected void postUpdate(final ReadOnlyTimer timer) {
+
+	}
+
 	private final Scene scene = new Scene() {
 
 		@Override
-		public boolean renderUnto(final Renderer renderer)
-		{
+		public boolean renderUnto(final Renderer renderer) {
 			// Execute renderQueue item
 			GameTaskQueueManager
 					.getManager(canvas.getCanvasRenderer().getRenderContext())
@@ -238,40 +232,33 @@ public abstract class TestBase implements Runnable
 			ContextGarbageCollector.doRuntimeCleanup(renderer);
 
 			/** Draw the rootNode and all its children. */
-			if (!canvas.isClosing())
-			{
+			if (!canvas.isClosing()) {
 				/** Call renderExample in any derived classes. */
 				renderExample(renderer);
 				renderDebug(renderer);
 
 				return true;
-			} else
-			{
+			} else {
 				return false;
 			}
 		}
 
 		@Override
-		public PickResults doPick(final Ray3 pickRay)
-		{
+		public PickResults doPick(final Ray3 pickRay) {
 			return null;
 		}
 	};
 
-	protected void renderExample(final Renderer renderer)
-	{
-		if (!shadowPass.isInitialised())
-		{
+	protected void renderExample(final Renderer renderer) {
+		if (!shadowPass.isInitialised()) {
 			shadowPass.init(renderer);
 		}
 
 		// Update the shadowpass "light" position. Iow it's camera.
 		final Light light = lightState.get(0);
-		if (light instanceof PointLight)
-		{
+		if (light instanceof PointLight) {
 			((PointLight) light).setLocation(lightPosition);
-		} else if (light instanceof DirectionalLight)
-		{
+		} else if (light instanceof DirectionalLight) {
 			((DirectionalLight) light).setDirection(lightPosition.normalize(
 					null).negateLocal());
 		}
@@ -280,21 +267,17 @@ public abstract class TestBase implements Runnable
 
 	}
 
-	protected void renderDebug(final Renderer renderer)
-	{
-		if (showBounds)
-		{
+	protected void renderDebug(final Renderer renderer) {
+		if (showBounds) {
 			Debugger.drawBounds(root, renderer, true);
 		}
 
-		if (showNormals)
-		{
+		if (showNormals) {
 			Debugger.drawNormals(root, renderer);
 			Debugger.drawTangents(root, renderer);
 		}
 
-		if (showDepth)
-		{
+		if (showDepth) {
 			renderer.renderBuckets();
 			Debugger.drawBuffer(TextureStoreFormat.Depth16, Debugger.NORTHEAST,
 					renderer);
@@ -304,15 +287,12 @@ public abstract class TestBase implements Runnable
 	private final Updater updater = new Updater() {
 
 		@Override
-		public void update(final ReadOnlyTimer timer)
-		{
-			if (canvas.isClosing())
-			{
+		public void update(final ReadOnlyTimer timer) {
+			if (canvas.isClosing()) {
 				exit();
 			}
 
-			if (Constants.stats)
-			{
+			if (Constants.stats) {
 				StatCollector.update();
 			}
 
@@ -324,12 +304,12 @@ public abstract class TestBase implements Runnable
 					.getQueue(GameTaskQueue.UPDATE).execute();
 
 			/** Call simpleUpdate in any derived classes of ExampleBase. */
-			TestBase.this.update(timer);
+			if (!paused)
+				TestBase.this.update(timer);
 
 			passManager.updatePasses(timer.getTimePerFrame());
 
-			if (updateLight)
-			{
+			if (updateLight) {
 				final double time = timer.getTimeInSeconds() * 0.2;
 				lightPosition.set(Math.sin(time) * 10000.0, 5000.0,
 						Math.cos(time) * 10000.0);
@@ -337,10 +317,11 @@ public abstract class TestBase implements Runnable
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */
 			root.updateGeometricState(timer.getTimePerFrame(), true);
+
+			postUpdate(timer);
 		}
 
-		private void initStates()
-		{
+		private void initStates() {
 			final ZBufferState buf = new ZBufferState();
 			buf.setEnabled(true);
 			buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
@@ -351,7 +332,7 @@ public abstract class TestBase implements Runnable
 			light = new PointLight();
 			light.setDiffuse(new ColorRGBA(0.75f, 0.75f, 0.75f, 0.75f));
 			light.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 1.0f));
-			light.setLocation(new Vector3(100, 100, 100));
+			light.setLocation(new Vector3(50, 100, 100));
 			light.setEnabled(true);
 
 			/** Attach the light to a lightState and the lightState to rootNode. */
@@ -368,8 +349,7 @@ public abstract class TestBase implements Runnable
 		}
 
 		@Override
-		public void init()
-		{
+		public void init() {
 
 			registerInputTriggers();
 
@@ -383,14 +363,12 @@ public abstract class TestBase implements Runnable
 		}
 	};
 
-	protected void quit(final Renderer renderer)
-	{
+	protected void quit(final Renderer renderer) {
 		ContextGarbageCollector.doFinalCleanup(renderer);
 		canvas.close();
 	}
 
-	public void start()
-	{
+	public void start() {
 
 		final DisplaySettings settings = new DisplaySettings(displayWidth,
 				displayHeight, colorDepth, framerate, 1, 8, 0, 1, false, false);
@@ -418,15 +396,13 @@ public abstract class TestBase implements Runnable
 		new Thread(this).start();
 	}
 
-	protected void registerInputTriggers()
-	{
+	protected void registerInputTriggers() {
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
 				Key.ESCAPE), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				exit();
 			}
 		}));
@@ -435,8 +411,7 @@ public abstract class TestBase implements Runnable
 				Key.L), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				lightState.setEnabled(!lightState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -448,8 +423,7 @@ public abstract class TestBase implements Runnable
 				Key.F4), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showDepth = !showDepth;
 			}
 		}));
@@ -458,8 +432,7 @@ public abstract class TestBase implements Runnable
 				Key.T), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				wireframeState.setEnabled(!wireframeState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -471,8 +444,7 @@ public abstract class TestBase implements Runnable
 				Key.B), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showBounds = !showBounds;
 			}
 		}));
@@ -481,8 +453,7 @@ public abstract class TestBase implements Runnable
 				Key.C), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				System.out.println("Camera: "
 						+ canvas.getCanvasRenderer().getCamera());
 			}
@@ -492,9 +463,19 @@ public abstract class TestBase implements Runnable
 				Key.N), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showNormals = !showNormals;
+			}
+		}));
+
+		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
+				Key.P), new TriggerAction() {
+
+			@Override
+			@MainThread
+			public void perform(Canvas source, TwoInputStates inputStates,
+					double tpf) {
+				paused = !paused;
 			}
 		}));
 
@@ -502,8 +483,7 @@ public abstract class TestBase implements Runnable
 				Key.F1), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				doShot = true;
 			}
 		}));
@@ -516,8 +496,7 @@ public abstract class TestBase implements Runnable
 				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						System.err.println("clicked: "
 								+ inputStates.getCurrent().getMouseState()
 										.getClickCounts());
@@ -529,10 +508,8 @@ public abstract class TestBase implements Runnable
 				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf)
-					{
-						if (mouseManager.isSetGrabbedSupported())
-						{
+							final TwoInputStates inputState, final double tpf) {
+						if (mouseManager.isSetGrabbedSupported()) {
 							mouseManager.setGrabbed(GrabbedState.GRABBED);
 						}
 					}
@@ -542,10 +519,8 @@ public abstract class TestBase implements Runnable
 				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf)
-					{
-						if (mouseManager.isSetGrabbedSupported())
-						{
+							final TwoInputStates inputState, final double tpf) {
+						if (mouseManager.isSetGrabbedSupported()) {
 							mouseManager.setGrabbed(GrabbedState.NOT_GRABBED);
 						}
 					}
@@ -555,8 +530,7 @@ public abstract class TestBase implements Runnable
 				new TriggerAction() {
 					@Override
 					public void perform(final Canvas source,
-							final TwoInputStates inputState, final double tpf)
-					{
+							final TwoInputStates inputState, final double tpf) {
 						System.out.println("Key character pressed: "
 								+ inputState.getCurrent().getKeyboardState()
 										.getKeyEvent().getKeyChar());

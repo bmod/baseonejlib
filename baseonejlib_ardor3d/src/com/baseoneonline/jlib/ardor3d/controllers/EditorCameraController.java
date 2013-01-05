@@ -29,7 +29,7 @@ public class EditorCameraController {
 	private final Camera cam;
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
-	private double heading = 0;
+	private double heading = MathUtils.HALF_PI / 3;
 	private double elevation = -MathUtils.HALF_PI / 2;
 
 	private final double dollyMultiplier = .005;
@@ -162,7 +162,7 @@ public class EditorCameraController {
 		}
 	};
 
-	public void postUpdate() {
+	public void update() {
 		if (!enabled)
 			return;
 
