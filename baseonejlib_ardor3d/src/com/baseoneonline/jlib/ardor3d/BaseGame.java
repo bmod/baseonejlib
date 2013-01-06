@@ -57,6 +57,7 @@ import com.ardor3d.util.ReadOnlyTimer;
 import com.ardor3d.util.Timer;
 import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.screen.ScreenExporter;
+import com.baseoneonline.jlib.ardor3d.jbullet.PhysicsWorld;
 import com.google.common.base.Predicates;
 
 public class BaseGame implements Runnable, IGame {
@@ -71,38 +72,41 @@ public class BaseGame implements Runnable, IGame {
 
 	public static boolean QUIT_VM_ON_EXIT = true;
 
-	protected final LogicalLayer logicalLayer = new LogicalLayer();
+	private final LogicalLayer logicalLayer = new LogicalLayer();
 
-	protected PhysicalLayer physicalLayer;
+	private PhysicalLayer physicalLayer;
 
-	protected final Timer timer = new Timer();
-	protected final FrameHandler frameHandler = new FrameHandler(timer);
+	private PhysicsWorld physWorld;
 
-	protected DisplaySettings displaySettings;
+	private final Timer timer = new Timer();
+	private final FrameHandler frameHandler = new FrameHandler(timer);
 
-	protected final Node root = new Node("RootNode");
+	private DisplaySettings displaySettings;
 
-	protected LightState lightState;
-	protected WireframeState wireframeState;
+	private final Node root = new Node("RootNode");
 
-	protected volatile boolean _exit = false;
+	private LightState lightState;
+	private WireframeState wireframeState;
 
-	protected boolean showBounds = false;
-	protected boolean showNormals = false;
-	protected boolean showDepth = false;
+	private volatile boolean _exit = false;
 
-	protected boolean paused = false;
-	protected boolean stepping = false;
+	private boolean showBounds = false;
+	private boolean showNormals = false;
+	private boolean showDepth = false;
+	private final boolean showPhysics = false;
 
-	protected boolean doShot = false;
+	private boolean paused = false;
+	private boolean stepping = false;
 
-	protected NativeCanvas canvas;
+	private boolean doShot = false;
 
-	protected ScreenShotImageExporter screenShotExp = new ScreenShotImageExporter();
+	private NativeCanvas canvas;
 
-	protected MouseManager mouseManager;
+	private final ScreenShotImageExporter screenShotExp = new ScreenShotImageExporter();
 
-	protected PointLight light;
+	private MouseManager mouseManager;
+
+	private PointLight light;
 
 	public static int framerate = 60;
 	public static int colorDepth = 32;
@@ -549,5 +553,12 @@ public class BaseGame implements Runnable, IGame {
 	@Override
 	public LogicalLayer getLogicalLayer() {
 		return logicalLayer;
+	}
+
+	@Override
+	public PhysicsWorld getPhysicsWorld() {
+		if (physWorld == null)
+			physWorld = new PhysicsWorld();
+		return null;
 	}
 }
