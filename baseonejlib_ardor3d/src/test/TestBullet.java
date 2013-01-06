@@ -37,7 +37,7 @@ public class TestBullet extends TestBase {
 	protected void init() {
 		Box b = new Box("Box1", Vector3.ZERO, 10, 1, 10);
 		root.attachChild(b);
-		world = new PhysicsWorld(canvas.getCanvasRenderer().getRenderer());
+		world = new PhysicsWorld();
 		world.setGravity(new Vector3(0, -10, 0));
 
 		world.addBox(b, 0);
@@ -47,6 +47,7 @@ public class TestBullet extends TestBase {
 
 		SphereShape triggerShape = new SphereShape(2);
 		GhostObject ob = new GhostObject();
+
 		ob.setCollisionShape(triggerShape);
 		com.bulletphysics.linearmath.Transform xf = new com.bulletphysics.linearmath.Transform();
 		xf.setIdentity();
@@ -95,6 +96,7 @@ public class TestBullet extends TestBase {
 	@Override
 	protected void update(ReadOnlyTimer timer) {
 		world.update(timer.getTimePerFrame());
+
 	}
 
 	@Override

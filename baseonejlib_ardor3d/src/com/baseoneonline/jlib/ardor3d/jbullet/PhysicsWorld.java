@@ -5,11 +5,9 @@ import java.util.List;
 import javax.vecmath.Vector3f;
 
 import com.ardor3d.math.Vector3;
-import com.ardor3d.renderer.Renderer;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.scenegraph.shape.Box;
 import com.ardor3d.scenegraph.shape.Sphere;
-import com.baseoneonline.jlib.ardor3d.tools.DebugDraw;
 import com.bulletphysics.collision.broadphase.AxisSweep3;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.Dispatcher;
@@ -37,7 +35,7 @@ public class PhysicsWorld {
 	/**
 	 * 
 	 */
-	public PhysicsWorld(Renderer r) {
+	public PhysicsWorld() {
 		float size = 1000;
 		Vector3f min = new Vector3f(size, size, size);
 		Vector3f max = new Vector3f(size, size, size);
@@ -49,7 +47,6 @@ public class PhysicsWorld {
 		world = new DiscreteDynamicsWorld(dispatcher, pairCache,
 				constraintSolver, collisionConfiguration);
 
-		world.setDebugDrawer(new DebugDraw(r));
 	}
 
 	public void update(double t) {
@@ -88,10 +85,6 @@ public class PhysicsWorld {
 				new Transform()));
 		world.addRigidBody(body);
 		return body;
-	}
-
-	public void render() {
-		world.debugDrawWorld();
 	}
 
 	public List<CollisionObject> getCollisionObjects() {

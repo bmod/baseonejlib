@@ -41,6 +41,7 @@ import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.stat.StatCollector;
 import com.ardor3d.util.stat.StatListener;
 import com.baseoneonline.jlib.ardor3d.controllers.EditorCameraController;
+import com.baseoneonline.jlib.ardor3d.jbullet.PhysDebugDraw;
 import com.google.common.base.Predicates;
 
 public class DebugInterface {
@@ -55,6 +56,7 @@ public class DebugInterface {
 	private boolean showBounds = false;
 	private boolean showDepth = false;
 	private boolean showDebugCamera = false;
+	private boolean showPhysics = false;
 
 	private WireframeState wireframeState;
 	private List<InputTrigger> inputMap;
@@ -169,6 +171,16 @@ public class DebugInterface {
 						showNormals = !showNormals;
 					}
 				}));
+		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F3),
+				new TriggerAction() {
+
+					@Override
+					@MainThread
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
+						showPhysics = !showPhysics;
+					}
+				}));
 
 		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F4),
 				new TriggerAction() {
@@ -269,6 +281,10 @@ public class DebugInterface {
 		if (showNormals) {
 			Debugger.drawNormals(scene, renderer);
 			Debugger.drawTangents(scene, renderer);
+		}
+
+		if (showPhysics) {
+			PhysDebugDraw.render(game.getPhysicsWorld(), renderer);
 		}
 
 		if (showDepth) {
