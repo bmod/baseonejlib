@@ -53,14 +53,17 @@ public class ResourceManager {
 	private ResourceManager() {}
 
 	public void setReferenceClass(Class<?> clazz) {
-
 		this.referenceClass = clazz;
+	}
 
-		// Add the classpathloader as texture dir
+	public void addTextureLocator(String path) {// Add the classpathloader as
+												// texture dir
 		SimpleResourceLocator srl;
 		try {
 			srl = new SimpleResourceLocator(
-					ResourceLocatorTool.getClassPathResource(clazz, ""));
+					ResourceLocatorTool.getClassPathResource(referenceClass,
+							path));
+
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
@@ -95,7 +98,7 @@ public class ResourceManager {
 			model = loadModel(resource);
 			models.put(resource, model);
 		}
-		return model.makeCopy(true);
+		return model.makeCopy(false);
 	}
 
 	private Node loadModel(String resource) {
