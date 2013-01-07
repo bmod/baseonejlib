@@ -30,12 +30,20 @@ import com.bulletphysics.linearmath.Transform;
 
 public class PhysicsWorld {
 
+	private static PhysicsWorld instance;
+
+	public static PhysicsWorld get() {
+		if (instance == null)
+			instance = new PhysicsWorld();
+		return instance;
+	}
+
 	private final DynamicsWorld world;
 
 	/**
 	 * 
 	 */
-	public PhysicsWorld() {
+	private PhysicsWorld() {
 		float size = 1000;
 		Vector3f min = new Vector3f(size, size, size);
 		Vector3f max = new Vector3f(size, size, size);
@@ -98,7 +106,14 @@ public class PhysicsWorld {
 		return ob;
 	}
 
-	public void addTrigger(GhostObject ob) {
+
+
+	public void add(GhostObject ob) {
 		world.addCollisionObject(ob);
 	}
+
+	public void remove(GhostObject ghostObject) {
+		world.removeCollisionObject(ghostObject);
+	}
+
 }
