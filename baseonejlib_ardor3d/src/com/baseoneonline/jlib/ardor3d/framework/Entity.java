@@ -89,11 +89,11 @@ public class Entity implements Savable {
 		setName(capsule.readString("name", null));
 		List<Component> components = capsule.readSavableList("components",
 				Collections.<Component> emptyList());
+
 		this.components.clear();
-		for (Component c : components) {
-			System.out.println(c);
+		for (Component c : components)
 			addComponent(c);
-		}
+
 	}
 
 	@Override
