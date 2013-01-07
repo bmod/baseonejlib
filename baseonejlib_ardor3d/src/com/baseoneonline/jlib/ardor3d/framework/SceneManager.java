@@ -4,28 +4,42 @@ import com.ardor3d.renderer.Renderer;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 
-public class SceneManager implements Manager {
+public class SceneManager {
 
-	private final Node rootNode = new Node("SceneManagerRootNode");
+	private static SceneManager instance;
+	private Node root = new Node();
 
-	public void add(Spatial spatial) {
-		rootNode.attachChild(spatial);
+	private SceneManager() {
 	}
 
-	public void remove(Spatial spatial) {
-		rootNode.detachChild(spatial);
+	public void setRoot(Node root) {
+		this.root = root;
 	}
 
-	public Node getRootNode() {
-		return rootNode;
+	public Node getRoot() {
+		return root;
 	}
 
 	public void update(double t) {
-		rootNode.updateGeometricState(t, true);
+		root.updateGeometricState(t, true);
 	}
 
 	public void render(Renderer r) {
-		rootNode.onDraw(r);
+		root.onDraw(r);
+	}
+
+	public static SceneManager get() {
+		if (instance == null)
+			instance = new SceneManager();
+		return instance;
+	}
+
+	public void add(Spatial spatial) {
+		root.attachChild(spatial);
+	}
+
+	public void remove(Spatial spatial) {
+		root.detachChild(spatial);
 	}
 
 }

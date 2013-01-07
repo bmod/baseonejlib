@@ -2,6 +2,7 @@ package com.baseoneonline.jlib.ardor3d;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.ardor3d.annotation.MainThread;
 import com.ardor3d.bounding.BoundingSphere;
@@ -41,16 +42,19 @@ import com.ardor3d.util.geom.Debugger;
 import com.ardor3d.util.stat.StatCollector;
 import com.ardor3d.util.stat.StatListener;
 import com.baseoneonline.jlib.ardor3d.controllers.EditorCameraController;
+import com.baseoneonline.jlib.ardor3d.framework.SceneManager;
 import com.baseoneonline.jlib.ardor3d.jbullet.PhysDebugDraw;
+import com.baseoneonline.jlib.ardor3d.jbullet.PhysicsWorld;
 import com.google.common.base.Predicates;
 
 public class DebugInterface {
 
+	private static final Logger LOG = Logger.getLogger(DebugInterface.class
+			.getName());
 	private boolean enabled = false;
 
 	private Node uiNode;
 	private final IGame game;
-	private final IGameContainer gameContainer;
 
 	private boolean showNormals = false;
 	private boolean showBounds = false;
@@ -70,9 +74,8 @@ public class DebugInterface {
 	 * @param game
 	 * @param gameContainer
 	 */
-	public DebugInterface(final IGame game, final IGameContainer gameContainer) {
+	public DebugInterface(final IGame game) {
 		this.game = game;
-		this.gameContainer = gameContainer;
 	}
 
 	public void toggle() {
@@ -95,6 +98,7 @@ public class DebugInterface {
 	}
 
 	private void start() {
+		LOG.info("Started Debug Interface");
 		StatCollector.addStatListener(statListener);
 
 		uiNode = new Node("UI");
@@ -118,10 +122,11 @@ public class DebugInterface {
 		if (wireframeState == null) {
 			wireframeState = new WireframeState();
 			wireframeState.setEnabled(false);
-			gameContainer.getSceneRoot().setRenderState(wireframeState);
+			SceneManager.get().getRoot().setRenderState(wireframeState);
+			SceneManager.get().getRoot().updateWorldRenderStates(true);
 		}
 
-		checkInfinityBounds(gameContainer.getSceneRoot());
+		checkInfinityBounds(SceneManager.get().getRoot());
 		focusAll();
 	}
 
@@ -133,6 +138,7 @@ public class DebugInterface {
 	}
 
 	private void stop() {
+		LOG.info("Stopped Debug Interface");
 		StatCollector.removeStatListener(statListener);
 
 		uiNode = null;
@@ -149,6 +155,7 @@ public class DebugInterface {
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf) {
 						showBounds = !showBounds;
+						LOG.info("Showing bounds: " + showBounds);
 					}
 				}));
 		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F2),
@@ -159,6 +166,7 @@ public class DebugInterface {
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf) {
 						showDepth = !showDepth;
+						LOG.info("Showing depth: " + showDepth);
 					}
 				}));
 		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F3),
@@ -169,16 +177,8 @@ public class DebugInterface {
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf) {
 						showNormals = !showNormals;
-					}
-				}));
-		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F3),
-				new TriggerAction() {
+						LOG.info("Showing normals: " + showNormals);
 
-					@Override
-					@MainThread
-					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf) {
-						showPhysics = !showPhysics;
 					}
 				}));
 
@@ -190,8 +190,24 @@ public class DebugInterface {
 					public void perform(final Canvas source,
 							final TwoInputStates inputStates, final double tpf) {
 						wireframeState.setEnabled(!wireframeState.isEnabled());
+						LOG.info("Wireframe enabled: "
+								+ wireframeState.isEnabled());
+
 					}
 				}));
+
+		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F5),
+				new TriggerAction() {
+
+					@Override
+					@MainThread
+					public void perform(final Canvas source,
+							final TwoInputStates inputStates, final double tpf) {
+						showPhysics = !showPhysics;
+						LOG.info("Showing physics: " + showPhysics);
+					}
+				}));
+
 		inputMap.add(new InputTrigger(Predicates.and(
 				Predicates.not(new KeyHeldCondition(Key.LSHIFT)),
 				new MouseButtonClickedCondition(MouseButton.LEFT)),
@@ -271,7 +287,7 @@ public class DebugInterface {
 		if (!enabled)
 			return;
 
-		final Node scene = gameContainer.getSceneRoot();
+		final Node scene = SceneManager.get().getRoot();
 
 		Debugger.setBoundsColor(ColorRGBA.BLUE);
 		if (showBounds) {
@@ -284,7 +300,7 @@ public class DebugInterface {
 		}
 
 		if (showPhysics) {
-			PhysDebugDraw.render(game.getPhysicsWorld(), renderer);
+			PhysDebugDraw.render(PhysicsWorld.get(), renderer);
 		}
 
 		if (showDepth) {
@@ -353,7 +369,7 @@ public class DebugInterface {
 		final Ray3 ray = new Ray3();
 		cam.getPickRay(new Vector2(ms.getX(), ms.getY()), false, ray);
 		final PickResults results = new PrimitivePickResults();
-		PickingUtil.findPick(gameContainer.getSceneRoot(), ray, results);
+		PickingUtil.findPick(SceneManager.get().getRoot(), ray, results);
 		final PickData pdata = results.findFirstIntersectingPickData();
 		if (pdata != null) {
 			final Pickable pickable = pdata.getTarget();
@@ -379,7 +395,7 @@ public class DebugInterface {
 	}
 
 	private void focusAll() {
-		focusCamera(gameContainer.getSceneRoot());
+		focusCamera(SceneManager.get().getRoot());
 	}
 
 	private void focusSelection() {

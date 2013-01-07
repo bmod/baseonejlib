@@ -35,18 +35,9 @@ public abstract class BaseGameContainer implements IGameContainer {
 	}
 
 	@Override
-	public void postUpdate(final double t) {
-	}
-
-	@Override
 	public void render(final Renderer r) {
 		root.onDraw(r);
 		r.renderBuckets();
-	}
-
-	@Override
-	public Node getSceneRoot() {
-		return root;
 	}
 
 }

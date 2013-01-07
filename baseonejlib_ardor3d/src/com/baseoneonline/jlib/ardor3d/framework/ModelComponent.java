@@ -8,18 +8,15 @@ import com.ardor3d.util.export.OutputCapsule;
 
 public class ModelComponent extends Component {
 
-	private final String resource;
+	private String resource;
+	private Spatial model;
+
+	public ModelComponent() {
+
+	}
 
 	public ModelComponent(String resource) {
 		this.resource = resource;
-	}
-
-	public Spatial getSpatial() {
-		return spatial;
-	}
-
-	public void setSpatial(Spatial spatial) {
-		this.spatial = spatial;
 	}
 
 	@Override
@@ -27,28 +24,26 @@ public class ModelComponent extends Component {
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
-		capsule.write(spatial, "spatial", null);
-	}
-
-	@Override
-	public void read(InputCapsule capsule) throws IOException {
-		spatial = (Spatial) capsule.readSavable("spatial", null);
-	}
-
-	@Override
-	public Class<?> getClassTag() {
-		return getClass();
-	}
-
-	@Override
 	public void onAdded() {
-		GameManager.get().getSceneManager().add(spatial);
+		if (model == null)
+			model = ResourceManager.get().getModel(resource);
+		getOwner().getNode().attachChild(model);
 	}
 
 	@Override
 	public void onRemoved() {
-		GameManager.get().getSceneManager().remove(spatial);
+		getOwner().getNode().detachChild(model);
+	}
+
+	@Override
+	public void write(OutputCapsule capsule) throws IOException {
+		capsule.write(resource, "resource", null);
+	}
+
+	@Override
+	public void read(InputCapsule capsule) throws IOException {
+		resource = capsule.readString("resource", null);
+
 	}
 
 }
