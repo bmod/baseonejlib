@@ -45,11 +45,9 @@ public class TriggerComponent extends Component {
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
-	}
+	public void write(OutputCapsule capsule) throws IOException {}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {
-	}
+	public void read(InputCapsule capsule) throws IOException {}
 
 }

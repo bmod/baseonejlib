@@ -59,7 +59,7 @@ public class Entity implements Savable {
 		return (T) components.get(type);
 	}
 
-	private Collection<? extends Component> getComponents() {
+	public Collection<? extends Component> getComponents() {
 		return components.values();
 	}
 
