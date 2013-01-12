@@ -14,21 +14,18 @@ import com.baseoneonline.jlib.ardor3d.Line;
 import com.baseoneonline.jlib.ardor3d.math.BSpline3;
 import com.baseoneonline.jlib.ardor3d.math.Nurbs3;
 
-public class TestNurbs extends TestBase
-{
+public class TestNurbs extends TestBase {
 
 	private static final Random random = new Random();
 	private BSpline3 curve;
 	private Spatial traveller;
 
-	public static void main(final String[] args)
-	{
+	public static void main(final String[] args) {
 		new TestNurbs().start();
 	}
 
 	@Override
-	protected void init()
-	{
+	protected void init() {
 		setShadowsEnabled(false);
 
 		camera.setLocation(0, 15, 1);
@@ -47,8 +44,7 @@ public class TestNurbs extends TestBase
 		final Vector3[] cvs = { new Vector3(0, 0, 0), new Vector3(0, 0, 5),
 				new Vector3(5, 0, 5), new Vector3(5, 0, 0), };
 
-		for (final Vector3 cv : cvs)
-		{
+		for (final Vector3 cv : cvs) {
 			addPoint(cv);
 		}
 
@@ -85,15 +81,11 @@ public class TestNurbs extends TestBase
 	}
 
 	@Override
-	protected void update(final ReadOnlyTimer timer)
-	{
-	}
+	protected void update(final ReadOnlyTimer timer) {}
 
-	private void createCurve(final int samples)
-	{
+	private void createCurve(final int samples) {
 		final ReadOnlyVector3[] curvePoints = new ReadOnlyVector3[samples + 1];
-		for (int i = 0; i <= samples; i++)
-		{
+		for (int i = 0; i <= samples; i++) {
 			final double t = (double) i / (double) samples * curve.getCVCount();
 
 			final Vector3 pos = curve.getPoint(t, null);
@@ -106,32 +98,18 @@ public class TestNurbs extends TestBase
 		root.attachChild(line);
 	}
 
-	private void addPoint(final ReadOnlyVector3 position)
-	{
+	private void addPoint(final ReadOnlyVector3 position) {
 		final double radius = .05;
 		final Box s = new Box("Point", Vector3.ZERO, radius, radius, radius);
 		s.setTranslation(position);
 		root.attachChild(s);
 	}
 
-	private static Vector3 randomize(final Vector3 store, final double extents)
-	{
-		return store.set(randRange(extents), randRange(extents),
-				randRange(extents));
-	}
-
-	private static double randRange(final double extents)
-	{
-		return (random.nextDouble() * 2 - 1) * extents;
-	}
-
 }
 
-class Curve extends Node
-{
+class Curve extends Node {
 
-	public Curve(final Nurbs3 nurbs)
-	{
+	public Curve(final Nurbs3 nurbs) {
 
 	}
 
