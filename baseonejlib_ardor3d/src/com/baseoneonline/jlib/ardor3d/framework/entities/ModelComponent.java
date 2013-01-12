@@ -1,10 +1,11 @@
-package com.baseoneonline.jlib.ardor3d.framework;
+package com.baseoneonline.jlib.ardor3d.framework.entities;
 
 import java.io.IOException;
 
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
+import com.baseoneonline.jlib.ardor3d.framework.ResourceManager;
 
 public class ModelComponent extends Component {
 
