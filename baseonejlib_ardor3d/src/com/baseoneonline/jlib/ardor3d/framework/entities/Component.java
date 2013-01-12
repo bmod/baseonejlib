@@ -1,4 +1,4 @@
-package com.baseoneonline.jlib.ardor3d.framework;
+package com.baseoneonline.jlib.ardor3d.framework.entities;
 
 import com.ardor3d.util.export.Savable;
 

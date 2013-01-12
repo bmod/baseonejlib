@@ -1,4 +1,4 @@
-package com.baseoneonline.jlib.ardor3d.framework;
+package com.baseoneonline.jlib.ardor3d.framework.entities;
 
 import java.io.IOException;
 import java.util.ArrayList;

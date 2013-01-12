@@ -2,6 +2,7 @@ package com.baseoneonline.jlib.ardor3d.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -17,21 +18,21 @@ import com.ardor3d.image.Texture;
 import com.ardor3d.image.Texture.MinificationFilter;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
-import com.ardor3d.util.export.Ardor3dImporter;
-import com.ardor3d.util.export.xml.XMLImporter;
+import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.resource.ResourceLocatorTool;
 import com.ardor3d.util.resource.SimpleResourceLocator;
 import com.baseoneonline.java.tools.FileExensionFilter;
+import com.baseoneonline.jlib.ardor3d.framework.entities.Entity;
 
 public class ResourceManager {
 
 	private static ResourceManager instance;
 
-	private final Ardor3dImporter importer = new XMLImporter();
 	private final HashMap<String, Entity> entities = new HashMap<String, Entity>();
 	private final HashMap<String, Node> models = new HashMap<String, Node>();
 
 	private static final HashMap<String, ModelLoader> loaders = new HashMap<String, ModelLoader>();
+	private final SimpleXMLImporter importer = new SimpleXMLImporter();
 
 	public static FileFilter MODEL_FILE_FILTER;
 	static {
@@ -40,6 +41,7 @@ public class ResourceManager {
 
 		MODEL_FILE_FILTER = new FileExensionFilter(loaders.keySet().toArray(
 				new String[loaders.keySet().size()]));
+
 	}
 
 	public static ResourceManager get() {
@@ -52,12 +54,15 @@ public class ResourceManager {
 
 	private ResourceManager() {}
 
+	public SimpleXMLImporter getTagTransformer() {
+		return importer;
+	}
+
 	public void setReferenceClass(Class<?> clazz) {
 		this.referenceClass = clazz;
 	}
 
-	public void addTextureLocator(String path) {// Add the classpathloader as
-												// texture dir
+	public void addTextureLocator(String path) {
 		SimpleResourceLocator srl;
 		try {
 			srl = new SimpleResourceLocator(
@@ -80,11 +85,24 @@ public class ResourceManager {
 	}
 
 	private Entity loadEntity(String resource) {
+		return (Entity) loadSavableXML(resource);
+	}
+
+	private Savable loadSavableXML(String resource) {
 		URL url = referenceClass.getClassLoader().getResource(resource);
+
+		InputStream is = null;
+		try {
+			is = ResourceManager.get().getResourceURL(resource).openStream();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 		if (url == null)
 			throw new RuntimeException("Resource not found: " + resource);
+
 		try {
-			return (Entity) importer.load(url);
+			return importer.load(is);
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
@@ -127,6 +145,14 @@ public class ResourceManager {
 				.toString();
 		String absPath = url.toString();
 		return absPath.replace(relPath, "");
+	}
+
+	URL getResourceURL(String resource) {
+		URL url = referenceClass.getClassLoader().getResource(resource);
+		if (url == null)
+			throw new RuntimeException("Resource could not be resolved: "
+					+ resource);
+		return url;
 	}
 
 }

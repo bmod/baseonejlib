@@ -3,6 +3,8 @@ package com.baseoneonline.jlib.ardor3d.framework;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baseoneonline.jlib.ardor3d.framework.entities.Entity;
+
 public class TheGame {
 
 	private static TheGame instance;
