@@ -13,12 +13,12 @@ public class PhysicsComponent extends Component {
 	}
 
 	@Override
-	public void onAdded() {
+	public void resume() {
 
 	}
 
 	@Override
-	public void onRemoved() {
+	public void suspend() {
 	}
 
 	public void setTransform(ReadOnlyTransform xf) {

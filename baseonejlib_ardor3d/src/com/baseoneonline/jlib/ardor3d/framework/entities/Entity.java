@@ -19,11 +19,13 @@ public class Entity implements Savable {
 
 	private final Node node;
 
+	private boolean initialized = false;
+
 	public Entity() {
 		node = new Node();
 	}
 
-	public Entity(String name) {
+	public Entity(final String name) {
 		node = new Node(name);
 	}
 
@@ -35,69 +37,87 @@ public class Entity implements Savable {
 		return node.getName();
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		node.setName(name);
 	}
 
-	public void addComponent(Component c) {
-		Class<? extends Component> type = c.getClass();
-		if (components.containsKey(type))
-			throw new RuntimeException("Component type already added: " + c);
+	public void addComponent(final Component c) {
+		final Class<? extends Component> type = c.getClass();
+		if (hasComponent(type))
+			throw new RuntimeException("Component type "
+					+ c.getClass().getName() + "  already added to: " + this);
 		components.put(type, c);
 		c.setOwner(this);
-		c.onAdded();
 	}
 
-	public void removeComponent(Component c) {
+	private boolean hasComponent(final Class<? extends Component> class1) {
+		return components.containsKey(class1);
+	}
+
+	public void removeComponent(final Component c) {
 		components.remove(c.getClass());
-		c.onRemoved();
+		c.suspend();
 		c.setOwner(null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Component> T getComponent(Class<T> type) {
-		return (T) components.get(type);
+	public <T extends Component> T getComponent(final Class<T> type) {
+		final T comp = (T) components.get(type);
+		if (comp == null)
+			throw new RuntimeException("Component of type " + type.getName()
+					+ " not found on entity: " + getName());
+		return comp;
 	}
 
 	public Collection<? extends Component> getComponents() {
 		return components.values();
 	}
 
-	public void update(double t) {
-		for (Component c : getComponents())
+	public void update(final double t) {
+		if (!initialized) {
+			for (final Component c : getComponents())
+				c.resume();
+			initialized = true;
+		}
+
+		for (final Component c : getComponents())
 			c.update(t);
 	}
 
-	public void setTransform(ReadOnlyTransform xf) {
-		PhysicsComponent phys = getComponent(PhysicsComponent.class);
-		if (null != phys) {
-			phys.setTransform(xf);
+	public void setTransform(final ReadOnlyTransform xf) {
+		if (hasComponent(PhysicsComponent.class)) {
+			getComponent(PhysicsComponent.class).setTransform(xf);
 		} else {
 			node.setTransform(xf);
 		}
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
+	public void write(final OutputCapsule capsule) throws IOException {
 		capsule.write(getName(), "name", null);
 		capsule.writeSavableList(new ArrayList<Savable>(components.values()),
 				"components", null);
 	}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {
+	public void read(final InputCapsule capsule) throws IOException {
 		setName(capsule.readString("name", null));
-		List<Component> components = capsule.readSavableList("components",
-				Collections.<Component> emptyList());
+		components.clear();
+		final List<Component> components = capsule.readSavableList(
+				"components", Collections.<Component> emptyList());
 
-		this.components.clear();
-		for (Component c : components)
+		for (final Component c : components)
 			addComponent(c);
 
 	}
 
 	@Override
 	public Class<?> getClassTag() {
-		return null;
+		return getClass();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Entity (name: %s)", getName());
 	}
 }

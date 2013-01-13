@@ -20,7 +20,7 @@ public class RandomRotationComponent extends Component {
 	private final Vector3 angles = new Vector3();
 	private final Simplex noise = new Simplex();
 
-	public void setSpeed(double speed) {
+	public void setSpeed(final double speed) {
 		this.speed = speed;
 	}
 
@@ -29,34 +29,34 @@ public class RandomRotationComponent extends Component {
 	}
 
 	@Override
-	public void update(double t) {
+	public void update(final double t) {
 		noise.noise(time * .01, tmp);
 		tmp.multiplyLocal(.1);
 		angles.addLocal(tmp);
 		orient.fromAngles(angles.getX(), angles.getY(), angles.getZ());
-
 		getOwner().getNode().setRotation(orient);
 		time += t;
 	}
 
 	@Override
-	public void onAdded() {
+	public void resume() {
 		angles.set(MathUtils.TWO_PI * MathUtils.rand.nextDouble(),
 				MathUtils.TWO_PI * MathUtils.rand.nextDouble(),
 				MathUtils.TWO_PI * MathUtils.rand.nextDouble());
 	}
 
 	@Override
-	public void onRemoved() {}
+	public void suspend() {
+	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
+	public void write(final OutputCapsule capsule) throws IOException {
 		capsule.write(speed, "speed", 1);
 		capsule.write(amplitude, "amplitude", 1);
 	}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {
+	public void read(final InputCapsule capsule) throws IOException {
 		speed = capsule.readDouble("speed", 1);
 		amplitude = capsule.readDouble("amplitude", 1);
 	}

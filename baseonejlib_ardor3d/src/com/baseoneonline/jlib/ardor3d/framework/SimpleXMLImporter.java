@@ -11,12 +11,12 @@ import org.xml.sax.SAXException;
 
 import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.export.xml.XMLImporter;
+import com.baseoneonline.jlib.ardor3d.framework.entities.CollisionComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.Entity;
 import com.baseoneonline.jlib.ardor3d.framework.entities.ModelComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.PhysicsComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.RandomRotationComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.SpatialComponent;
-import com.baseoneonline.jlib.ardor3d.framework.entities.TriggerComponent;
 
 public class SimpleXMLImporter extends XMLImporter {
 
@@ -27,16 +27,16 @@ public class SimpleXMLImporter extends XMLImporter {
 		simplifyTag(ModelComponent.class);
 		simplifyTag(PhysicsComponent.class);
 		simplifyTag(SpatialComponent.class);
-		simplifyTag(TriggerComponent.class);
 		simplifyTag(RandomRotationComponent.class);
+		simplifyTag(CollisionComponent.class);
 	}
 
-	public void simplifyTag(Class<? extends Savable> clazz) {
-		String name = clazz.getSimpleName().toLowerCase();
+	public void simplifyTag(final Class<? extends Savable> clazz) {
+		final String name = clazz.getSimpleName().toLowerCase();
 		setTag(name, clazz);
 	}
 
-	private void setTag(String name, Class<? extends Savable> clazz) {
+	private void setTag(final String name, final Class<? extends Savable> clazz) {
 		if (tagMap.containsKey(name))
 			throw new RuntimeException("The tag is already defined: " + name);
 		tagMap.put(name, clazz);

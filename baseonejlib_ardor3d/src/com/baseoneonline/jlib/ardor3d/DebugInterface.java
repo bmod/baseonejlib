@@ -39,12 +39,15 @@ import com.ardor3d.ui.text.BMText;
 import com.ardor3d.ui.text.BasicText;
 import com.ardor3d.util.ReadOnlyTimer;
 import com.ardor3d.util.geom.Debugger;
+import com.ardor3d.util.stat.MultiStatSample;
 import com.ardor3d.util.stat.StatCollector;
 import com.ardor3d.util.stat.StatListener;
+import com.ardor3d.util.stat.StatType;
+import com.ardor3d.util.stat.StatValue;
 import com.baseoneonline.jlib.ardor3d.controllers.EditorCameraController;
+import com.baseoneonline.jlib.ardor3d.framework.PhysicsManager;
 import com.baseoneonline.jlib.ardor3d.framework.SceneManager;
 import com.baseoneonline.jlib.ardor3d.jbullet.PhysDebugDraw;
-import com.baseoneonline.jlib.ardor3d.jbullet.PhysicsWorld;
 import com.google.common.base.Predicates;
 
 public class DebugInterface {
@@ -86,7 +89,6 @@ public class DebugInterface {
 		if (this.enabled == enabled)
 			return;
 		this.enabled = enabled;
-
 		if (enabled)
 			start();
 		else
@@ -300,7 +302,7 @@ public class DebugInterface {
 		}
 
 		if (showPhysics) {
-			PhysDebugDraw.render(PhysicsWorld.get(), renderer);
+			PhysDebugDraw.render(PhysicsManager.get(), renderer);
 		}
 
 		if (showDepth) {
@@ -322,15 +324,29 @@ public class DebugInterface {
 
 		uiNode.updateGeometricState(timer.getTimePerFrame(), true);
 
-		StringBuffer buf = new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 		// Selection
 		if (selection.size() > 0) {
 			buf.append("Selection:\n");
-			for (Spatial s : selection)
+			for (final Spatial s : selection)
 				buf.append("\t" + s.toString() + '\n');
 			buf.append("\n");
 		}
 
+		// Stats
+
+		for (final MultiStatSample sample : StatCollector.getHistorical()) {
+			if (null != sample) {
+				for (final StatType t : sample.getStatTypes()) {
+					final StatValue val = sample.getStatValue(t);
+					final double v = val.getAccumulatedValue();
+					buf.append(t.getStatName());
+					buf.append(": ");
+					buf.append(v);
+					buf.append('\n');
+				}
+			}
+		}
 		// Camera
 		final Camera cam = game.getMainCamera();
 		final ReadOnlyVector3 pos = cam.getLocation();

@@ -25,14 +25,14 @@ public class ModelComponent extends Component {
 	}
 
 	@Override
-	public void onAdded() {
+	public void resume() {
 		if (model == null)
 			model = ResourceManager.get().getModel(resource);
 		getOwner().getNode().attachChild(model);
 	}
 
 	@Override
-	public void onRemoved() {
+	public void suspend() {
 		getOwner().getNode().detachChild(model);
 	}
 

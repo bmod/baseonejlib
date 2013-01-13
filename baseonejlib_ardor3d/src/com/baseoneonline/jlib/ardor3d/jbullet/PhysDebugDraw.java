@@ -9,6 +9,7 @@ import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.renderer.Renderer;
 import com.ardor3d.scenegraph.Mesh;
+import com.baseoneonline.jlib.ardor3d.framework.PhysicsManager;
 import com.baseoneonline.jlib.ardor3d.spatials.SimpleAxis;
 import com.baseoneonline.jlib.ardor3d.spatials.WireBox;
 import com.baseoneonline.jlib.ardor3d.spatials.WireSphere;
@@ -37,7 +38,7 @@ public class PhysDebugDraw {
 	private static final ReadOnlyColorRGBA COLOR_DISABLE_DEACTIVATE = ColorRGBA.RED;
 	private static final ReadOnlyColorRGBA COLOR_DISABLE_SIM = ColorRGBA.MAGENTA;
 
-	public static void render(PhysicsWorld world, Renderer renderer) {
+	public static void render(PhysicsManager world, Renderer renderer) {
 		for (CollisionObject ob : world.getCollisionObjects()) {
 			ob.getWorldTransform(bTrans);
 
