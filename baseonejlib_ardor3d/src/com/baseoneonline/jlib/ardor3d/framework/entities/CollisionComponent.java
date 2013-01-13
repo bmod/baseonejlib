@@ -18,34 +18,34 @@ public class CollisionComponent extends Component {
 	private final GhostObject ghostObject = new GhostObject();
 	private final Transform ghostTransform = new Transform();
 
-	private int[] collisionMask = { 0 };
+	private int collisionMask = 1;
 
-	private int collisionGroup = 0;
+	private int collisionGroup = 1;
 
 	public CollisionComponent() {
 
 	}
 
-	public CollisionComponent(final int group, final int[] filter) {
+	public CollisionComponent(final int group, final int filter) {
 		collisionGroup = group;
 		collisionMask = filter;
 	}
 
 	@Override
 	public void write(final OutputCapsule capsule) throws IOException {
-		capsule.write(collisionGroup, "group", 0);
-		capsule.write(collisionMask, "mask", new int[0]);
+		capsule.write(collisionGroup, "group", 1);
+		capsule.write(collisionMask, "mask", 1);
 	}
 
 	@Override
 	public void read(final InputCapsule capsule) throws IOException {
-		collisionGroup = capsule.readInt("group", 0);
-		collisionMask = capsule.readIntArray("mask", new int[0]);
+		collisionGroup = capsule.readInt("group", 1);
+		collisionMask = capsule.readInt("mask", 1);
 	}
 
 	@Override
 	public void update(final double t) {
-		ghostObject.setWorldTransform(BulletConvert.convert(getOwner()
+		ghostObject.setWorldTransform(BulletConvert.convert(getEntity()
 				.getNode().getWorldTransform(), ghostTransform));
 
 	}
@@ -65,7 +65,7 @@ public class CollisionComponent extends Component {
 		return collisionGroup;
 	}
 
-	public int[] getCollisionMask() {
+	public int getCollisionMask() {
 		return collisionMask;
 	}
 

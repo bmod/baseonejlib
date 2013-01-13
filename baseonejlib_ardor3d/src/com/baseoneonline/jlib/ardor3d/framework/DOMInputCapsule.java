@@ -18,7 +18,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import com.ardor3d.annotation.SavableFactory;
 import com.ardor3d.image.Texture;
@@ -1041,9 +1040,8 @@ class DOMInputCapsule implements InputCapsule {
 		int count = 0;
 		for (int i = 0; i < children.getLength(); i++) {
 			Node n = children.item(i);
-			if (n instanceof Text)
-				continue;
-			count++;
+			if (n.getNodeType() == Node.ELEMENT_NODE)
+				count++;
 		}
 		return count;
 	}

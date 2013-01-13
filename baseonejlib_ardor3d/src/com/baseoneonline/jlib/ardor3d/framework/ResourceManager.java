@@ -16,6 +16,9 @@ import com.ardor3d.extension.model.collada.jdom.data.MaterialInfo;
 import com.ardor3d.extension.model.obj.ObjImporter;
 import com.ardor3d.image.Texture;
 import com.ardor3d.image.Texture.MinificationFilter;
+import com.ardor3d.math.MathUtils;
+import com.ardor3d.math.Matrix3;
+import com.ardor3d.math.Vector3;
 import com.ardor3d.scenegraph.Node;
 import com.ardor3d.scenegraph.Spatial;
 import com.ardor3d.util.export.Savable;
@@ -52,8 +55,7 @@ public class ResourceManager {
 
 	private Class<?> referenceClass;
 
-	private ResourceManager() {
-	}
+	private ResourceManager() {}
 
 	public SimpleXMLImporter getTagTransformer() {
 		return importer;
@@ -172,6 +174,11 @@ class ColladaLoader implements ModelLoader {
 
 		try {
 			store = importer.load(resource);
+
+			if (store.getAssetData().getUpAxis() == Vector3.UNIT_Z) {
+				store.getScene().setRotation(
+						new Matrix3().fromAngles(-MathUtils.HALF_PI, 0, 0));
+			}
 
 			for (final MaterialInfo inf : store.getMaterialMap().values())
 				for (final Texture t : inf.getTextures().values())

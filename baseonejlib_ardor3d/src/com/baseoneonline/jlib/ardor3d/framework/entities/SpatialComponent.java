@@ -15,17 +15,13 @@ public class SpatialComponent extends Component {
 	}
 
 	@Override
-	public void update(final double t) {
-	}
-
-	@Override
 	public void resume() {
-		getOwner().getNode().attachChild(spatial);
+		getEntity().getNode().attachChild(spatial);
 	}
 
 	@Override
 	public void suspend() {
-		getOwner().getNode().detachChild(spatial);
+		getEntity().getNode().detachChild(spatial);
 	}
 
 	@Override
