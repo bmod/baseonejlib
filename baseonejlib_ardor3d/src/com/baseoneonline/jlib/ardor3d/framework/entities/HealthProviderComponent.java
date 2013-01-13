@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
-import com.baseoneonline.jlib.ardor3d.framework.CameraManager;
 
 public class HealthProviderComponent extends Component {
 
@@ -33,6 +32,6 @@ public class HealthProviderComponent extends Component {
 		if (other.hasComponent(HealthComponent.class))
 			other.getComponent(HealthComponent.class).addHealth(charge);
 		getEntity().destroy();
-		CameraManager.get().getController().
+
 	}
 }
