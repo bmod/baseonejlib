@@ -17,7 +17,7 @@ public class EntityManager {
 		return instance;
 	}
 
-	private void add(Entity e) {
+	public void add(Entity e) {
 		assert isUniqueName(e.getName()) : "Entity must have a unique name: "
 				+ e.getName();
 		entities.add(e);

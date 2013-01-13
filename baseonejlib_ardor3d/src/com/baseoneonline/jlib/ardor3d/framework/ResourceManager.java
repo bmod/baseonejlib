@@ -7,9 +7,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.filechooser.FileFilter;
 
+import com.ardor3d.extension.model.collada.jdom.ColladaAnimUtils;
 import com.ardor3d.extension.model.collada.jdom.ColladaImporter;
 import com.ardor3d.extension.model.collada.jdom.data.ColladaStorage;
 import com.ardor3d.extension.model.collada.jdom.data.MaterialInfo;
@@ -171,7 +174,8 @@ class ColladaLoader implements ModelLoader {
 	@Override
 	public Node load(final String resource) {
 		ColladaStorage store = null;
-
+		Logger.getLogger(ColladaAnimUtils.class.getName()).setLevel(
+				Level.SEVERE);
 		try {
 			store = importer.load(resource);
 
