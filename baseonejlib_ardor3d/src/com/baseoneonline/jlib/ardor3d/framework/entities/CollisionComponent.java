@@ -23,7 +23,7 @@ public class CollisionComponent extends Component {
 	private int collisionGroup = 0;
 
 	public CollisionComponent() {
-		ghostObject.setCollisionShape(shape);
+
 	}
 
 	public CollisionComponent(final int group, final int[] filter) {
@@ -52,6 +52,7 @@ public class CollisionComponent extends Component {
 
 	@Override
 	public void resume() {
+		ghostObject.setCollisionShape(shape);
 		PhysicsManager.get().add(this);
 	}
 
