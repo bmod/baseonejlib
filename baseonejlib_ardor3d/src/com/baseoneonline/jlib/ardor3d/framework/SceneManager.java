@@ -12,7 +12,7 @@ public class SceneManager {
 	private SceneManager() {
 	}
 
-	public void setRoot(Node root) {
+	public void setRoot(final Node root) {
 		this.root = root;
 	}
 
@@ -20,11 +20,11 @@ public class SceneManager {
 		return root;
 	}
 
-	public void update(double t) {
+	public void update(final double t) {
 		root.updateGeometricState(t, true);
 	}
 
-	public void render(Renderer r) {
+	public void render(final Renderer r) {
 		root.onDraw(r);
 	}
 
@@ -34,11 +34,11 @@ public class SceneManager {
 		return instance;
 	}
 
-	public void add(Spatial spatial) {
+	public void add(final Spatial spatial) {
 		root.attachChild(spatial);
 	}
 
-	public void remove(Spatial spatial) {
+	public void remove(final Spatial spatial) {
 		root.detachChild(spatial);
 	}
 

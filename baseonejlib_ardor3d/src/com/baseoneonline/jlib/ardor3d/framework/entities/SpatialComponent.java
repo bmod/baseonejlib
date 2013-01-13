@@ -10,31 +10,31 @@ public class SpatialComponent extends Component {
 
 	private Spatial spatial;
 
-	public SpatialComponent(Spatial spatial) {
+	public SpatialComponent(final Spatial spatial) {
 		this.spatial = spatial;
 	}
 
 	@Override
-	public void update(double t) {
+	public void update(final double t) {
 	}
 
 	@Override
-	public void onAdded() {
+	public void resume() {
 		getOwner().getNode().attachChild(spatial);
 	}
 
 	@Override
-	public void onRemoved() {
+	public void suspend() {
 		getOwner().getNode().detachChild(spatial);
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
+	public void write(final OutputCapsule capsule) throws IOException {
 		capsule.write(spatial, "spatial", null);
 	}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {
+	public void read(final InputCapsule capsule) throws IOException {
 		spatial = (Spatial) capsule.readSavable("spatial", null);
 	}
 

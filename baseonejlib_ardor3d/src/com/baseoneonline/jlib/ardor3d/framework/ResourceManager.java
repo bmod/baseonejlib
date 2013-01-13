@@ -52,31 +52,32 @@ public class ResourceManager {
 
 	private Class<?> referenceClass;
 
-	private ResourceManager() {}
+	private ResourceManager() {
+	}
 
 	public SimpleXMLImporter getTagTransformer() {
 		return importer;
 	}
 
-	public void setReferenceClass(Class<?> clazz) {
-		this.referenceClass = clazz;
+	public void setReferenceClass(final Class<?> clazz) {
+		referenceClass = clazz;
 	}
 
-	public void addTextureLocator(String path) {
+	public void addTextureLocator(final String path) {
 		SimpleResourceLocator srl;
 		try {
 			srl = new SimpleResourceLocator(
 					ResourceLocatorTool.getClassPathResource(referenceClass,
 							path));
 
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 		ResourceLocatorTool.addResourceLocator(
 				ResourceLocatorTool.TYPE_TEXTURE, srl);
 	}
 
-	public Entity getEntity(String resource) {
+	public Entity getEntity(final String resource) {
 		// TODO: Caching
 		// if (!entities.containsKey(resource))
 		// entities.put(resource, loadEntity(resource));
@@ -84,17 +85,17 @@ public class ResourceManager {
 		return loadEntity(resource);
 	}
 
-	private Entity loadEntity(String resource) {
+	private Entity loadEntity(final String resource) {
 		return (Entity) loadSavableXML(resource);
 	}
 
-	private Savable loadSavableXML(String resource) {
-		URL url = referenceClass.getClassLoader().getResource(resource);
+	private Savable loadSavableXML(final String resource) {
+		final URL url = referenceClass.getClassLoader().getResource(resource);
 
 		InputStream is = null;
 		try {
 			is = ResourceManager.get().getResourceURL(resource).openStream();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -103,12 +104,12 @@ public class ResourceManager {
 
 		try {
 			return importer.load(is);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			throw new RuntimeException(e1);
 		}
 	}
 
-	public Node getModel(String resource) {
+	public Node getModel(final String resource) {
 		Node model;
 		if (models.containsKey(resource)) {
 			model = models.get(resource);
@@ -119,10 +120,10 @@ public class ResourceManager {
 		return model.makeCopy(false);
 	}
 
-	private Node loadModel(String resource) {
-		for (String ext : loaders.keySet()) {
+	private Node loadModel(final String resource) {
+		for (final String ext : loaders.keySet()) {
 			if (resource.toLowerCase().endsWith("." + ext)) {
-				Node model = loaders.get(ext).load(resource);
+				final Node model = loaders.get(ext).load(resource);
 				if (model == null)
 					throw new RuntimeException("Model returned null: "
 							+ resource);
@@ -132,23 +133,23 @@ public class ResourceManager {
 		throw new RuntimeException("No support for model resource: " + resource);
 	}
 
-	public Spatial getModel(File f) {
+	public Spatial getModel(final File f) {
 		try {
 			return getModel(toResourcePath(f.toURI().toURL()));
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private String toResourcePath(URL url) {
-		String relPath = referenceClass.getClassLoader().getResource("")
+	private String toResourcePath(final URL url) {
+		final String relPath = referenceClass.getClassLoader().getResource("")
 				.toString();
-		String absPath = url.toString();
+		final String absPath = url.toString();
 		return absPath.replace(relPath, "");
 	}
 
-	URL getResourceURL(String resource) {
-		URL url = referenceClass.getClassLoader().getResource(resource);
+	URL getResourceURL(final String resource) {
+		final URL url = referenceClass.getClassLoader().getResource(resource);
 		if (url == null)
 			throw new RuntimeException("Resource could not be resolved: "
 					+ resource);
@@ -166,16 +167,16 @@ class ColladaLoader implements ModelLoader {
 	private final ColladaImporter importer = new ColladaImporter();
 
 	@Override
-	public Node load(String resource) {
+	public Node load(final String resource) {
 		ColladaStorage store = null;
 
 		try {
 			store = importer.load(resource);
 
-			for (MaterialInfo inf : store.getMaterialMap().values())
-				for (Texture t : inf.getTextures().values())
+			for (final MaterialInfo inf : store.getMaterialMap().values())
+				for (final Texture t : inf.getTextures().values())
 					t.setMinificationFilter(MinificationFilter.Trilinear);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 		return store.getScene();
@@ -191,7 +192,7 @@ class ObjLoader implements ModelLoader {
 	}
 
 	@Override
-	public Node load(String resource) {
+	public Node load(final String resource) {
 		return importer.load(resource).getScene();
 	}
 }

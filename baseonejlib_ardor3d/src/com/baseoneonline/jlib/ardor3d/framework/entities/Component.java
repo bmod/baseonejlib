@@ -8,15 +8,15 @@ public abstract class Component implements Savable {
 
 	public abstract void update(double t);
 
-	public abstract void onAdded();
+	public abstract void resume();
 
-	public abstract void onRemoved();
+	public abstract void suspend();
 
-	protected <T extends Component> T getComponent(Class<T> type) {
+	protected <T extends Component> T getComponent(final Class<T> type) {
 		return getOwner().getComponent(type);
 	}
 
-	protected void setOwner(Entity owner) {
+	public void setOwner(final Entity owner) {
 		this.owner = owner;
 	}
 
