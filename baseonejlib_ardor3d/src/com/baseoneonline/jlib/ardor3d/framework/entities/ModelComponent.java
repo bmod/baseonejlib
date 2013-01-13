@@ -16,24 +16,20 @@ public class ModelComponent extends Component {
 
 	}
 
-	public ModelComponent(String resource) {
+	public void setResource(String resource) {
 		this.resource = resource;
-	}
-
-	@Override
-	public void update(double t) {
 	}
 
 	@Override
 	public void resume() {
 		if (model == null)
 			model = ResourceManager.get().getModel(resource);
-		getOwner().getNode().attachChild(model);
+		getEntity().getNode().attachChild(model);
 	}
 
 	@Override
 	public void suspend() {
-		getOwner().getNode().detachChild(model);
+		getEntity().getNode().detachChild(model);
 	}
 
 	@Override
@@ -44,7 +40,6 @@ public class ModelComponent extends Component {
 	@Override
 	public void read(InputCapsule capsule) throws IOException {
 		resource = capsule.readString("resource", null);
-
 	}
 
 }

@@ -18,11 +18,30 @@ public class EntityManager {
 	}
 
 	private void add(Entity e) {
+		assert isUniqueName(e.getName()) : "Entity must have a unique name: "
+				+ e.getName();
 		entities.add(e);
 		SceneManager.get().add(e.getNode());
 	}
 
-	private void remove(Entity e) {
+	private boolean isUniqueName(String name) {
+		for (Entity e : entities)
+			if (e.getName().equals(name))
+				return false;
+		return true;
+	}
+
+	public String getUniqueName(String baseName) {
+		String name = baseName;
+		int i = 1;
+		while (!isUniqueName(name)) {
+			name = baseName + i;
+			i++;
+		}
+		return name;
+	}
+
+	public void remove(Entity e) {
 		entities.remove(e);
 		SceneManager.get().remove(e.getNode());
 	}
@@ -34,14 +53,25 @@ public class EntityManager {
 
 	public Entity load(String resource) {
 		Entity e = ResourceManager.get().getEntity(resource);
+		e.setName(EntityManager.get().getUniqueName(e.getName()));
 		add(e);
 		return e;
 	}
 
 	public Entity create(String name) {
-		Entity e = new Entity(name);
+		Entity e = new Entity();
+		e.setName(name);
 		add(e);
 		return e;
+	}
+
+	public Entity getEntity(String name) {
+		for (Entity e : entities) {
+			if (e.getName().equals(name))
+				return e;
+		}
+		assert false : "Entity does not exist: " + name;
+		return null;
 	}
 
 }

@@ -34,7 +34,7 @@ public class RandomRotationComponent extends Component {
 		tmp.multiplyLocal(.1);
 		angles.addLocal(tmp);
 		orient.fromAngles(angles.getX(), angles.getY(), angles.getZ());
-		getOwner().getNode().setRotation(orient);
+		getEntity().getNode().setRotation(orient);
 		time += t;
 	}
 
@@ -43,10 +43,6 @@ public class RandomRotationComponent extends Component {
 		angles.set(MathUtils.TWO_PI * MathUtils.rand.nextDouble(),
 				MathUtils.TWO_PI * MathUtils.rand.nextDouble(),
 				MathUtils.TWO_PI * MathUtils.rand.nextDouble());
-	}
-
-	@Override
-	public void suspend() {
 	}
 
 	@Override

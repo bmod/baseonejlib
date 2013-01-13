@@ -12,22 +12,17 @@ import com.ardor3d.scenegraph.Node;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
+import com.baseoneonline.jlib.ardor3d.framework.EntityManager;
 
 public class Entity implements Savable {
 
 	private final HashMap<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
 
-	private final Node node;
+	private final Node node = new Node();
 
 	private boolean initialized = false;
 
-	public Entity() {
-		node = new Node();
-	}
-
-	public Entity(final String name) {
-		node = new Node(name);
-	}
+	public Entity() {}
 
 	public Node getNode() {
 		return node;
@@ -38,20 +33,25 @@ public class Entity implements Savable {
 	}
 
 	public void setName(final String name) {
+		assert name != null;
 		node.setName(name);
+	}
+
+	public void onCollide(Entity other) {
+		for (Component c : components.values())
+			c.onCollide(other);
 	}
 
 	public void addComponent(final Component c) {
 		final Class<? extends Component> type = c.getClass();
-		if (hasComponent(type))
-			throw new RuntimeException("Component type "
-					+ c.getClass().getName() + "  already added to: " + this);
+		assert !hasComponent(type) : "Component type " + c.getClass().getName()
+				+ "  already added to: " + this;
 		components.put(type, c);
 		c.setOwner(this);
 	}
 
-	private boolean hasComponent(final Class<? extends Component> class1) {
-		return components.containsKey(class1);
+	public boolean hasComponent(final Class<? extends Component> type) {
+		return components.containsKey(type);
 	}
 
 	public void removeComponent(final Component c) {
@@ -63,9 +63,10 @@ public class Entity implements Savable {
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T getComponent(final Class<T> type) {
 		final T comp = (T) components.get(type);
-		if (comp == null)
-			throw new RuntimeException("Component of type " + type.getName()
-					+ " not found on entity: " + getName());
+
+		assert (comp != null) : "Component of type " + type.getName()
+				+ " not found on entity: " + getName();
+
 		return comp;
 	}
 
@@ -85,11 +86,7 @@ public class Entity implements Savable {
 	}
 
 	public void setTransform(final ReadOnlyTransform xf) {
-		if (hasComponent(PhysicsComponent.class)) {
-			getComponent(PhysicsComponent.class).setTransform(xf);
-		} else {
-			node.setTransform(xf);
-		}
+		node.setTransform(xf);
 	}
 
 	@Override
@@ -108,7 +105,6 @@ public class Entity implements Savable {
 
 		for (final Component c : components)
 			addComponent(c);
-
 	}
 
 	@Override
@@ -119,5 +115,11 @@ public class Entity implements Savable {
 	@Override
 	public String toString() {
 		return String.format("Entity (name: %s)", getName());
+	}
+
+	public void destroy() {
+		for (Component c : components.values())
+			c.suspend();
+		EntityManager.get().remove(this);
 	}
 }

@@ -13,8 +13,9 @@ import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.export.xml.XMLImporter;
 import com.baseoneonline.jlib.ardor3d.framework.entities.CollisionComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.Entity;
+import com.baseoneonline.jlib.ardor3d.framework.entities.HealthComponent;
+import com.baseoneonline.jlib.ardor3d.framework.entities.HealthProviderComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.ModelComponent;
-import com.baseoneonline.jlib.ardor3d.framework.entities.PhysicsComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.RandomRotationComponent;
 import com.baseoneonline.jlib.ardor3d.framework.entities.SpatialComponent;
 
@@ -23,15 +24,16 @@ public class SimpleXMLImporter extends XMLImporter {
 	private final HashMap<String, Class<? extends Savable>> tagMap = new HashMap<String, Class<? extends Savable>>();
 
 	public SimpleXMLImporter() {
-		simplifyTag(Entity.class);
-		simplifyTag(ModelComponent.class);
-		simplifyTag(PhysicsComponent.class);
-		simplifyTag(SpatialComponent.class);
-		simplifyTag(RandomRotationComponent.class);
-		simplifyTag(CollisionComponent.class);
+		addTag(Entity.class);
+		addTag(ModelComponent.class);
+		addTag(SpatialComponent.class);
+		addTag(RandomRotationComponent.class);
+		addTag(CollisionComponent.class);
+		addTag(HealthComponent.class);
+		addTag(HealthProviderComponent.class);
 	}
 
-	public void simplifyTag(final Class<? extends Savable> clazz) {
+	public void addTag(final Class<? extends Savable> clazz) {
 		final String name = clazz.getSimpleName().toLowerCase();
 		setTag(name, clazz);
 	}

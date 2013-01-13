@@ -13,11 +13,9 @@ public class BSpline3 implements Curve3 {
 	protected ReadOnlyVector3[] cvs;
 	protected Mode mode = Mode.Open;
 
+	public BSpline3() {}
+
 	public BSpline3(final ReadOnlyVector3[] cvs) {
-		if (cvs.length < 4)
-			throw new IllegalArgumentException(
-					"Requiring at least 4 control points, " + cvs.length
-							+ " given.");
 		setCVs(cvs);
 	}
 
@@ -306,6 +304,10 @@ public class BSpline3 implements Curve3 {
 	 */
 	@Override
 	public void setCVs(ReadOnlyVector3[] cvs) {
+		if (cvs.length < 4)
+			throw new IllegalArgumentException(
+					"Requiring at least 4 control points, " + cvs.length
+							+ " given.");
 		this.cvs = cvs;
 	}
 
