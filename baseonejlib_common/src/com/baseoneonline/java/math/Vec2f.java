@@ -42,7 +42,7 @@ public class Vec2f
 		return this;
 	}
 
-	public Vec2f minus(Vec2f v)
+	public Vec2f minus(final Vec2f v)
 	{
 		return new Vec2f(x - v.x, y - v.y);
 	}
@@ -59,15 +59,15 @@ public class Vec2f
 		y /= value.y;
 	}
 
-	public float dot(Vec2f v)
+	public float dot(final Vec2f v)
 	{
 		return x * v.x + y * v.y;
 	}
 
-	public float distanceSquared(Vec2f v)
+	public float distanceSquared(final Vec2f v)
 	{
-		float dx = v.x - x;
-		float dy = v.y - y;
+		final float dx = v.x - x;
+		final float dy = v.y - y;
 
 		return dx * dx + dy * dy;
 	}
@@ -78,10 +78,25 @@ public class Vec2f
 		return "[Vec2f x:" + x + ", y:" + y + "]";
 	}
 
-	public void multiplyLocal(float v)
+	public void multiplyLocal(final float v)
 	{
 		x *= v;
 		y *= v;
+	}
+
+	public float lengthSquared()
+	{
+		return x * x + y * y;
+	}
+
+	public void normalizeLocal()
+	{
+		final float lengthSq = lengthSquared();
+		if (Math.abs(lengthSq) > BMath.EPSILON)
+		{
+			multiplyLocal(BMath.inverseSqrt(lengthSq));
+		}
+
 	}
 
 }
