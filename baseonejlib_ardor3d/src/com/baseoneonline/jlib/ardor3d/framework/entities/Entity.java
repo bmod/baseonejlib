@@ -22,7 +22,8 @@ public class Entity implements Savable {
 
 	private boolean initialized = false;
 
-	public Entity() {}
+	public Entity() {
+	}
 
 	public Node getNode() {
 		return node;
@@ -37,8 +38,8 @@ public class Entity implements Savable {
 		node.setName(name);
 	}
 
-	public void onCollide(Entity other) {
-		for (Component c : components.values())
+	public void onCollide(final Entity other) {
+		for (final Component c : components.values())
 			c.onCollide(other);
 	}
 
@@ -64,7 +65,7 @@ public class Entity implements Savable {
 	public <T extends Component> T getComponent(final Class<T> type) {
 		final T comp = (T) components.get(type);
 
-		assert (comp != null) : "Component of type " + type.getName()
+		assert comp != null : "Component of type " + type.getName()
 				+ " not found on entity: " + getName();
 
 		return comp;
@@ -118,8 +119,9 @@ public class Entity implements Savable {
 	}
 
 	public void destroy() {
-		for (Component c : components.values())
+		for (final Component c : components.values())
 			c.suspend();
 		EntityManager.get().remove(this);
 	}
+
 }
