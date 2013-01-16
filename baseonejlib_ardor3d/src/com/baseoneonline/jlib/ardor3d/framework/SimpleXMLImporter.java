@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.ardor3d.math.Vector3;
 import com.ardor3d.util.export.Savable;
 import com.ardor3d.util.export.xml.XMLImporter;
 import com.baseoneonline.jlib.ardor3d.framework.entities.CollisionComponent;
@@ -31,6 +32,7 @@ public class SimpleXMLImporter extends XMLImporter {
 		addTag(CollisionComponent.class);
 		addTag(HealthComponent.class);
 		addTag(HealthProviderComponent.class);
+		addTag(Vector3.class);
 	}
 
 	public void addTag(final Class<? extends Savable> clazz) {
