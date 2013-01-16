@@ -21,13 +21,13 @@ public class TileGraph implements Graph {
 
 		this.w = w;
 		this.h = h;
-		this.data = new TileNode[w][h];
+		data = new TileNode[w][h];
 		nodes = new TileNode[w * h];
 		int i = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				this.data[x][y] = new TileNode(x, y, i, 0);
-				nodes[i] = this.data[x][y];
+				data[x][y] = new TileNode(x, y, i, 0);
+				nodes[i] = data[x][y];
 				i++;
 			}
 		}
@@ -67,12 +67,12 @@ public class TileGraph implements Graph {
 	}
 
 	@Override
-	public float distance(final int a, final int b) {
+	public float cost(final int a, final int b) {
 		final TileNode n1 = nodes[a];
 		final TileNode n2 = nodes[b];
-		final float h_diag = Math.min(Math.abs(n1.x - n2.x), Math.abs(n1.y
-				- n2.y));
-		final float h_orth = (Math.abs(n1.x - n2.x) + Math.abs(n1.y - n2.y));
+		final float h_diag = Math.min(Math.abs(n1.x - n2.x),
+				Math.abs(n1.y - n2.y));
+		final float h_orth = Math.abs(n1.x - n2.x) + Math.abs(n1.y - n2.y);
 		return COST_DIAG * h_diag + h_orth - 2 * h_diag;
 	}
 
@@ -88,19 +88,23 @@ public class TileGraph implements Graph {
 		TileNode n;
 		if (x > 0) {
 			n = data[x - 1][y];
-			if (n.isWalkable()) neighbors.add(n.index);
+			if (n.isWalkable())
+				neighbors.add(n.index);
 		}
 		if (y > 0) {
 			n = data[x][y - 1];
-			if (n.isWalkable()) neighbors.add(n.index);
+			if (n.isWalkable())
+				neighbors.add(n.index);
 		}
 		if (x < w - 1) {
 			n = data[x + 1][y];
-			if (n.isWalkable()) neighbors.add(n.index);
+			if (n.isWalkable())
+				neighbors.add(n.index);
 		}
 		if (y < h - 1) {
 			n = data[x][y + 1];
-			if (n.isWalkable()) neighbors.add(n.index);
+			if (n.isWalkable())
+				neighbors.add(n.index);
 		}
 
 		// Diagonal, no cutting corners

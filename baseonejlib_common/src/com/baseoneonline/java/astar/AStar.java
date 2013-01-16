@@ -14,31 +14,31 @@ public class AStar {
 	private final ArrayList<Integer> open = new ArrayList<Integer>();
 	private final ArrayList<Integer> closed = new ArrayList<Integer>();
 
-	public AStar(Graph graph) {
+	public AStar(final Graph graph) {
 		setGraph(graph);
 	}
 
-	public void setGraph(Graph graph) {
-		this.userGraph = graph;
+	public void setGraph(final Graph graph) {
+		userGraph = graph;
 		updateGraph();
 	}
 
 	private void updateGraph() {
-		int len = userGraph.size();
+		final int len = userGraph.size();
 		g = new float[len];
 		h = new float[len];
 		f = new float[len];
 		parent = new int[len];
 	}
 
-	public ArrayList<Integer> solve(int start, int goal) {
+	public ArrayList<Integer> solve(final int start, final int goal) {
 		open.clear();
 		closed.clear();
 
 		open.add(start);
 
 		g[start] = 0;
-		h[start] = userGraph.distance(start, goal);
+		h[start] = userGraph.cost(start, goal);
 		f[start] = h[start];
 		parent[start] = -1;
 
@@ -48,7 +48,7 @@ public class AStar {
 			float tf = Float.POSITIVE_INFINITY;
 			int x = -1;
 			for (int i = 0; i < open.size(); i++) {
-				int e = open.get(i);
+				final int e = open.get(i);
 				if (f[e] < tf) {
 					tf = f[e];
 					x = e;
@@ -61,11 +61,11 @@ public class AStar {
 			open.remove((Integer) x);
 			closed.add(x);
 
-			for (int y : userGraph.getNeighbors(x)) {
+			for (final int y : userGraph.getNeighbors(x)) {
 				if (closed.contains(y))
 					continue;
 
-				float tg = g[x] + userGraph.distance(x, y);
+				final float tg = g[x] + userGraph.cost(x, y);
 				boolean better = false;
 
 				if (!open.contains(y)) {
@@ -77,7 +77,7 @@ public class AStar {
 				if (better) {
 					parent[y] = x;
 					g[y] = tg;
-					h[y] = userGraph.distance(y, goal);
+					h[y] = userGraph.cost(y, goal);
 					f[y] = g[y] + h[y];
 				}
 			}
@@ -86,8 +86,8 @@ public class AStar {
 		// No solution found, return shortest alternative
 		float min = Float.POSITIVE_INFINITY;
 		int ng = -1;
-		for (int n : closed) {
-			float d = userGraph.distance(goal, n);
+		for (final int n : closed) {
+			final float d = userGraph.cost(goal, n);
 			if (d < min) {
 				min = d;
 				ng = n;
@@ -97,7 +97,7 @@ public class AStar {
 	}
 
 	private ArrayList<Integer> createPath(int n) {
-		ArrayList<Integer> solution = new ArrayList<Integer>();
+		final ArrayList<Integer> solution = new ArrayList<Integer>();
 		while (parent[n] != -1) {
 			solution.add(n);
 			n = parent[n];
