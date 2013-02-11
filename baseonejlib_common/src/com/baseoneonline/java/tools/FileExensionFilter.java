@@ -25,11 +25,17 @@ public class FileExensionFilter extends javax.swing.filechooser.FileFilter
 		}
 	}
 
+	public FileExensionFilter(String ext) {
+		this(new String[] { ext });
+	}
+
 	@Override
 	public boolean accept(final File f) {
-		if (f.isDirectory()) return true;
+		if (f.isDirectory())
+			return true;
 		for (final String ext : extensions) {
-			if (f.getName().toLowerCase().endsWith(ext)) return true;
+			if (f.getName().toLowerCase().endsWith(ext))
+				return true;
 		}
 		return false;
 	}

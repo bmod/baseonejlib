@@ -2,8 +2,7 @@ package com.baseoneonline.java.math;
 
 import java.util.ArrayList;
 
-public class SimplifyDouglasPeucker
-{
+public class SimplifyDouglasPeucker {
 
 	// adapted from
 	// http://geometryalgorithms.com/Archive/algorithm_0205/algorithm_0205.htm
@@ -26,8 +25,7 @@ public class SimplifyDouglasPeucker
 	 *            the array of Vec2fs to be simplified
 	 * @return an array of Vec2f representing the simplified polyline
 	 */
-	public static Vec2f[] simplifyLine2D(float tol, Vec2f[] V)
-	{
+	public static Vec2f[] simplifyLine2D(float tol, Vec2f[] V) {
 
 		int n = V.length;
 
@@ -36,18 +34,16 @@ public class SimplifyDouglasPeucker
 		Vec2f[] vt = new Vec2f[n];
 		int[] mk = new int[n];
 
-		ArrayList<Vec2f> sV = new ArrayList<>();
+		ArrayList<Vec2f> sV = new ArrayList<Vec2f>();
 
-		for (int b = 0; b < n; b++)
-		{
+		for (int b = 0; b < n; b++) {
 			mk[b] = 0;
 		}
 
 		// STAGE 1 simple vertex reduction
 		vt[0] = V[0];
 
-		for (i = k = 1, pv = 0; i < n; i++)
-		{
+		for (i = k = 1, pv = 0; i < n; i++) {
 			if (V[i].distanceSquared(V[pv]) < tol2)
 				continue;
 			vt[k++] = V[i];
@@ -63,8 +59,7 @@ public class SimplifyDouglasPeucker
 		simplifyDP2D(tol, vt, 0, k - 1, mk);
 
 		// copy marked vertices to output
-		for (i = m = 0; i < k; i++)
-		{
+		for (i = m = 0; i < k; i++) {
 			if (mk[i] == 1)
 				sV.add(vt[i]);
 		}
@@ -74,8 +69,7 @@ public class SimplifyDouglasPeucker
 	}
 
 	private static void simplifyDP2D(float tol, Vec2f[] v, int j, int k,
-			int[] mk)
-	{
+			int[] mk) {
 
 		if (k <= j + 1)
 			return; // nothing to simplify
@@ -92,16 +86,14 @@ public class SimplifyDouglasPeucker
 		Vec2f Pb;
 		float b, cw, dv2;
 
-		for (int i = j + 1; i < k; i++)
-		{
+		for (int i = j + 1; i < k; i++) {
 			w = v[i].minus(v[j]);
 			cw = w.dot(u);
 			if (cw <= 0)
 				dv2 = v[i].distanceSquared(v[j]);
 			else if (cu <= cw)
 				dv2 = v[i].distanceSquared(v[k]);
-			else
-			{
+			else {
 				b = cw / cu;
 				Pb = v[j].minus(u.mult(-b));
 				dv2 = v[i].distanceSquared(Pb);
@@ -113,8 +105,7 @@ public class SimplifyDouglasPeucker
 			maxi = i;
 			maxd2 = dv2;
 		}
-		if (maxd2 > tol2)
-		{
+		if (maxd2 > tol2) {
 			mk[maxi] = 1;
 			simplifyDP2D(tol, v, j, maxi, mk);
 			simplifyDP2D(tol, v, maxi, k, mk);
@@ -134,8 +125,7 @@ public class SimplifyDouglasPeucker
 	 *            the array of Vec3f to be simplified
 	 * @return an array of Vec3f representing the simplified polyline
 	 */
-	public static Vec3f[] simplifyLine3D(float tol, Vec3f[] V)
-	{
+	public static Vec3f[] simplifyLine3D(float tol, Vec3f[] V) {
 
 		int n = V.length;
 
@@ -144,18 +134,16 @@ public class SimplifyDouglasPeucker
 		Vec3f[] vt = new Vec3f[n];
 		int[] mk = new int[n];
 
-		ArrayList<Vec3f> sV = new ArrayList<>();
+		ArrayList<Vec3f> sV = new ArrayList<Vec3f>();
 
-		for (int b = 0; b < n; b++)
-		{
+		for (int b = 0; b < n; b++) {
 			mk[b] = 0;
 		}
 
 		// STAGE 1 simple vertex reduction
 		vt[0] = V[0];
 
-		for (i = k = 1, pv = 0; i < n; i++)
-		{
+		for (i = k = 1, pv = 0; i < n; i++) {
 			if (V[i].distSquared(V[pv]) < tol2)
 				continue;
 			vt[k++] = V[i];
@@ -171,8 +159,7 @@ public class SimplifyDouglasPeucker
 		simplifyDP3D(tol, vt, 0, k - 1, mk);
 
 		// copy marked vertices to output
-		for (i = m = 0; i < k; i++)
-		{
+		for (i = m = 0; i < k; i++) {
 			if (mk[i] == 1)
 				sV.add(vt[i]);
 		}
@@ -181,8 +168,7 @@ public class SimplifyDouglasPeucker
 	}
 
 	private static void simplifyDP3D(float tol, Vec3f[] v, int j, int k,
-			int[] mk)
-	{
+			int[] mk) {
 
 		if (k <= j + 1)
 			return; // nothing to simplify
@@ -199,16 +185,14 @@ public class SimplifyDouglasPeucker
 		Vec3f Pb;
 		float b, cw, dv2;
 
-		for (int i = j + 1; i < k; i++)
-		{
+		for (int i = j + 1; i < k; i++) {
 			w = v[i].subtract(v[j]);
 			cw = w.dot(u);
 			if (cw <= 0)
 				dv2 = v[i].distSquared(v[j]);
 			else if (cu <= cw)
 				dv2 = v[i].distSquared(v[k]);
-			else
-			{
+			else {
 				b = cw / cu;
 				Pb = v[j].subtract(u.mult(-b));
 				dv2 = v[i].distSquared(Pb);
@@ -220,8 +204,7 @@ public class SimplifyDouglasPeucker
 			maxi = i;
 			maxd2 = dv2;
 		}
-		if (maxd2 > tol2)
-		{
+		if (maxd2 > tol2) {
 			mk[maxi] = 1;
 			simplifyDP3D(tol, v, j, maxi, mk);
 			simplifyDP3D(tol, v, maxi, k, mk);
