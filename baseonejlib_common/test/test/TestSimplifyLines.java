@@ -9,10 +9,9 @@ import processing.core.PApplet;
 import com.baseoneonline.java.math.SimplifyDouglasPeucker;
 import com.baseoneonline.java.math.Vec2f;
 
-public class TestSimplifyLines extends PApplet
-{
+public class TestSimplifyLines extends PApplet {
 
-	private final ArrayList<Vec2f> points = new ArrayList<>();
+	private final ArrayList<Vec2f> points = new ArrayList<Vec2f>();
 	private Vec2f[] pts = null;
 
 	private boolean mouseDown = false;
@@ -26,14 +25,12 @@ public class TestSimplifyLines extends PApplet
 	private float simplifyTolerance = 1;
 
 	@Override
-	public void setup()
-	{
+	public void setup() {
 		size(500, 500);
 	}
 
 	@Override
-	public void draw()
-	{
+	public void draw() {
 		background(0x444444);
 		stroke(drawColor);
 
@@ -50,29 +47,25 @@ public class TestSimplifyLines extends PApplet
 
 	}
 
-	private void drawOptimized()
-	{
+	private void drawOptimized() {
 		if (null == pts)
 			pts = getOptimized();
 
 		if (pts.length <= 1)
 			return;
 
-		for (int i = 1; i < pts.length; i++)
-		{
+		for (int i = 1; i < pts.length; i++) {
 			Vec2f a = pts[i - 1];
 			Vec2f b = pts[i];
 			line(a.x, a.y, b.x, b.y);
 		}
 	}
 
-	private void drawPolyLine()
-	{
+	private void drawPolyLine() {
 		if (points.size() <= 1)
 			return;
 
-		for (int i = 1; i < points.size(); i++)
-		{
+		for (int i = 1; i < points.size(); i++) {
 			Vec2f a = points.get(i - 1);
 			Vec2f b = points.get(i);
 			line(a.x, a.y, b.x, b.y);
@@ -80,21 +73,17 @@ public class TestSimplifyLines extends PApplet
 
 	}
 
-	private Vec2f[] getOptimized()
-	{
+	private Vec2f[] getOptimized() {
 		Vec2f[] pts = points.toArray(new Vec2f[points.size()]);
-		if (pts.length < 2)
-		{
+		if (pts.length < 2) {
 			return pts;
-		} else
-		{
+		} else {
 			return SimplifyDouglasPeucker
 					.simplifyLine2D(simplifyTolerance, pts);
 		}
 	}
 
-	private void changeTolerance(float n)
-	{
+	private void changeTolerance(float n) {
 		simplifyTolerance += n;
 		if (simplifyTolerance < 0)
 			simplifyTolerance = 0;
@@ -102,8 +91,7 @@ public class TestSimplifyLines extends PApplet
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e)
-	{
+	public void keyPressed(KeyEvent e) {
 
 		char c = e.getKeyChar();
 
@@ -114,8 +102,7 @@ public class TestSimplifyLines extends PApplet
 		if (e.isControlDown())
 			mult = .1f;
 
-		switch (c)
-		{
+		switch (c) {
 		case '+':
 			changeTolerance(mult);
 			break;
@@ -129,24 +116,21 @@ public class TestSimplifyLines extends PApplet
 	}
 
 	@Override
-	public void mousePressed()
-	{
+	public void mousePressed() {
 		points.clear();
 		drawColor = COLOR_DRAWING;
 		mouseDown = true;
 	}
 
 	@Override
-	public void mouseReleased()
-	{
+	public void mouseReleased() {
 		drawColor = COLOR_DRAWN;
 		mouseDown = false;
 		pts = null;
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e)
-	{
+	public void mouseDragged(MouseEvent e) {
 		points.add(new Vec2f(e.getX(), e.getY()));
 	}
 }
