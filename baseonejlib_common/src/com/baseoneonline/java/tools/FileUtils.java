@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class FileUtils {
 
 	/**
@@ -23,20 +25,25 @@ public class FileUtils {
 	 * @return {@link String} containing the contents of the file or null if the
 	 *         file could not be read.
 	 */
-	public static String readFile(final File f) {
-		try {
+	public static String readFile(final File f)
+	{
+		try
+		{
 			final FileReader reader = new FileReader(f);
 			final StringBuffer buf = new StringBuffer();
 			int c;
-			while ((c = reader.read()) != -1) {
+			while ((c = reader.read()) != -1)
+			{
 				buf.append((char) c);
 			}
 			reader.close();
 			return buf.toString();
-		} catch (final FileNotFoundException e) {
+		} catch (final FileNotFoundException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
 					"File not found: " + f.getAbsolutePath());
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
 					"IO Exception while reading file: " + f.getAbsolutePath());
 			e.printStackTrace();
@@ -52,13 +59,16 @@ public class FileUtils {
 	 * @param s
 	 *            Write this {@link String} to the file.
 	 */
-	public static void writeFile(final File f, final String s) {
-		try {
+	public static void writeFile(final File f, final String s)
+	{
+		try
+		{
 			final FileWriter writer = new FileWriter(f);
 			writer.write(s);
 			writer.flush();
 			writer.close();
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			Logger.getLogger(StringUtils.class.getName()).warning(
 					"IO Exception while writing: " + f.getAbsolutePath());
 		}
@@ -68,15 +78,21 @@ public class FileUtils {
 			.toCharArray();
 
 	public static String removeIllegalChars(final String filename,
-			final boolean allowSeparators) {
+			final boolean allowSeparators)
+	{
 		final StringBuffer buf = new StringBuffer();
 		final char[] fname = filename.toCharArray();
-		for (final char fc : fname) {
-			if (allowSeparators && (fc == '/' || fc == '\\')) {
+		for (final char fc : fname)
+		{
+			if (allowSeparators && (fc == '/' || fc == '\\'))
+			{
 				buf.append(fc);
-			} else {
-				for (final char c : ALLOWED_CHARS) {
-					if (fc == c) {
+			} else
+			{
+				for (final char c : ALLOWED_CHARS)
+				{
+					if (fc == c)
+					{
 						buf.append(c);
 						break;
 					}
@@ -86,17 +102,21 @@ public class FileUtils {
 		return buf.toString();
 	}
 
-	public static String readFile(final URL url) {
-		try {
+	public static String readFile(final URL url)
+	{
+		try
+		{
 			final BufferedInputStream bin = new BufferedInputStream(
 					url.openStream());
 			final StringBuffer buf = new StringBuffer();
 			int c;
-			while ((c = bin.read()) != -1) {
+			while ((c = bin.read()) != -1)
+			{
 				buf.append((char) c);
 			}
 			return buf.toString();
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			Logger.getLogger(FileUtils.class.getName()).severe(
 					"Error loading: " + url);
 		}
@@ -108,13 +128,15 @@ public class FileUtils {
 	 * @param directory
 	 * @return True if the specified file is inside the specified directory
 	 */
-	public static boolean isChildOf(File f, File directory) {
+	public static boolean isChildOf(final File f, final File directory)
+	{
 		if (!directory.isDirectory())
 			return false;
 
 		File current = f;
-		while (true) {
-			File parent = current.getParentFile();
+		while (true)
+		{
+			final File parent = current.getParentFile();
 			if (null == parent)
 				return false;
 			if (current.getParentFile().equals(directory))
@@ -132,26 +154,32 @@ public class FileUtils {
 	 * @param directory
 	 * @return
 	 */
-	public static List<File> findEmpty(File directory, DisposableFilter filter) {
-		List<File> stor = new ArrayList<File>();
-		findEmpty(directory, stor, filter);
+	public static List<File> findEmpty(final File directory,
+			final DisposableFilter filter)
+	{
+		final List<File> stor = new ArrayList<File>();
+		FileUtils.findEmpty(directory, stor, filter);
 		return stor;
 	}
 
-	public static void findEmpty(File parent, List<File> stor,
-			DisposableFilter filter) {
-		if (isEmpty(parent, filter)) {
+	public static void findEmpty(final File parent, final List<File> stor,
+			final DisposableFilter filter)
+	{
+		if (FileUtils.isEmpty(parent, filter))
+		{
 			stor.add(parent);
 			return;
 		}
 
-		for (File dir : parent.listFiles()) {
+		for (final File dir : parent.listFiles())
+		{
 
-			if (dir.isDirectory()) {
-				if (isEmpty(dir, filter))
+			if (dir.isDirectory())
+			{
+				if (FileUtils.isEmpty(dir, filter))
 					stor.add(dir);
 				else
-					findEmpty(dir, stor, filter);
+					FileUtils.findEmpty(dir, stor, filter);
 
 			}
 		}
@@ -173,15 +201,18 @@ public class FileUtils {
 	 * @return <code>true</code> if the provided directory contains no files or
 	 *         only empty directories.
 	 */
-	public static boolean isEmpty(File dir, DisposableFilter disposableFilter) {
+	public static boolean isEmpty(final File dir,
+			final DisposableFilter disposableFilter)
+	{
 		if (dir.isFile())
 			return false;
 
-		for (File f : dir.listFiles()) {
+		for (final File f : dir.listFiles())
+		{
 			if (f.isFile() && !disposableFilter.isDisposable(f))
 				return false;
 
-			else if (f.isDirectory() && !isEmpty(f, disposableFilter))
+			else if (f.isDirectory() && !FileUtils.isEmpty(f, disposableFilter))
 				return false;
 		}
 
@@ -205,23 +236,35 @@ public class FileUtils {
 		public void onFile(File f);
 	}
 
-	public static File canonical(Object... args) throws IOException {
-		String[] elements = new String[args.length];
-		for (int i = 0; i < args.length; i++) {
-			Object o = args[i];
-			if (o instanceof Character) {
+	public static File canonical(final Object... args) throws IOException
+	{
+		final String[] elements = new String[args.length];
+		for (int i = 0; i < args.length; i++)
+		{
+			final Object o = args[i];
+			if (o instanceof Character)
+			{
 				elements[i] = Character.toString((Character) o);
-			} else if (o instanceof String) {
+			} else if (o instanceof String)
+			{
 				elements[i] = ((String) o).trim();
-			} else if (o instanceof File) {
+			} else if (o instanceof File)
+			{
 				elements[i] = ((File) o).getAbsolutePath();
 			}
 		}
 		return new File(StringUtils.join(elements, "")).getCanonicalFile();
 	}
 
-	public static File relative(File f, File base) {
+	public static File relative(final File f, final File base)
+	{
 		return new File(f.toURI().relativize(base.toURI()).getPath());
+	}
+
+	public static String replaceExtension(final String filename,
+			final String rep)
+	{
+		return FilenameUtils.getBaseName(filename) + "." + rep;
 	}
 
 }
