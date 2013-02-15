@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 public class FileUtils {
+	private static final int TEMP_DIR_ATTEMPTS = 10000;
 
 	/**
 	 * Read a file into a {@link String} and return it. Will not throw errors
@@ -265,6 +266,28 @@ public class FileUtils {
 			final String rep)
 	{
 		return FilenameUtils.getBaseName(filename) + "." + rep;
+	}
+
+	public static File file(final String... args)
+	{
+		return new File(StringUtils.join(args, "/"));
+	}
+
+	public static File createTempDir(final File baseDir)
+	{
+		final String baseName = System.currentTimeMillis() + "-";
+
+		for (int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++)
+		{
+			final File tempDir = new File(baseDir, baseName + counter);
+			if (tempDir.mkdir())
+			{
+				return tempDir;
+			}
+		}
+		throw new IllegalStateException("Failed to create directory within "
+				+ TEMP_DIR_ATTEMPTS + " attempts (tried " + baseName + "0 to "
+				+ baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
 	}
 
 }
