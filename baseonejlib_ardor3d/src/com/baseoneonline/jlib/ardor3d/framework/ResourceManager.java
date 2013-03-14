@@ -41,16 +41,19 @@ public class ResourceManager {
 	private final SimpleXMLImporter importer = new SimpleXMLImporter();
 
 	public static FileFilter MODEL_FILE_FILTER;
-	static {
+	static
+	{
 		loaders.put("dae", new ColladaLoader());
 		loaders.put("obj", new ObjLoader());
+		loaders.put("blend", new BlenderLoader());
 
 		MODEL_FILE_FILTER = new FileExensionFilter(loaders.keySet().toArray(
 				new String[loaders.keySet().size()]));
 
 	}
 
-	public static ResourceManager get() {
+	public static ResourceManager get()
+	{
 		if (null == instance)
 			instance = new ResourceManager();
 		return instance;
@@ -60,29 +63,35 @@ public class ResourceManager {
 
 	private ResourceManager() {}
 
-	public SimpleXMLImporter getTagTransformer() {
+	public SimpleXMLImporter getTagTransformer()
+	{
 		return importer;
 	}
 
-	public void setReferenceClass(final Class<?> clazz) {
+	public void setReferenceClass(final Class<?> clazz)
+	{
 		referenceClass = clazz;
 	}
 
-	public void addTextureLocator(final String path) {
+	public void addTextureLocator(final String path)
+	{
 		SimpleResourceLocator srl;
-		try {
+		try
+		{
 			srl = new SimpleResourceLocator(
 					ResourceLocatorTool.getClassPathResource(referenceClass,
 							path));
 
-		} catch (final URISyntaxException e) {
+		} catch (final URISyntaxException e)
+		{
 			throw new RuntimeException(e);
 		}
 		ResourceLocatorTool.addResourceLocator(
 				ResourceLocatorTool.TYPE_TEXTURE, srl);
 	}
 
-	public Entity getEntity(final String resource) {
+	public Entity getEntity(final String resource)
+	{
 		// TODO: Caching
 		// if (!entities.containsKey(resource))
 		// entities.put(resource, loadEntity(resource));
@@ -90,44 +99,56 @@ public class ResourceManager {
 		return loadEntity(resource);
 	}
 
-	private Entity loadEntity(final String resource) {
+	private Entity loadEntity(final String resource)
+	{
 		return (Entity) loadSavableXML(resource);
 	}
 
-	private Savable loadSavableXML(final String resource) {
+	private Savable loadSavableXML(final String resource)
+	{
 		final URL url = referenceClass.getClassLoader().getResource(resource);
 
 		InputStream is = null;
-		try {
+		try
+		{
 			is = ResourceManager.get().getResourceURL(resource).openStream();
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			throw new RuntimeException(e);
 		}
 
 		if (url == null)
 			throw new RuntimeException("Resource not found: " + resource);
 
-		try {
+		try
+		{
 			return importer.load(is);
-		} catch (final IOException e1) {
+		} catch (final IOException e1)
+		{
 			throw new RuntimeException(e1);
 		}
 	}
 
-	public Node getModel(final String resource) {
+	public Node getModel(final String resource)
+	{
 		Node model;
-		if (models.containsKey(resource)) {
+		if (models.containsKey(resource))
+		{
 			model = models.get(resource);
-		} else {
+		} else
+		{
 			model = loadModel(resource);
 			models.put(resource, model);
 		}
 		return model.makeCopy(false);
 	}
 
-	private Node loadModel(final String resource) {
-		for (final String ext : loaders.keySet()) {
-			if (resource.toLowerCase().endsWith("." + ext)) {
+	private Node loadModel(final String resource)
+	{
+		for (final String ext : loaders.keySet())
+		{
+			if (resource.toLowerCase().endsWith("." + ext))
+			{
 				final Node model = loaders.get(ext).load(resource);
 				if (model == null)
 					throw new RuntimeException("Model returned null: "
@@ -138,22 +159,27 @@ public class ResourceManager {
 		throw new RuntimeException("No support for model resource: " + resource);
 	}
 
-	public Spatial getModel(final File f) {
-		try {
+	public Spatial getModel(final File f)
+	{
+		try
+		{
 			return getModel(toResourcePath(f.toURI().toURL()));
-		} catch (final MalformedURLException e) {
+		} catch (final MalformedURLException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
 
-	private String toResourcePath(final URL url) {
+	private String toResourcePath(final URL url)
+	{
 		final String relPath = referenceClass.getClassLoader().getResource("")
 				.toString();
 		final String absPath = url.toString();
 		return absPath.replace(relPath, "");
 	}
 
-	URL getResourceURL(final String resource) {
+	URL getResourceURL(final String resource)
+	{
 		final URL url = referenceClass.getClassLoader().getResource(resource);
 		if (url == null)
 			throw new RuntimeException("Resource could not be resolved: "
@@ -172,14 +198,17 @@ class ColladaLoader implements ModelLoader {
 	private final ColladaImporter importer = new ColladaImporter();
 
 	@Override
-	public Node load(final String resource) {
+	public Node load(final String resource)
+	{
 		ColladaStorage store = null;
 		Logger.getLogger(ColladaAnimUtils.class.getName()).setLevel(
 				Level.SEVERE);
-		try {
+		try
+		{
 			store = importer.load(resource);
 
-			if (store.getAssetData().getUpAxis() == Vector3.UNIT_Z) {
+			if (store.getAssetData().getUpAxis() == Vector3.UNIT_Z)
+			{
 				store.getScene().setRotation(
 						new Matrix3().fromAngles(-MathUtils.HALF_PI, 0, 0));
 			}
@@ -187,10 +216,35 @@ class ColladaLoader implements ModelLoader {
 			for (final MaterialInfo inf : store.getMaterialMap().values())
 				for (final Texture t : inf.getTextures().values())
 					t.setMinificationFilter(MinificationFilter.Trilinear);
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			throw new RuntimeException(e);
 		}
 		return store.getScene();
+	}
+}
+
+class BlenderLoader implements ModelLoader {
+
+	private final String blenderExe = "C:/Program Files/Blender Foundation/Blender/blender.exe";
+	private final String scriptFile = new File("test.py").getAbsolutePath();
+
+	@Override
+	public Node load(String resource)
+	{
+		String cmd = String.format("\"%s\" -P \"%s\"", blenderExe, scriptFile);
+		System.out.println(cmd);
+		ProcessBuilder builder = new ProcessBuilder(cmd);
+
+		Process proc = null;
+		try
+		{
+			proc = builder.start();
+		} catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 }
 
@@ -203,7 +257,8 @@ class ObjLoader implements ModelLoader {
 	}
 
 	@Override
-	public Node load(final String resource) {
+	public Node load(final String resource)
+	{
 		return importer.load(resource).getScene();
 	}
 }
