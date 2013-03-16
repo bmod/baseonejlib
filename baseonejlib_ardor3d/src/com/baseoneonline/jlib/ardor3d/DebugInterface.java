@@ -81,13 +81,11 @@ public class DebugInterface {
 		this.game = game;
 	}
 
-	public void toggle()
-	{
+	public void toggle() {
 		setEnabled(!enabled);
 	}
 
-	public void setEnabled(final boolean enabled)
-	{
+	public void setEnabled(final boolean enabled) {
 		if (this.enabled == enabled)
 			return;
 		this.enabled = enabled;
@@ -97,13 +95,11 @@ public class DebugInterface {
 			stop();
 	}
 
-	public boolean isEnabled()
-	{
+	public boolean isEnabled() {
 		return enabled;
 	}
 
-	private void start()
-	{
+	private void start() {
 		LOG.info("Started Debug Interface");
 		StatCollector.addStatListener(statListener);
 
@@ -122,11 +118,9 @@ public class DebugInterface {
 		registerInput();
 
 		if (null == camCtrl)
-			camCtrl = new EditorCameraController(game.getLogicalLayer(),
-					game.getMainCamera());
+			camCtrl = new EditorCameraController(game.getLogicalLayer());
 
-		if (wireframeState == null)
-		{
+		if (wireframeState == null) {
 			wireframeState = new WireframeState();
 			wireframeState.setEnabled(false);
 			SceneManager.get().getRoot().setRenderState(wireframeState);
@@ -137,16 +131,14 @@ public class DebugInterface {
 		focusAll();
 	}
 
-	private BMText addText()
-	{
+	private BMText addText() {
 		final BMText label = BasicText.createDefaultTextLabel("MyText",
 				"Ohay!", 12);
 		uiNode.attachChild(label);
 		return label;
 	}
 
-	private void stop()
-	{
+	private void stop() {
 		LOG.info("Stopped Debug Interface");
 		StatCollector.removeStatListener(statListener);
 
@@ -154,8 +146,7 @@ public class DebugInterface {
 		deregisterInput();
 	}
 
-	private void registerInput()
-	{
+	private void registerInput() {
 		inputMap = new ArrayList<InputTrigger>();
 		inputMap.add(new InputTrigger(new KeyPressedCondition(Key.F1),
 				new TriggerAction() {
@@ -163,8 +154,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						showBounds = !showBounds;
 						LOG.info("Showing bounds: " + showBounds);
 					}
@@ -175,8 +165,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						showDepth = !showDepth;
 						LOG.info("Showing depth: " + showDepth);
 					}
@@ -187,8 +176,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						showNormals = !showNormals;
 						LOG.info("Showing normals: " + showNormals);
 
@@ -201,8 +189,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						wireframeState.setEnabled(!wireframeState.isEnabled());
 						LOG.info("Wireframe enabled: "
 								+ wireframeState.isEnabled());
@@ -216,8 +203,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						showPhysics = !showPhysics;
 						LOG.info("Showing physics: " + showPhysics);
 					}
@@ -231,8 +217,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						final Spatial s = findSpatialUnderMouse(inputStates
 								.getCurrent().getMouseState());
 						clearSelection();
@@ -248,8 +233,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						final Spatial s = findSpatialUnderMouse(inputStates
 								.getCurrent().getMouseState());
 						if (s != null)
@@ -263,8 +247,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						focusSelection();
 					}
 				}));
@@ -274,8 +257,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						focusAll();
 					}
 				}));
@@ -285,8 +267,7 @@ public class DebugInterface {
 					@Override
 					@MainThread
 					public void perform(final Canvas source,
-							final TwoInputStates inputStates, final double tpf)
-					{
+							final TwoInputStates inputStates, final double tpf) {
 						showDebugCamera = !showDebugCamera;
 						if (showDebugCamera)
 							focusSelection();
@@ -297,47 +278,40 @@ public class DebugInterface {
 			game.getLogicalLayer().registerTrigger(t);
 	}
 
-	private void deregisterInput()
-	{
+	private void deregisterInput() {
 		for (final InputTrigger t : inputMap)
 			game.getLogicalLayer().deregisterTrigger(t);
 		inputMap.clear();
 	}
 
-	public void render(final Renderer renderer)
-	{
+	public void render(final Renderer renderer) {
 		if (!enabled)
 			return;
 
 		final Node scene = SceneManager.get().getRoot();
 
 		Debugger.setBoundsColor(ColorRGBA.BLUE);
-		if (showBounds)
-		{
+		if (showBounds) {
 			Debugger.drawBounds(scene, renderer, true);
 		}
 
-		if (showNormals)
-		{
+		if (showNormals) {
 			Debugger.drawNormals(scene, renderer);
 			Debugger.drawTangents(scene, renderer);
 		}
 
-		if (showPhysics)
-		{
+		if (showPhysics) {
 			PhysDebugDraw.render(PhysicsManager.get(), renderer);
 		}
 
-		if (showDepth)
-		{
+		if (showDepth) {
 			renderer.renderBuckets();
 			Debugger.drawBuffer(TextureStoreFormat.Depth16, Debugger.NORTHEAST,
 					renderer);
 		}
 
 		Debugger.setBoundsColor(ColorRGBA.YELLOW);
-		for (final Spatial s : selection)
-		{
+		for (final Spatial s : selection) {
 			Debugger.drawBounds(s, renderer, true);
 			// Debugger.drawAxis(s, renderer);
 		}
@@ -345,15 +319,13 @@ public class DebugInterface {
 		uiNode.onDraw(renderer);
 	}
 
-	public void update(final ReadOnlyTimer timer)
-	{
+	public void update(final ReadOnlyTimer timer) {
 
 		uiNode.updateGeometricState(timer.getTimePerFrame(), true);
 
 		final StringBuffer buf = new StringBuffer();
 		// Selection
-		if (selection.size() > 0)
-		{
+		if (selection.size() > 0) {
 			buf.append("Selection:\n");
 			for (final Spatial s : selection)
 				buf.append("\t" + s.toString() + '\n');
@@ -362,12 +334,9 @@ public class DebugInterface {
 
 		// Stats
 
-		for (final MultiStatSample sample : StatCollector.getHistorical())
-		{
-			if (null != sample)
-			{
-				for (final StatType t : sample.getStatTypes())
-				{
+		for (final MultiStatSample sample : StatCollector.getHistorical()) {
+			if (null != sample) {
+				for (final StatType t : sample.getStatTypes()) {
 					final StatValue val = sample.getStatValue(t);
 					final double v = val.getAccumulatedValue();
 					buf.append(t.getStatName());
@@ -389,57 +358,48 @@ public class DebugInterface {
 		txtLabel.setText(buf.toString());
 	}
 
-	public void postUpdate(final double tpf)
-	{
-		if (showDebugCamera)
-			camCtrl.update();
+	public void postUpdate(final double tpf) {
+		// if (showDebugCamera)
+		// camCtrl.update();
 	}
 
 	private final StatListener statListener = new StatListener() {
 
 		@Override
-		public void statsUpdated()
-		{
+		public void statsUpdated() {
 
 		}
 	};
 
-	private void clearSelection()
-	{
+	private void clearSelection() {
 		selection.clear();
 	}
 
-	private void addSelection(final Spatial s)
-	{
+	private void addSelection(final Spatial s) {
 		selection.add(s);
 	}
 
-	private Spatial findSpatialUnderMouse(final MouseState ms)
-	{
+	private Spatial findSpatialUnderMouse(final MouseState ms) {
 		final Camera cam = game.getMainCamera();
 		final Ray3 ray = new Ray3();
 		cam.getPickRay(new Vector2(ms.getX(), ms.getY()), false, ray);
 		final PickResults results = new PrimitivePickResults();
 		PickingUtil.findPick(SceneManager.get().getRoot(), ray, results);
 		final PickData pdata = results.findFirstIntersectingPickData();
-		if (pdata != null)
-		{
+		if (pdata != null) {
 			final Pickable pickable = pdata.getTarget();
-			if (pickable instanceof Spatial)
-			{
+			if (pickable instanceof Spatial) {
 				return (Spatial) pickable;
 			}
 		}
 		return null;
 	}
 
-	private void focusCamera(final Spatial... spatials)
-	{
+	private void focusCamera(final Spatial... spatials) {
 		if (spatials.length < 1)
 			return;
 		BoundingVolume bounds = null;
-		for (final Spatial s : spatials)
-		{
+		for (final Spatial s : spatials) {
 			if (bounds == null)
 				bounds = s.getWorldBound().clone(new BoundingSphere());
 			else
@@ -449,21 +409,18 @@ public class DebugInterface {
 		camCtrl.setDistance(bounds.getRadius() * 1.5);
 	}
 
-	private void focusAll()
-	{
+	private void focusAll() {
 		focusCamera(SceneManager.get().getRoot());
 	}
 
-	private void focusSelection()
-	{
+	private void focusSelection() {
 		if (selection.size() == 0)
 			focusAll();
 		else
 			focusCamera(selection.toArray(new Spatial[selection.size()]));
 	}
 
-	private void checkInfinityBounds(final Spatial spatial)
-	{
+	private void checkInfinityBounds(final Spatial spatial) {
 
 		if (spatial instanceof Node)
 			for (final Spatial s : ((Node) spatial).getChildren())

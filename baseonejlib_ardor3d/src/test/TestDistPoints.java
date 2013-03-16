@@ -13,11 +13,9 @@ import com.ardor3d.util.ReadOnlyTimer;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
 import com.baseoneonline.jlib.ardor3d.controllers.EditorCameraController;
 
-public class TestDistPoints extends TestBase
-{
+public class TestDistPoints extends TestBase {
 
-	public static void main(final String[] args)
-	{
+	public static void main(final String[] args) {
 		new TestDistPoints().start();
 	}
 
@@ -25,28 +23,24 @@ public class TestDistPoints extends TestBase
 	private EditorCameraController orbCam;
 
 	@Override
-	protected void init()
-	{
+	protected void init() {
 		createPoints(100);
 
 		solver.setConstraint(new PlanarConstraint());
 
 		lightState.setEnabled(false);
-		orbCam = new EditorCameraController(logicalLayer, camera);
+		orbCam = new EditorCameraController(logicalLayer);
 	}
 
-	private void createPoints(final int num)
-	{
-		for (int i = 0; i < num; i++)
-		{
+	private void createPoints(final int num) {
+		for (int i = 0; i < num; i++) {
 
 			createPoint();
 		}
 
 	}
 
-	private void createPoint()
-	{
+	private void createPoint() {
 		final Vector3 pos = Vector3.fetchTempInstance().zero();
 
 		final Particle p = new Particle();
@@ -58,68 +52,55 @@ public class TestDistPoints extends TestBase
 	}
 
 	@Override
-	protected void update(final ReadOnlyTimer timer)
-	{
+	protected void update(final ReadOnlyTimer timer) {
 		solver.update();
-		orbCam.update();
+		// orbCam.update();
 	}
 }
 
-class PlanarConstraint implements Constraint
-{
+class PlanarConstraint implements Constraint {
 	@Override
-	public void apply(final Vector3 p)
-	{
+	public void apply(final Vector3 p) {
 		p.setY(0);
 	}
 }
 
-class AABBConstraint implements Constraint
-{
+class AABBConstraint implements Constraint {
 
-	public AABBConstraint(final Vector3 min, final Vector3 max)
-	{
+	public AABBConstraint(final Vector3 min, final Vector3 max) {
 	}
 
 	@Override
-	public void apply(final Vector3 p)
-	{
+	public void apply(final Vector3 p) {
 
 	}
 }
 
-interface Constraint
-{
+interface Constraint {
 	public void apply(Vector3 p);
 }
 
-class Solver
-{
+class Solver {
 
 	private final List<Particle> particles = new ArrayList<Particle>();
 
 	private Constraint constraint;
 
-	public void add(final Particle p)
-	{
+	public void add(final Particle p) {
 		particles.add(p);
 	}
 
-	public void setConstraint(final Constraint c)
-	{
+	public void setConstraint(final Constraint c) {
 		constraint = c;
 	}
 
-	public void update()
-	{
+	public void update() {
 		final int len = particles.size();
-		for (int i = 0; i < len - 1; i++)
-		{
+		for (int i = 0; i < len - 1; i++) {
 
 			final Particle p1 = particles.get(i); // the first particle
 
-			for (int j = i + 1; j < particles.size(); j++)
-			{
+			for (int j = i + 1; j < particles.size(); j++) {
 
 				final Particle p2 = particles.get(j); // the second particle
 				solve(p1, p2);
@@ -131,8 +112,7 @@ class Solver
 		}
 	}
 
-	private void solve(final Particle a, final Particle b)
-	{
+	private void solve(final Particle a, final Particle b) {
 		final Vector3 repelForce = Vector3.fetchTempInstance();
 
 		a.translation.subtract(b.translation, repelForce);
@@ -149,8 +129,7 @@ class Solver
 	}
 }
 
-class Particle
-{
+class Particle {
 	private static int COUNT = 0;
 	private final int index;
 	public final Vector3 translation = new Vector3();
@@ -158,8 +137,7 @@ class Particle
 	private final Point spatial;
 	public final Vector3 force = new Vector3();
 
-	public Particle()
-	{
+	public Particle() {
 		index = COUNT++;
 
 		spatial = new Point("Point" + index, ArdorUtil.createArray(
@@ -171,19 +149,16 @@ class Particle
 		spatial.setPointType(PointType.Point);
 	}
 
-	public Spatial getSpatial()
-	{
+	public Spatial getSpatial() {
 		return spatial;
 	}
 
-	public void update()
-	{
+	public void update() {
 		spatial.setTranslation(translation);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return String.format("[Particle id=%s]", index);
 	}
 }
