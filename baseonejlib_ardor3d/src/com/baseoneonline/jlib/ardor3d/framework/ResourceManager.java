@@ -38,7 +38,7 @@ public class ResourceManager {
 	private final HashMap<String, Node> models = new HashMap<String, Node>();
 
 	private static final HashMap<String, ModelLoader> loaders = new HashMap<String, ModelLoader>();
-	private final SimpleXMLImporter importer = new SimpleXMLImporter();
+	private final XMLImporter importer = new XMLImporter();
 
 	public static FileFilter MODEL_FILE_FILTER;
 	static
@@ -63,7 +63,7 @@ public class ResourceManager {
 
 	private ResourceManager() {}
 
-	public SimpleXMLImporter getTagTransformer()
+	public XMLImporter getTagTransformer()
 	{
 		return importer;
 	}

@@ -26,7 +26,6 @@ import com.google.common.base.Predicates;
  */
 public class EditorCameraController {
 
-	private final Camera cam;
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
 	private double heading = MathUtils.HALF_PI / 3;
@@ -48,9 +47,7 @@ public class EditorCameraController {
 	private final Vector3 pos = new Vector3();
 	private final Matrix3 orient = new Matrix3();
 
-	public EditorCameraController(final LogicalLayer logicalLayer,
-			final Camera cam) {
-		this.cam = cam;
+	public EditorCameraController(final LogicalLayer logicalLayer) {
 
 		this.logicalLayer = logicalLayer;
 
@@ -118,6 +115,8 @@ public class EditorCameraController {
 
 			distance -= ms.getDx() * distance * dollyMultiplier;
 			distance -= ms.getDwheel() * distance * dollyWheelMultiplier;
+
+			update(source.getCanvasRenderer().getCamera());
 		}
 	};
 
@@ -128,6 +127,7 @@ public class EditorCameraController {
 				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			final Vector3 tmp = Vector3.fetchTempInstance();
+			Camera cam = source.getCanvasRenderer().getCamera();
 
 			tmp.set(cam.getLeft());
 			tmp.multiplyLocal(ms.getDx() * panMultiplier * distance);
@@ -138,6 +138,8 @@ public class EditorCameraController {
 			orbitCenter.addLocal(tmp);
 
 			Vector3.releaseTempInstance(tmp);
+
+			update(cam);
 		}
 	};
 
@@ -149,6 +151,7 @@ public class EditorCameraController {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			elevation += ms.getDy() * orbitMultipler;
 			heading -= ms.getDx() * orbitMultipler;
+			update(source.getCanvasRenderer().getCamera());
 		}
 	};
 
@@ -159,10 +162,11 @@ public class EditorCameraController {
 		public void perform(final Canvas source,
 				final TwoInputStates inputStates, final double tpf) {
 			orbitCenter.set(Vector3.ZERO);
+			update(source.getCanvasRenderer().getCamera());
 		}
 	};
 
-	public void update() {
+	private void update(Camera cam) {
 		if (!enabled)
 			return;
 
@@ -180,10 +184,6 @@ public class EditorCameraController {
 		double aspect = (double) cam.getWidth() / (double) cam.getHeight();
 		cam.setFrustumPerspective(fov, aspect, cam.getFrustumNear(),
 				cam.getFrustumFar());
-	}
-
-	public Camera getCamera() {
-		return cam;
 	}
 
 	public void setCenter(ReadOnlyVector3 center) {

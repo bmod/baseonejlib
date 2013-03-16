@@ -11,48 +11,48 @@ import com.ardor3d.extension.model.collada.jdom.data.ColladaStorage;
 public class BlenderImporter {
 	private static final File BLENDER_LOCATION = new File(
 			"C:/Program Files/Blender Foundation/Blender/blender.exe");
-	private static final File EXPORT_SCRIPT;
 
-	static
+	public static void main(String[] args) throws IOException
 	{
-		final String script = "exportCollada.py";
-		final URL scriptFile = BlenderImporter.class.getClassLoader()
-				.getResource(script);
-		EXPORT_SCRIPT = new File(scriptFile.getFile());
-		if (!EXPORT_SCRIPT.exists())
-			throw new RuntimeException("File not found: " + script);
-	}
-
-	public static void main(final String[] args) throws IOException
-	{
-
 		new BlenderImporter().load("test/bike.blend");
 	}
 
 	public BlenderImporter() {}
 
-	public ColladaStorage load(final String model) throws IOException
+	public ColladaStorage load(String model) throws IOException
 	{
 		runBlender(model);
 		return null;
 	}
 
-	private void runBlender(final String model) throws IOException
+	private File resFile(String res)
 	{
+		URL url = getClass().getClassLoader().getResource(res);
+		if (null == url)
+			throw new RuntimeException("Resource not found in classpath: "
+					+ res);
+		return new File(url.getFile());
+	}
 
-		final File modelFile = new File(getClass().getClassLoader()
-				.getResource(model).getFile());
+	private void runBlender(String model) throws IOException
+	{
+		File scriptFile = resFile("exportCollada.py");
+		File modelFile = resFile(model);
 
 		if (!BLENDER_LOCATION.exists())
 			throw new RuntimeException("Blender not found at: "
 					+ BLENDER_LOCATION.getAbsolutePath());
 
-		final String cmd = String.format("\"%s\" -b \"%s\" -P \"%s\"",
-				BLENDER_LOCATION.getAbsolutePath(),
-				modelFile.getAbsolutePath(), EXPORT_SCRIPT.getAbsolutePath());
+		if (!scriptFile.exists())
+			throw new RuntimeException("Script file not found: "
+					+ scriptFile.getAbsolutePath());
 
-		final ProcessBuilder builder = new ProcessBuilder(cmd);
-		final Process proc = builder.start();
+		String cmd = String.format("\"%s\" -b \"%s\" -P \"%s\"",
+				BLENDER_LOCATION.getAbsolutePath(),
+				modelFile.getAbsolutePath(), scriptFile.getAbsolutePath());
+
+		ProcessBuilder builder = new ProcessBuilder(cmd);
+		Process proc = builder.start();
 
 		IOUtils.copy(proc.getInputStream(), System.out);
 		IOUtils.copy(proc.getErrorStream(), System.out);
@@ -60,11 +60,10 @@ public class BlenderImporter {
 		try
 		{
 			proc.waitFor();
-		} catch (final InterruptedException e)
+		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 
 	}
-
 }
