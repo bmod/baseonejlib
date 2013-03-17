@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="jar" name="Build baseonejlib-common jar">
+<project default="build" name="Build baseonejlib-common jar">
 
 	<taskdef resource="proguard/ant/task.properties" classpath="../proguard/lib/proguard.jar" />
 
@@ -8,32 +8,27 @@
 	<property name="dir.build" value="build" />
 	<property name="dir.dist" value="dist" />
 	<property name="jar" value="${dir.dist}/baseonejlib-common.jar" />
-
-
-
-
-	<target name="clean">
-		<delete dir="${dir.build}" />
-		<delete dir="${dir.dist}" />
+	
+	<target name="jar" depends="build">
+		<mkdir dir="${dir.dist}" />
+		<jar destfile="${jar}" basedir="${dir.build}" />
+	</target>
+	
+	<target name="build" depends="extractlibs">
+		<javac srcdir="${dir.src}" destdir="${dir.build}" verbose="yes" />
 	</target>
 
 	<target name="extractlibs" depends="clean">
 		<unzip dest="${dir.build}">
 			<fileset dir="lib" includes="*.jar" />
-			
 		</unzip>
 	</target>
-
-	<target name="build" depends="extractlibs">
-		<mkdir dir="${dir.build}" />
-		<javac srcdir="${dir.src}" destdir="${dir.build}">
-		</javac>
+	
+	<target name="clean">
+		<delete dir="${dir.build}" />
+		<delete dir="${dir.dist}" />
 	</target>
 
-	<target name="jar" depends="build">
-		<mkdir dir="${dir.dist}" />
-		<jar destfile="${jar}" basedir="${dir.build}" />
-	</target>
-
+	
 
 </project>
