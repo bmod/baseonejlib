@@ -25,13 +25,13 @@
 	<classpathentry kind="lib" path="lib/org-openide-util-lookup.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-nodes.jar"/>
 	<classpathentry kind="lib" path="lib/guava-r09.jar"/>
-	<classpathentry kind="lib" path="lib/glazedlists-1.8.0_java15.jar"/>
+	<classpathentry kind="lib" path="lib/glazedlists-1.8.0_java15.jar" sourcepath="lib/glazedlists_java15-1.9-20110828.184933-10-sources.jar"/>
 	<classpathentry kind="lib" path="lib/core.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://processing.googlecode.com/svn/trunk/processing/build/javadoc/core/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.4.jar" sourcepath="lib/commons-io-2.4-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
