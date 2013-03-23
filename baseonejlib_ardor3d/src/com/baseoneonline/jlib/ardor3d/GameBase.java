@@ -233,7 +233,7 @@ public abstract class GameBase implements Runnable {
 
 			/** Draw the rootNode and all its children. */
 			if (!canvas.isClosing()) {
-				/** Call renderExample in any derived classes. */
+
 				renderBase(renderer);
 				renderDebug(renderer);
 

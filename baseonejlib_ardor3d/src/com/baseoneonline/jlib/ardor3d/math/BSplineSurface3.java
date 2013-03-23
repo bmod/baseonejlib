@@ -3,7 +3,6 @@ package com.baseoneonline.jlib.ardor3d.math;
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
-import com.baseoneonline.java.math.CurveAlgorithms;
 
 public class BSplineSurface3 {
 
@@ -68,11 +67,12 @@ public class BSplineSurface3 {
 		store.set(0, 0, 0);
 
 		for (int ku = 0; ku < orderU; ku++) {
+
 			for (int kv = 0; kv < orderV; kv++) {
 				ReadOnlyVector3 pt = vtc[ku + spanU][kv + spanV];
 
-				double bu = CurveAlgorithms.bSplinePoint(ku, ttu);
-				double bv = CurveAlgorithms.bSplinePoint(kv, ttv);
+				double bu = bSplinePoint(ku, ttu);
+				double bv = bSplinePoint(kv, ttv);
 				double b = bu * bv;
 
 				store.addLocal(pt.getX() * b, pt.getY() * b, pt.getZ() * b);
@@ -80,8 +80,89 @@ public class BSplineSurface3 {
 		}
 	}
 
-	public void getNormal(final double u, final double v, final Vector3 vtx) {
-		vtx.set(0, 1, 0);
+	public void getTangentU(double u, double v, Vector3 store) {
+		double tu = u * spansU;
+		double tv = v * spansV;
+
+		int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
+		int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
+
+		double ttu = tu - spanU;
+		double ttv = tv - spanV;
+
+		store.set(0, 0, 0);
+
+		Vector3 tmp = Vector3.fetchTempInstance();
+
+		for (int ku = 0; ku < orderU; ku++) {
+			bSplineVelocity(vtc[spanU + ku][spanV + 0],
+					vtc[spanU + ku][spanV + 1], vtc[spanU + ku][spanV + 2],
+					vtc[spanU + ku][spanV + 3], ttu, tmp);
+			store.addLocal(tmp);
+		}
+		Vector3.releaseTempInstance(tmp);
+	}
+
+	public void getNormal(final double u, final double v, final Vector3 store) {
+		getTangentU(u, v, store);
+		store.set(0, 1, 0);
+	}
+
+	public static double bSplinePoint(int k, double t) {
+		double it = 1 - t;
+		switch (k) {
+		case 0:
+			return it * it * it / 6;
+		case 1:
+			return (3 * t * t * t - 6 * t * t + 4) / 6;
+		case 2:
+			return (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
+		case 3:
+			return t * t * t / 6;
+		default:
+			throw new RuntimeException("Wrong k value (0-4 ex): " + k);
+		}
+	}
+
+	public static Vector3 bSplinePoint(ReadOnlyVector3 a, ReadOnlyVector3 b,
+			ReadOnlyVector3 c, ReadOnlyVector3 d, double t, Vector3 store) {
+		double it = 1 - t;
+		double b0 = it * it * it / 6;
+		double b1 = (3 * t * t * t - 6 * t * t + 4) / 6;
+		double b2 = (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
+		double b3 = t * t * t / 6;
+
+		store.set(0, 0, 0);
+
+		store.addLocal(a.getX() * b0, a.getY() * b0, a.getZ() * b0);
+		store.addLocal(b.getX() * b1, b.getY() * b1, b.getZ() * b1);
+		store.addLocal(c.getX() * b2, c.getY() * b2, c.getZ() * b2);
+		store.addLocal(d.getX() * b3, d.getY() * b3, d.getZ() * b3);
+
+		return store;
+	}
+
+	private Vector3 bSplineVelocity(ReadOnlyVector3 a, ReadOnlyVector3 b,
+			ReadOnlyVector3 c, ReadOnlyVector3 d, double t, Vector3 store) {
+
+		double it = 1 - t;
+		double b0 = it * it;
+		double b1 = 1 + 2 * t - 3 * t * t;
+
+		store.set(0, 0, 0);
+
+		double x = (-(a.getX() * b0) + t
+				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
+				* b1) * .5;
+		double y = (-(a.getX() * b0) + t
+				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
+				* b1) * .5;
+		double z = (-(a.getX() * b0) + t
+				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
+				* b1) * .5;
+
+		return store.set(x, y, z);
+
 	}
 
 	private void generateKnots() {
