@@ -26,6 +26,9 @@ import com.google.common.base.Predicates;
  */
 public class EditorCameraController {
 
+	private final double maxElevation = MathUtils.HALF_PI * .99;
+	private final double minElevation = -maxElevation;
+
 	private double distance = 10;
 	private final Vector3 orbitCenter = new Vector3();
 	private double heading = MathUtils.HALF_PI / 3;
@@ -150,6 +153,7 @@ public class EditorCameraController {
 				final TwoInputStates inputStates, final double tpf) {
 			final MouseState ms = inputStates.getCurrent().getMouseState();
 			elevation += ms.getDy() * orbitMultipler;
+			elevation = MathUtils.clamp(elevation, minElevation, maxElevation);
 			heading -= ms.getDx() * orbitMultipler;
 			update(source.getCanvasRenderer().getCamera());
 		}
@@ -166,7 +170,7 @@ public class EditorCameraController {
 		}
 	};
 
-	private void update(Camera cam) {
+	public void update(Camera cam) {
 		if (!enabled)
 			return;
 

@@ -58,8 +58,6 @@ public class TestPolyStrip extends GameBase {
 
 	@Override
 	protected void update(ReadOnlyTimer timer) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

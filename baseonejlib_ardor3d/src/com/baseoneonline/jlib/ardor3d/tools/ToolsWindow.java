@@ -1,6 +1,7 @@
 package com.baseoneonline.jlib.ardor3d.tools;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -19,6 +20,7 @@ public class ToolsWindow extends JFrame {
 	public ToolsWindow() {
 		initComponents();
 		Config.get().persist(this);
+		addWindowListener(winAdapter);
 	}
 
 	private void initComponents() {
@@ -28,8 +30,17 @@ public class ToolsWindow extends JFrame {
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		sceneGraphPanel = new SceneGraphPanel();
+
 		tabbedPane.addTab("Scene Graph", null, sceneGraphPanel, null);
+
 	}
+
+	private final WindowAdapter winAdapter = new WindowAdapter() {
+		@Override
+		public void windowClosing(java.awt.event.WindowEvent e) {
+			Config.get().flush();
+		}
+	};
 
 	public static void show(final Node rootNode) {
 		if (window == null) {
