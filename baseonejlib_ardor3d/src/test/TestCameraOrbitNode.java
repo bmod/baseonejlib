@@ -14,11 +14,9 @@ import com.baseoneonline.jlib.ardor3d.GameBase;
 import com.baseoneonline.jlib.ardor3d.controllers.NoiseRotationController;
 import com.baseoneonline.jlib.ardor3d.math.Simplex;
 
-public class TestCameraOrbitNode extends GameBase
-{
+public class TestCameraOrbitNode extends GameBase {
 
-	public static void main(final String[] args)
-	{
+	public static void main(final String[] args) {
 		final TestCameraOrbitNode app = new TestCameraOrbitNode();
 
 		app.start(1280, 720, false);
@@ -28,8 +26,7 @@ public class TestCameraOrbitNode extends GameBase
 	private Trail trail;
 
 	@Override
-	protected void init()
-	{
+	protected void init() {
 		orbiter = new CameraOrbitNode(camera);
 
 		root.attachChild(trail);
@@ -39,8 +36,7 @@ public class TestCameraOrbitNode extends GameBase
 		orbiter.addController(ctrl);
 		root.attachChild(orbiter);
 
-		for (int i = 0; i < 5; i++)
-		{
+		for (int i = 0; i < 5; i++) {
 			createDot(i);
 		}
 
@@ -48,17 +44,14 @@ public class TestCameraOrbitNode extends GameBase
 		root.attachChild(box);
 	}
 
-	private Dot createDot(final double offset)
-	{
+	private Dot createDot(final double offset) {
 		final Dot dot = new Dot();
-		dot.addController(new SpatialController<Spatial>()
-		{
+		dot.addController(new SpatialController<Spatial>() {
 			Vector3 pos = new Vector3();
 			double t = 0;
 
 			@Override
-			public void update(final double time, final Spatial caller)
-			{
+			public void update(final double time, final Spatial caller) {
 				t += time * 2;
 				noise(t, pos, offset * .04);
 				caller.setTranslation(pos);
@@ -71,8 +64,7 @@ public class TestCameraOrbitNode extends GameBase
 		return dot;
 	}
 
-	private Vector3 noise(final double t, final Vector3 store, final double seed)
-	{
+	private Vector3 noise(final double t, final Vector3 store, final double seed) {
 		final double x = Simplex.noise(t, 0 + seed);
 		final double y = Simplex.noise(t, 22 + seed);
 		final double z = Simplex.noise(t, 55 + seed);
@@ -80,10 +72,7 @@ public class TestCameraOrbitNode extends GameBase
 	}
 
 	@Override
-	protected void update(final ReadOnlyTimer timer)
-	{
-		// TODO Auto-generated method stub
-
+	protected void update(final ReadOnlyTimer timer) {
 	}
 
 }

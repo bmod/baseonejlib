@@ -110,21 +110,17 @@ public abstract class GameBase implements Runnable {
 	protected DirectionalLight sunlight;
 	protected Camera camera;
 
-	public float getDisplayRatio()
-	{
+	public float getDisplayRatio() {
 		return (float) displaySettings.getWidth()
 				/ (float) displaySettings.getHeight();
 	}
 
 	@Override
-	public void run()
-	{
-		try
-		{
+	public void run() {
+		try {
 			frameHandler.init();
 
-			while (!_exit)
-			{
+			while (!_exit) {
 				frameHandler.updateFrame();
 				Thread.yield();
 			}
@@ -133,31 +129,26 @@ public abstract class GameBase implements Runnable {
 			cr.makeCurrentContext();
 			quit(cr.getRenderer());
 			cr.releaseCurrentContext();
-			if (QUIT_VM_ON_EXIT)
-			{
+			if (QUIT_VM_ON_EXIT) {
 				System.exit(0);
 			}
-		} catch (final Throwable t)
-		{
+		} catch (final Throwable t) {
 			System.err.println("Throwable caught in MainThread - exiting");
 			t.printStackTrace(System.err);
 		}
 	}
 
-	public void exit()
-	{
+	public void exit() {
 		_exit = true;
 	}
 
-	protected void setShadowsEnabled(final boolean b)
-	{
+	protected void setShadowsEnabled(final boolean b) {
 		shadowPass.setEnabled(b);
 	}
 
 	protected abstract void init();
 
-	protected final void initExample()
-	{
+	protected final void initExample() {
 		// Setup main camera.
 		canvas.setTitle(getClass().getSimpleName());
 
@@ -205,6 +196,7 @@ public abstract class GameBase implements Runnable {
 		shadowPass.add(root);
 		shadowPass.setUseSceneTexturing(true);
 		shadowPass.setUseObjectCullFace(true);
+		shadowPass.setEnabled(false);
 
 		// Outline pass
 		// outlinePass = new OutlinePass(true);
@@ -223,16 +215,14 @@ public abstract class GameBase implements Runnable {
 
 	protected abstract void update(final ReadOnlyTimer timer);
 
-	protected void lateUpdate(final ReadOnlyTimer timer)
-	{
+	protected void lateUpdate(final ReadOnlyTimer timer) {
 
 	}
 
 	private final Scene scene = new Scene() {
 
 		@Override
-		public boolean renderUnto(final Renderer renderer)
-		{
+		public boolean renderUnto(final Renderer renderer) {
 			// Execute renderQueue item
 			GameTaskQueueManager
 					.getManager(canvas.getCanvasRenderer().getRenderContext())
@@ -242,14 +232,12 @@ public abstract class GameBase implements Runnable {
 			ContextGarbageCollector.doRuntimeCleanup(renderer);
 
 			/** Draw the rootNode and all its children. */
-			if (!canvas.isClosing())
-			{
+			if (!canvas.isClosing()) {
 				/** Call renderExample in any derived classes. */
 				renderBase(renderer);
 				renderDebug(renderer);
 
-				if (doShot)
-				{
+				if (doShot) {
 					// force any waiting scene elements to be renderer.
 					renderer.renderBuckets();
 					ScreenExporter.exportCurrentScreen(canvas
@@ -257,23 +245,19 @@ public abstract class GameBase implements Runnable {
 					doShot = false;
 				}
 				return true;
-			} else
-			{
+			} else {
 				return false;
 			}
 		}
 
 		@Override
-		public PickResults doPick(final Ray3 pickRay)
-		{
+		public PickResults doPick(final Ray3 pickRay) {
 			return null;
 		}
 	};
 
-	protected void renderBase(final Renderer renderer)
-	{
-		if (!shadowPass.isInitialised())
-		{
+	protected void renderBase(final Renderer renderer) {
+		if (!shadowPass.isInitialised()) {
 			shadowPass.init(renderer);
 		}
 
@@ -294,21 +278,17 @@ public abstract class GameBase implements Runnable {
 
 	}
 
-	protected void renderDebug(final Renderer renderer)
-	{
-		if (showBounds)
-		{
+	protected void renderDebug(final Renderer renderer) {
+		if (showBounds) {
 			Debugger.drawBounds(root, renderer, true);
 		}
 
-		if (showNormals)
-		{
+		if (showNormals) {
 			Debugger.drawNormals(root, renderer);
 			Debugger.drawTangents(root, renderer);
 		}
 
-		if (showDepth)
-		{
+		if (showDepth) {
 			renderer.renderBuckets();
 			Debugger.drawBuffer(TextureStoreFormat.Depth16, Debugger.NORTHEAST,
 					renderer);
@@ -318,23 +298,19 @@ public abstract class GameBase implements Runnable {
 	private final Updater updater = new Updater() {
 
 		@Override
-		public void update(final ReadOnlyTimer timer)
-		{
-			if (canvas.isClosing())
-			{
+		public void update(final ReadOnlyTimer timer) {
+			if (canvas.isClosing()) {
 				exit();
 			}
 
-			if (Constants.stats)
-			{
+			if (Constants.stats) {
 				StatCollector.update();
 			}
 
 			logicalLayer.checkTriggers(timer.getTimePerFrame());
 
 			// Execute updateQueue item
-			if (!paused || stepping)
-			{
+			if (!paused || stepping) {
 				GameTaskQueueManager
 						.getManager(
 								canvas.getCanvasRenderer().getRenderContext())
@@ -346,15 +322,13 @@ public abstract class GameBase implements Runnable {
 
 			passManager.updatePasses(timer.getTimePerFrame());
 
-			if (updateLight)
-			{
+			if (updateLight) {
 				final double time = timer.getTimeInSeconds() * 0.2;
 				lightPosition.set(Math.sin(time) * 10000.0, 5000.0,
 						Math.cos(time) * 10000.0);
 			}
 
-			if (!paused || stepping)
-			{
+			if (!paused || stepping) {
 				root.updateGeometricState(timer.getTimePerFrame(), true);
 				lateUpdate(timer);
 			}
@@ -362,8 +336,7 @@ public abstract class GameBase implements Runnable {
 			stepping = false;
 		}
 
-		private void initStates()
-		{
+		private void initStates() {
 			final ZBufferState buf = new ZBufferState();
 			buf.setEnabled(true);
 			buf.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
@@ -391,8 +364,7 @@ public abstract class GameBase implements Runnable {
 		}
 
 		@Override
-		public void init()
-		{
+		public void init() {
 
 			registerInputTriggers();
 
@@ -408,27 +380,23 @@ public abstract class GameBase implements Runnable {
 		}
 	};
 
-	protected void quit(final Renderer renderer)
-	{
+	protected void quit(final Renderer renderer) {
 		ContextGarbageCollector.doFinalCleanup(renderer);
 		canvas.close();
 	}
 
 	public void start(final int width, final int height,
-			final boolean fullscreen)
-	{
+			final boolean fullscreen) {
 		start(new DisplaySettings(width, height, colorDepth, framerate, 1, 8,
 				0, 1, fullscreen, false));
 	}
 
-	public void start()
-	{
-		start(new DisplaySettings(720, 406, colorDepth, framerate, 1, 8, 0, 1,
+	public void start() {
+		start(new DisplaySettings(720, 406, colorDepth, framerate, 1, 8, 0, 0,
 				false, false));
 	}
 
-	public void start(final DisplaySettings settings)
-	{
+	public void start(final DisplaySettings settings) {
 
 		displaySettings = settings;
 
@@ -454,15 +422,13 @@ public abstract class GameBase implements Runnable {
 		new Thread(this).start();
 	}
 
-	protected void registerInputTriggers()
-	{
+	protected void registerInputTriggers() {
 
 		logicalLayer.registerTrigger(new InputTrigger(new KeyPressedCondition(
 				Key.ESCAPE), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				exit();
 			}
 		}));
@@ -471,8 +437,7 @@ public abstract class GameBase implements Runnable {
 				Key.L), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				lightState.setEnabled(!lightState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -484,8 +449,7 @@ public abstract class GameBase implements Runnable {
 				Key.F4), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showDepth = !showDepth;
 			}
 		}));
@@ -494,8 +458,7 @@ public abstract class GameBase implements Runnable {
 				Key.T), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				wireframeState.setEnabled(!wireframeState.isEnabled());
 				// Either an update or a markDirty is needed here since we did
 				// not touch the affected spatial directly.
@@ -507,8 +470,7 @@ public abstract class GameBase implements Runnable {
 				Key.B), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showBounds = !showBounds;
 			}
 		}));
@@ -517,8 +479,7 @@ public abstract class GameBase implements Runnable {
 				Key.C), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				System.out.println("Camera: "
 						+ canvas.getCanvasRenderer().getCamera());
 			}
@@ -528,8 +489,7 @@ public abstract class GameBase implements Runnable {
 				Key.N), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				showNormals = !showNormals;
 			}
 		}));
@@ -538,8 +498,7 @@ public abstract class GameBase implements Runnable {
 				Key.F1), new TriggerAction() {
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputState, final double tpf)
-			{
+					final TwoInputStates inputState, final double tpf) {
 				doShot = true;
 			}
 		}));
@@ -549,8 +508,7 @@ public abstract class GameBase implements Runnable {
 
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputStates, final double tpf)
-			{
+					final TwoInputStates inputStates, final double tpf) {
 				paused = !paused;
 			}
 		}));
@@ -560,8 +518,7 @@ public abstract class GameBase implements Runnable {
 
 			@Override
 			public void perform(final Canvas source,
-					final TwoInputStates inputStates, final double tpf)
-			{
+					final TwoInputStates inputStates, final double tpf) {
 				stepping = true;
 			}
 		}));
