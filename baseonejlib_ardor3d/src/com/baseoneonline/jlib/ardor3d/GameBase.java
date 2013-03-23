@@ -190,7 +190,7 @@ public abstract class GameBase implements Runnable {
 		lightState.attach(sunlight);
 
 		// Create pssm pass
-		shadowPass = new ParallelSplitShadowMapPass(sunlight, 2048, 8);
+		shadowPass = new ParallelSplitShadowMapPass(sunlight, 1024, 4);
 		shadowPass.setFiltering(Filter.Pcf);
 		shadowPass.setMaxShadowDistance(500);
 		shadowPass.add(root);
