@@ -25,26 +25,31 @@ public class BSplineSurface3 {
 		setDegree(3, 3);
 	}
 
-	public int getVertsU() {
+	public int getVertsU()
+	{
 		return vertsU;
 	}
 
-	public int getVertsV() {
+	public int getVertsV()
+	{
 		return vertsV;
 	}
 
-	public void setVertices(final ReadOnlyVector3[][] vtc) {
+	public void setVertices(final ReadOnlyVector3[][] vtc)
+	{
 		this.vtc = vtc;
 		recalculate();
 	}
 
-	private void setDegree(int u, int v) {
-		this.degreeU = u;
-		this.degreeV = v;
+	private void setDegree(final int u, final int v)
+	{
+		degreeU = u;
+		degreeV = v;
 		recalculate();
 	}
 
-	private void recalculate() {
+	private void recalculate()
+	{
 		vertsU = vtc.length;
 		vertsV = vtc[0].length;
 		spansU = vertsU - degreeU;
@@ -54,63 +59,195 @@ public class BSplineSurface3 {
 		generateKnots();
 	}
 
-	public void getPoint(final double u, final double v, final Vector3 store) {
-		double tu = u * spansU;
-		double tv = v * spansV;
+	public void getPoint(final double u, final double v, final Vector3 store)
+	{
+		final double tu = u * spansU;
+		final double tv = v * spansV;
 
-		int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
-		int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
+		final int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
+		final int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
 
-		double ttu = tu - spanU;
-		double ttv = tv - spanV;
+		final double ttu = tu - spanU;
+		final double ttv = tv - spanV;
 
 		store.set(0, 0, 0);
 
-		for (int ku = 0; ku < orderU; ku++) {
+		final double[] basisU = BSplineSurface3.basisFunc(ttu);
+		final double[] basisV = BSplineSurface3.basisFunc(ttv);
 
-			for (int kv = 0; kv < orderV; kv++) {
-				ReadOnlyVector3 pt = vtc[ku + spanU][kv + spanV];
+		for (int ku = 0; ku < orderU; ku++)
+		{
 
-				double bu = bSplinePoint(ku, ttu);
-				double bv = bSplinePoint(kv, ttv);
-				double b = bu * bv;
+			for (int kv = 0; kv < orderV; kv++)
+			{
+				final ReadOnlyVector3 pt = vtc[ku + spanU][kv + spanV];
+
+				final double b = basisU[ku] * basisV[kv];
 
 				store.addLocal(pt.getX() * b, pt.getY() * b, pt.getZ() * b);
 			}
 		}
 	}
 
-	public void getTangentU(double u, double v, Vector3 store) {
-		double tu = u * spansU;
-		double tv = v * spansV;
+	public Vector3 getTangentU(final double u, final double v, final Vector3 store)
+	{
+		final double tu = u * spansU;
+		final double tv = v * spansV;
 
-		int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
-		int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
+		final int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
+		final int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
 
-		double ttu = tu - spanU;
-		double ttv = tv - spanV;
+		final double ttu = tu - spanU;
+		final double ttv = tv - spanV;
 
-		store.set(0, 0, 0);
+		store.zero();
 
-		Vector3 tmp = Vector3.fetchTempInstance();
+		final double[] nu = BSplineSurface3.basisFunc(ttu);
+		final double[] nv = BSplineSurface3.basisFunc(ttv);
+		final double[] dnu = BSplineSurface3.curveFuncDerived(ttu);
 
-		for (int ku = 0; ku < orderU; ku++) {
-			bSplineVelocity(vtc[spanU + ku][spanV + 0],
-					vtc[spanU + ku][spanV + 1], vtc[spanU + ku][spanV + 2],
-					vtc[spanU + ku][spanV + 3], ttu, tmp);
-			store.addLocal(tmp);
+		final double w1 = 0;
+		final double w2 = 0;
+
+		double val1x = 0;
+		double val1y = 0;
+		double val1z = 0;
+		double val1w = 0;
+
+		double val2x = 0;
+		double val2y = 0;
+		double val2z = 0;
+		double val2w = 0;
+
+		for (int ku = 0; ku < orderU; ku++)
+		{
+			for (int kv = 0; kv < orderV; kv++)
+			{
+				final ReadOnlyVector3 pt = vtc[ku + spanU][kv + spanV];
+
+				val1x += pt.getX() * nu[ku] * nv[kv];
+				val1y += pt.getY() * nu[ku] * nv[kv];
+				val1z += pt.getZ() * nu[ku] * nv[kv];
+				val1w += nu[ku] * nv[kv];
+
+				val2x += pt.getX() * dnu[ku] * nv[kv];
+				val2y += pt.getY() * dnu[ku] * nv[kv];
+				val2z += pt.getZ() * dnu[ku] * nv[kv];
+				val2w += dnu[ku] * nv[kv];
+
+			}
 		}
-		Vector3.releaseTempInstance(tmp);
+
+		val1x *= val2w;
+		val1y *= val2w;
+		val1z *= val2w;
+
+		val2x *= val1w;
+		val2y *= val1w;
+		val2z *= val1w;
+
+		val1w *= val1w;
+		store.setX((val2x - val1x) / val1w);
+		store.setY((val2y - val1y) / val1w);
+		store.setZ((val2z - val1z) / val1w);
+
+		return store;
 	}
 
-	public void getNormal(final double u, final double v, final Vector3 store) {
-		getTangentU(u, v, store);
-		store.set(0, 1, 0);
+	private Vector3 getTangentV(final double u, final double v, final Vector3 store)
+	{
+		final double tu = u * spansU;
+		final double tv = v * spansV;
+
+		final int spanU = MathUtils.clamp((int) tu, 0, spansU - 1);
+		final int spanV = MathUtils.clamp((int) tv, 0, spansV - 1);
+
+		final double ttu = tu - spanU;
+		final double ttv = tv - spanV;
+
+		store.zero();
+
+		final double[] nu = BSplineSurface3.basisFunc(ttu);
+		final double[] nv = BSplineSurface3.basisFunc(ttv);
+		final double[] dnv = BSplineSurface3.curveFuncDerived(ttv);
+
+		double val1x = 0;
+		double val1y = 0;
+		double val1z = 0;
+		double val1w = 0;
+
+		double val2x = 0;
+		double val2y = 0;
+		double val2z = 0;
+		double val2w = 0;
+
+		for (int ku = 0; ku < orderU; ku++)
+		{
+			for (int kv = 0; kv < orderV; kv++)
+			{
+				final ReadOnlyVector3 pt = vtc[ku + spanU][kv + spanV];
+
+				val1x += pt.getX() * nu[ku] * nv[kv];
+				val1y += pt.getY() * nu[ku] * nv[kv];
+				val1z += pt.getZ() * nu[ku] * nv[kv];
+				val1w += nu[ku] * nv[kv];
+
+				val2x += pt.getX() * nu[ku] * dnv[kv];
+				val2y += pt.getY() * nu[ku] * dnv[kv];
+				val2z += pt.getZ() * nu[ku] * dnv[kv];
+				val2w += nu[ku] * dnv[kv];
+
+			}
+		}
+
+		val1x *= val2w;
+		val1y *= val2w;
+		val1z *= val2w;
+
+		val2x *= val1w;
+		val2y *= val1w;
+		val2z *= val1w;
+
+		val1w *= val1w;
+		store.setX((val2x - val1x) / val1w);
+		store.setY((val2y - val1y) / val1w);
+		store.setZ((val2z - val1z) / val1w);
+		return store;
 	}
 
-	public static double bSplinePoint(int k, double t) {
-		double it = 1 - t;
-		switch (k) {
+	public void getAxes(final double u, final double v, final Vector3 axisU, final Vector3 axisV, final Vector3 normal)
+	{
+		getTangentU(u, v, axisU);
+		getTangentV(u, v, axisV);
+		axisV.cross(axisU, normal);
+	}
+
+	public void getNormal(final double u, final double v, final Vector3 store)
+	{
+		final Vector3 tanU = Vector3.fetchTempInstance();
+		final Vector3 tanV = Vector3.fetchTempInstance();
+
+		getAxes(u, v, tanU, tanV, store);
+
+		Vector3.releaseTempInstance(tanU);
+		Vector3.releaseTempInstance(tanV);
+	}
+
+	private static double[] basisFunc(final double t)
+	{
+		final double it = 1 - t;
+		final double a = it * it * it / 6;
+		final double b = (3 * t * t * t - 6 * t * t + 4) / 6;
+		final double c = (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
+		final double d = t * t * t / 6;
+		return new double[] { a, b, c, d };
+	}
+
+	public static double bSplinePoint(final int k, final double t)
+	{
+		final double it = 1 - t;
+		switch (k)
+		{
 		case 0:
 			return it * it * it / 6;
 		case 1:
@@ -124,13 +261,14 @@ public class BSplineSurface3 {
 		}
 	}
 
-	public static Vector3 bSplinePoint(ReadOnlyVector3 a, ReadOnlyVector3 b,
-			ReadOnlyVector3 c, ReadOnlyVector3 d, double t, Vector3 store) {
-		double it = 1 - t;
-		double b0 = it * it * it / 6;
-		double b1 = (3 * t * t * t - 6 * t * t + 4) / 6;
-		double b2 = (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
-		double b3 = t * t * t / 6;
+	public static Vector3 bSplinePoint(final ReadOnlyVector3 a, final ReadOnlyVector3 b, final ReadOnlyVector3 c, final ReadOnlyVector3 d, final double t,
+			final Vector3 store)
+	{
+		final double it = 1 - t;
+		final double b0 = it * it * it / 6;
+		final double b1 = (3 * t * t * t - 6 * t * t + 4) / 6;
+		final double b2 = (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
+		final double b3 = t * t * t / 6;
 
 		store.set(0, 0, 0);
 
@@ -142,30 +280,36 @@ public class BSplineSurface3 {
 		return store;
 	}
 
-	private Vector3 bSplineVelocity(ReadOnlyVector3 a, ReadOnlyVector3 b,
-			ReadOnlyVector3 c, ReadOnlyVector3 d, double t, Vector3 store) {
+	private static double[] curveFuncDerived(final double t)
+	{
+		final double it = 1 - t;
+		final double a = -(it * it) * .5;
+		final double b = t * (-4 * 1 + 3 * 1 * t) * .5;
+		final double c = t * (1 + 2 * t - 3 * t * t) * .5;
+		final double d = t * t * .5;
+		return new double[] { a, b, c, d };
+	}
 
-		double it = 1 - t;
-		double b0 = it * it;
-		double b1 = 1 + 2 * t - 3 * t * t;
+	private Vector3 bSplineVelocity(final ReadOnlyVector3 a, final ReadOnlyVector3 b, final ReadOnlyVector3 c, final ReadOnlyVector3 d, final double t,
+			final Vector3 store)
+	{
+
+		final double it = 1 - t;
+		final double b0 = it * it;
+		final double b1 = 1 + 2 * t - 3 * t * t;
 
 		store.set(0, 0, 0);
 
-		double x = (-(a.getX() * b0) + t
-				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
-				* b1) * .5;
-		double y = (-(a.getX() * b0) + t
-				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
-				* b1) * .5;
-		double z = (-(a.getX() * b0) + t
-				* (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX()
-				* b1) * .5;
+		final double x = (-(a.getX() * b0) + t * (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX() * b1) * .5;
+		final double y = (-(a.getX() * b0) + t * (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX() * b1) * .5;
+		final double z = (-(a.getX() * b0) + t * (-4 * b.getX() + 3 * b.getX() * t + d.getX() * t) + c.getX() * b1) * .5;
 
 		return store.set(x, y, z);
 
 	}
 
-	private void generateKnots() {
+	private void generateKnots()
+	{
 		// resize if necessary
 		numUKnots = vertsU + degreeU + 1;
 		if (knotsU.length < numUKnots)
@@ -173,7 +317,8 @@ public class BSplineSurface3 {
 
 		int j;
 
-		for (j = 0; j < numUKnots; j++) {
+		for (j = 0; j < numUKnots; j++)
+		{
 			if (j <= degreeU)
 				knotsU[j] = 0;
 			else if (j < vertsU)
@@ -186,7 +331,8 @@ public class BSplineSurface3 {
 		if (knotsV.length < numVKnots)
 			knotsV = new double[numVKnots];
 
-		for (j = 0; j < numVKnots; j++) {
+		for (j = 0; j < numVKnots; j++)
+		{
 			if (j <= degreeV)
 				knotsV[j] = 0;
 			else if (j < vertsV)
@@ -194,33 +340,6 @@ public class BSplineSurface3 {
 			else if (j >= vertsV)
 				knotsV[j] = vertsV - degreeV + 1;
 		}
-	}
-
-	private double splineBlend(final int i, final int k,
-			final boolean useDepth, final double t) {
-		double ret_val;
-
-		// Do this just to make the maths traceable with the std algorithm
-		final double[] u = useDepth ? knotsV : knotsU;
-
-		if (k == 1) {
-			ret_val = u[i] <= t && t < u[i + 1] ? 1 : 0;
-		} else {
-			final double b1 = splineBlend(i, k - 1, useDepth, t);
-			final double b2 = splineBlend(i + 1, k - 1, useDepth, t);
-
-			final double d1 = u[i + k - 1] - u[i];
-			final double d2 = u[i + k] - u[i + 1];
-
-			double e, f;
-
-			e = b1 != 0 ? (t - u[i]) / d1 * b1 : 0;
-			f = b2 != 0 ? (u[i + k] - t) / d2 * b2 : 0;
-
-			ret_val = e + f;
-		}
-
-		return ret_val;
 	}
 
 }
