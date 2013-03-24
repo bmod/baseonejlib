@@ -22,8 +22,7 @@ public class SplineSurfaceMesh extends Mesh {
 
 	private final boolean autoRebuild = true;
 
-	public SplineSurfaceMesh(final BSplineSurface3 patch, final int uSamples,
-			final int vSamples) {
+	public SplineSurfaceMesh(final BSplineSurface3 patch, final int uSamples, final int vSamples) {
 		this.patch = patch;
 		this.uSamples = uSamples;
 		this.vSamples = vSamples;
@@ -31,44 +30,57 @@ public class SplineSurfaceMesh extends Mesh {
 		rebuild();
 	}
 
-	public void setSamples(int u, int v) {
+	public void setSamples(final int u, final int v)
+	{
 		uSamples = u;
 		vSamples = v;
-		if (autoRebuild) {
+		if (autoRebuild)
+		{
 			initBuffers();
 			rebuild();
 		}
 	}
 
-	public void setTextureScale(double u, double v) {
+	public void setTextureScale(final double u, final double v)
+	{
 		texScaleU = u;
 		texScaleV = v;
 		if (autoRebuild)
 			rebuild();
 	}
 
-	public void setTextureOffset(double u, double v) {
+	public void setTextureRepeat(final double u, final double v)
+	{
+		texScaleU = 1 / u;
+		texScaleV = 1 / v;
+		if (autoRebuild)
+			rebuild();
+	}
+
+	public void setTextureOffset(final double u, final double v)
+	{
 		texOffsetU = u;
 		texOffsetV = v;
 		if (autoRebuild)
 			rebuild();
 	}
 
-	private void initBuffers() {
+	private void initBuffers()
+	{
 		final int verts = (uSamples + 1) * (vSamples + 1);
 		final int quads = uSamples * vSamples;
-		_meshData.setVertexBuffer(BufferUtils.createVector3Buffer(
-				_meshData.getVertexBuffer(), verts));
+		_meshData.setVertexBuffer(BufferUtils.createVector3Buffer(_meshData.getVertexBuffer(), verts));
 
-		_meshData.setNormalBuffer(BufferUtils.createVector3Buffer(
-				_meshData.getNormalBuffer(), verts));
+		_meshData.setNormalBuffer(BufferUtils.createVector3Buffer(_meshData.getNormalBuffer(), verts));
 
 		_meshData.setTextureBuffer(BufferUtils.createVector2Buffer(verts), 0);
 
 		// Index buffer
 		final IntBuffer idc = BufferUtils.createIntBuffer(quads * 6);
-		for (int x = 0; x < uSamples; x++) {
-			for (int y = 0; y < vSamples; y++) {
+		for (int x = 0; x < uSamples; x++)
+		{
+			for (int y = 0; y < vSamples; y++)
+			{
 				final int v = vSamples + 1;
 				final int a = y + v * x;
 				final int b = a + 1;
@@ -82,7 +94,8 @@ public class SplineSurfaceMesh extends Mesh {
 
 	}
 
-	public void rebuild() {
+	public void rebuild()
+	{
 		final FloatBuffer vtxBuf = _meshData.getVertexBuffer();
 		final FloatBuffer nmlBuf = _meshData.getNormalBuffer();
 		final FloatBuffer texBuf = _meshData.getTextureBuffer(0);
@@ -92,22 +105,25 @@ public class SplineSurfaceMesh extends Mesh {
 		texBuf.rewind();
 
 		final Vector3 vtx = Vector3.fetchTempInstance();
-		for (int iu = 0; iu <= uSamples; iu++) {
-			for (int iv = 0; iv <= vSamples; iv++) {
+		for (int iu = 0; iu <= uSamples; iu++)
+		{
+			for (int iv = 0; iv <= vSamples; iv++)
+			{
 				final double u = (double) iu / (double) uSamples;
 				final double v = (double) iv / (double) vSamples;
 
 				patch.getPoint(u, v, vtx);
 				vtxBuf.put(vtx.getXf()).put(vtx.getYf()).put(vtx.getZf());
-				patch.getNormal(u, v, vtx);
+				patch.getNormal(u, v, vtx).normalizeLocal();
 				nmlBuf.put(vtx.getXf()).put(vtx.getYf()).put(vtx.getZf());
 
-				double texU = texOffsetU + u / texScaleU;
-				double texV = texOffsetV + v / texScaleV;
+				final double texU = texOffsetU + u / texScaleU;
+				final double texV = texOffsetV + v / texScaleV;
 
 				texBuf.put((float) texU).put((float) texV);
 			}
 		}
 		Vector3.releaseTempInstance(vtx);
 	}
+
 }

@@ -209,9 +209,11 @@ public class BSplineSurface3 {
 		val2z *= val1w;
 
 		val1w *= val1w;
+
 		store.setX((val2x - val1x) / val1w);
 		store.setY((val2y - val1y) / val1w);
 		store.setZ((val2z - val1z) / val1w);
+
 		return store;
 	}
 
@@ -222,7 +224,7 @@ public class BSplineSurface3 {
 		axisV.cross(axisU, normal);
 	}
 
-	public void getNormal(final double u, final double v, final Vector3 store)
+	public Vector3 getNormal(final double u, final double v, final Vector3 store)
 	{
 		final Vector3 tanU = Vector3.fetchTempInstance();
 		final Vector3 tanV = Vector3.fetchTempInstance();
@@ -231,6 +233,8 @@ public class BSplineSurface3 {
 
 		Vector3.releaseTempInstance(tanU);
 		Vector3.releaseTempInstance(tanV);
+
+		return store;
 	}
 
 	private static double[] basisFunc(final double t)
