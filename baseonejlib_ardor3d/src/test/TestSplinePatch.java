@@ -14,7 +14,6 @@ import com.ardor3d.input.logical.TriggerAction;
 import com.ardor3d.input.logical.TwoInputStates;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Vector3;
-import com.ardor3d.math.functions.SimplexNoise;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.state.TextureState;
 import com.ardor3d.renderer.state.WireframeState;
@@ -32,12 +31,8 @@ public class TestSplinePatch extends GameBase {
 		new TestSplinePatch().start();
 	}
 
-	private final SimplexNoise simplex = new SimplexNoise();
-
 	int w = 7;
 	int h = 7;
-	private Vector3[][] vtc;
-	private final double time = 0;
 
 	private Patch patch;
 
