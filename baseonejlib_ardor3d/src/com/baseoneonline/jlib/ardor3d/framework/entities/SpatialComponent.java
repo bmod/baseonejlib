@@ -14,23 +14,32 @@ public class SpatialComponent extends Component {
 		this.spatial = spatial;
 	}
 
+	public Spatial getSpatial()
+	{
+		return spatial;
+	}
+
 	@Override
-	public void resume() {
+	public void resume()
+	{
 		getEntity().getNode().attachChild(spatial);
 	}
 
 	@Override
-	public void suspend() {
+	public void suspend()
+	{
 		getEntity().getNode().detachChild(spatial);
 	}
 
 	@Override
-	public void write(final OutputCapsule capsule) throws IOException {
+	public void write(final OutputCapsule capsule) throws IOException
+	{
 		capsule.write(spatial, "spatial", null);
 	}
 
 	@Override
-	public void read(final InputCapsule capsule) throws IOException {
+	public void read(final InputCapsule capsule) throws IOException
+	{
 		spatial = (Spatial) capsule.readSavable("spatial", null);
 	}
 
