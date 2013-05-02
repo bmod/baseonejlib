@@ -2,8 +2,7 @@ package com.baseoneonline.java.importerexporter;
 
 import java.util.List;
 
-public interface Capsule
-{
+public interface Capsule {
 
 	public <T extends Storable> List<T> read(String string, Class<T> elementType);
 
