@@ -154,4 +154,69 @@ public class ArdorUtil {
 
 		return store;
 	}
+
+	/**
+	 * @return {float newValue, float currentVelocity};
+	 */
+	public static float[] smoothDamp(float current, float target,
+			float currentVelocity, float smoothTime, float maxSpeed,
+			float deltaTime) {
+		smoothTime = Math.max(0.0001f, smoothTime);
+		float num = 2f / smoothTime;
+		float num2 = num * deltaTime;
+		float num3 = 1f / (1f + num2 + 0.48f * num2 * num2 + 0.235f * num2
+				* num2 * num2);
+		float num4 = current - target;
+		float num5 = target;
+		float num6 = maxSpeed * smoothTime;
+		num4 = MathUtils.clamp(num4, -num6, num6);
+		target = current - num4;
+		float num7 = (currentVelocity + num * num4) * deltaTime;
+		currentVelocity = (currentVelocity - num * num7) * num3;
+		float num8 = target + (num4 + num7) * num3;
+		if (num5 - current > 0f == num8 > num5) {
+			num8 = num5;
+			currentVelocity = (num8 - num5) / deltaTime;
+		}
+		return new float[] { num8, currentVelocity };
+	}
+
+	/**
+	 * @return {float newValue, float currentVelocity};
+	 */
+	public static double[] smoothDamp(double current, double target,
+			double currentVelocity, double smoothTime, double maxSpeed,
+			double deltaTime) {
+		smoothTime = Math.max(0.0001f, smoothTime);
+		double num = 2f / smoothTime;
+		double num2 = num * deltaTime;
+		double num3 = 1f / (1f + num2 + 0.48f * num2 * num2 + 0.235f * num2
+				* num2 * num2);
+		double num4 = current - target;
+		double num5 = target;
+		double num6 = maxSpeed * smoothTime;
+		num4 = MathUtils.clamp(num4, -num6, num6);
+		target = current - num4;
+		double num7 = (currentVelocity + num * num4) * deltaTime;
+		currentVelocity = (currentVelocity - num * num7) * num3;
+		double num8 = target + (num4 + num7) * num3;
+		if (num5 - current > 0f == num8 > num5) {
+			num8 = num5;
+			currentVelocity = (num8 - num5) / deltaTime;
+		}
+		return new double[] { num8, currentVelocity };
+	}
+
+	public static void smoothDamp(Vector3 current, ReadOnlyVector3 target,
+			Vector3 currentVelocity, double smoothTime, double maxSpeed,
+			double deltaTime) {
+		double[] x = smoothDamp(current.getX(), target.getX(),
+				currentVelocity.getX(), smoothTime, maxSpeed, deltaTime);
+		double[] y = smoothDamp(current.getY(), target.getY(),
+				currentVelocity.getY(), smoothTime, maxSpeed, deltaTime);
+		double[] z = smoothDamp(current.getZ(), target.getZ(),
+				currentVelocity.getZ(), smoothTime, maxSpeed, deltaTime);
+		current.set(x[0], y[0], z[0]);
+		currentVelocity.set(x[1], y[1], z[1]);
+	}
 }
