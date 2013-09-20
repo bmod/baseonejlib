@@ -1,0 +1,37 @@
+<project default="makeJars">
+
+	<property name="ardor3dSourceArchive" value="C:/Users/bask/Downloads/Ardor3D-master.zip" />
+	<property name="tmpDir" value="_tmp_ardor3d" />
+	<property name="outDir" value="lib/ardor3d" />
+
+	<target name="makeJars">
+		<mkdir dir="${tmpDir}" />
+		<unzip dest="${tmpDir}" src="${ardor3dSourceArchive}" />
+
+		<makeJar lib="animation" />
+		<makeJar lib="awt" />
+		<makeJar lib="collada" />
+		<makeJar lib="core" />
+		<makeJar lib="effects" />
+		<makeJar lib="extras" />
+		<makeJar lib="jogl" />
+		<makeJar lib="lwjgl" />
+		<makeJar lib="math" />
+		<makeJar lib="savable" />
+		<makeJar lib="swt" />
+		<makeJar lib="terrain" />
+		<makeJar lib="ui" />
+		
+		<delete dir="${tmpDir}" />
+		
+	</target>
+
+	<macrodef name="makeJar">
+		<attribute name="lib" />
+		<sequential>
+			<echo message="Making jar: @{lib}" />
+			<delete file="${outDir}/ardor3d-@{lib}-source.jar" />
+			<jar destfile="${outDir}/ardor3d-@{lib}-source.jar" basedir="${tmpDir}/Ardor3D-master/ardor3d-@{lib}/src/main/java" />
+		</sequential>
+	</macrodef>
+</project>
