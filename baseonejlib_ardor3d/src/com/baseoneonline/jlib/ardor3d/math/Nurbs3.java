@@ -25,6 +25,10 @@ public class Nurbs3 implements Curve3 {
 		setCVs(cvs);
 	}
 
+	public ReadOnlyVector3[] getCvs() {
+		return cvs;
+	}
+
 	@Override
 	public void setCVs(final ReadOnlyVector3[] cvs) {
 		this.cvs = cvs;
