@@ -17,9 +17,9 @@ public class Nurbs3 implements Curve3 {
 	private int order;
 	private double maxKnotValue;
 	protected ReadOnlyVector3[] normals;
-	private ReadOnlyVector3 defaultNormal = Vector3.UNIT_Y;
+	private final ReadOnlyVector3 defaultNormal = Vector3.UNIT_Y;
 	protected ReadOnlyVector3[] cvs;
-	protected Mode mode = Mode.Open;
+	private boolean clamped;
 
 	public Nurbs3(final ReadOnlyVector3[] cvs) {
 		setCVs(cvs);
@@ -36,7 +36,7 @@ public class Nurbs3 implements Curve3 {
 	}
 
 	private void rebuild() {
-		if (mode == Mode.Clamp) {
+		if (clamped) {
 			order = degree + 1;
 			final int numKnots = cvs.length + order;
 
@@ -93,32 +93,8 @@ public class Nurbs3 implements Curve3 {
 		return store;
 	}
 
-	@Override
-	public Vector3 getNormal(double t, Vector3 store) {
-		return store.set(getDefaultNormal());
-	}
-
-	@Override
-	public void setNormals(ReadOnlyVector3[] normals) {
-		this.normals = normals;
-	}
-
-	@Override
-	public void setDefaultNormal(ReadOnlyVector3 defaultNormal) {
-		if (null == defaultNormal)
-			throw new IllegalArgumentException("Cannot provide a null normal");
-		this.defaultNormal = defaultNormal;
-	}
-
 	public ReadOnlyVector3 getDefaultNormal() {
 		return defaultNormal;
-	}
-
-	@Override
-	public ReadOnlyVector3 getCVNormal(int index) {
-		if (null == normals)
-			return defaultNormal;
-		return normals[index];
 	}
 
 	/**
@@ -130,36 +106,32 @@ public class Nurbs3 implements Curve3 {
 	 * @return
 	 */
 	@Override
-	public Matrix3 getOrientation(double t, Matrix3 store) {
+	public Matrix3 getOrientation(double t, ReadOnlyVector3 normal,
+			Matrix3 store) {
 		Vector3 tangent = Vector3.fetchTempInstance();
-		Vector3 normal = Vector3.fetchTempInstance();
 		Quaternion q = Quaternion.fetchTempInstance();
 
 		getVelocity(t, tangent);
-		getNormal(t, normal);
 		q.lookAt(tangent, normal);
 		store.set(q);
 
 		Quaternion.releaseTempInstance(q);
 		Vector3.releaseTempInstance(tangent);
-		Vector3.releaseTempInstance(normal);
 		return store;
 	}
 
-	public Quaternion getCVOrientation(int index, Quaternion store) {
+	public Quaternion getCVOrientation(int index, ReadOnlyVector3 normal,
+			Quaternion store) {
 		Vector3 tangent = Vector3.fetchTempInstance();
-		Vector3 normal = Vector3.fetchTempInstance();
 
 		double t = (double) index / (double) cvs.length;
 
 		getVelocity(t, tangent);
 		// tangent.normalizeLocal();
 
-		getNormal(t, normal);
 		store.lookAt(tangent, normal);
 
 		Vector3.releaseTempInstance(tangent);
-		Vector3.releaseTempInstance(normal);
 		return store;
 	}
 
@@ -170,16 +142,6 @@ public class Nurbs3 implements Curve3 {
 		double velocity = tmp.length();
 		Vector3.releaseTempInstance(tmp);
 		return velocity;
-	}
-
-	@Override
-	public Mode getMode() {
-		return mode;
-	}
-
-	@Override
-	public void setMode(Mode mode) {
-		this.mode = mode;
 	}
 
 	/**
@@ -198,6 +160,15 @@ public class Nurbs3 implements Curve3 {
 	@Override
 	public int getCVCount() {
 		return cvs.length;
+	}
+
+	public void setClamped(boolean clamped) {
+		this.clamped = clamped;
+	}
+
+	@Override
+	public ReadOnlyVector3[] getCVS() {
+		return cvs;
 	}
 
 }

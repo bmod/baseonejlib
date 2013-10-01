@@ -6,34 +6,21 @@ import com.ardor3d.math.type.ReadOnlyVector3;
 
 public interface Curve3 {
 
-	public enum Mode {
-		Open, Clamp, Loop
-	}
+	public int getCVCount();
 
-	public abstract int getCVCount();
+	public ReadOnlyVector3 getCV(int i);
 
-	public abstract ReadOnlyVector3 getCV(int i);
+	public ReadOnlyVector3[] getCVS();
 
-	public abstract void setCVs(ReadOnlyVector3[] cvs);
+	public void setCVs(ReadOnlyVector3[] cvs);
 
-	public abstract void setMode(Mode mode);
+	public ReadOnlyVector3 getVelocity(double t, Vector3 store);
 
-	public abstract Mode getMode();
+	public ReadOnlyVector3 getPoint(double t, Vector3 store);
 
-	public abstract ReadOnlyVector3 getCVNormal(int index);
+	public double getLinearVelocity(double currentPosition);
 
-	public abstract void setNormals(ReadOnlyVector3[] normals);
-
-	public abstract Vector3 getNormal(double t, Vector3 store);
-
-	public abstract ReadOnlyVector3 getVelocity(double t, Vector3 store);
-
-	public abstract ReadOnlyVector3 getPoint(double t, Vector3 store);
-
-	public abstract void setDefaultNormal(ReadOnlyVector3 unitZ);
-
-	public abstract double getLinearVelocity(double currentPosition);
-
-	public abstract Matrix3 getOrientation(double currentPosition, Matrix3 rot);
+	public Matrix3 getOrientation(double currentPosition,
+			ReadOnlyVector3 normal, Matrix3 rot);
 
 }
