@@ -263,4 +263,12 @@ public class BSpline3 implements Curve3 {
 		return cvs.length;
 	}
 
+	public ReadOnlyVector3[] getCvs() {
+		return cvs;
+	}
+
+	public void setClamped(boolean b) {
+		this.clamped = b;
+	}
+
 }
