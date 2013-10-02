@@ -38,9 +38,12 @@ public class InputManager {
 	}
 
 	public InputTrigger register(String key, TriggerAction action) {
+		if (null == inputMap)
+			throw new RuntimeException("Please provide an inputmap first");
+		if (!inputMap.containsKey(key))
+			throw new RuntimeException("Key not found in inputmap: " + key);
 		InputTrigger trigger = new InputTrigger(inputMap.get(key), action);
 		logicalLayer.registerTrigger(trigger);
 		return trigger;
 	}
-
 }
