@@ -2,6 +2,7 @@ package com.baseoneonline.jlib.ardor3d.math;
 
 import com.ardor3d.math.Matrix3;
 import com.ardor3d.math.Quaternion;
+import com.ardor3d.math.Transform;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
 
@@ -53,7 +54,7 @@ public class CatmullRom3 implements Curve3 {
 	}
 
 	@Override
-	public ReadOnlyVector3 getVelocity(double t, Vector3 store) {
+	public ReadOnlyVector3 getTangent(double t, Vector3 store) {
 		// How many segments does this curve have
 		int segCount = getSegmentCount();
 
@@ -150,7 +151,7 @@ public class CatmullRom3 implements Curve3 {
 		Vector3 tangent = Vector3.fetchTempInstance();
 		Quaternion q = Quaternion.fetchTempInstance();
 
-		getVelocity(t, tangent);
+		getTangent(t, tangent);
 		q.lookAt(tangent, normal);
 		store.set(q);
 
@@ -165,7 +166,7 @@ public class CatmullRom3 implements Curve3 {
 
 		double t = (double) index / (double) cvs.length;
 
-		getVelocity(t, tangent);
+		getTangent(t, tangent);
 
 		store.lookAt(tangent, normal);
 
@@ -176,7 +177,7 @@ public class CatmullRom3 implements Curve3 {
 	@Override
 	public double getLinearVelocity(double t) {
 		Vector3 tmp = Vector3.fetchTempInstance();
-		getVelocity(t, tmp);
+		getTangent(t, tmp);
 		double velocity = tmp.length();
 		Vector3.releaseTempInstance(tmp);
 		return velocity;
@@ -209,6 +210,12 @@ public class CatmullRom3 implements Curve3 {
 	@Override
 	public int getCVCount() {
 		return cvs.length;
+	}
+
+	@Override
+	public void getTransform(double t, ReadOnlyVector3 normal, Transform store) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -57,7 +57,7 @@ public class BSpline3 implements Curve3 {
 	}
 
 	@Override
-	public Vector3 getVelocity(final double t, final Vector3 store) {
+	public Vector3 getTangent(final double t, final Vector3 store) {
 		// How many segments does this curve have
 		final int segCount = getSegmentCount();
 
@@ -161,7 +161,7 @@ public class BSpline3 implements Curve3 {
 		final double t = input.getZ();
 
 		getPoint(t, pos);
-		getVelocity(t, vel);
+		getTangent(t, vel);
 		rot.lookAt(vel, up);
 
 		rot.getColumn(0, tmp);
@@ -197,7 +197,7 @@ public class BSpline3 implements Curve3 {
 		Vector3 tangent = Vector3.fetchTempInstance();
 		Quaternion q = Quaternion.fetchTempInstance();
 
-		getVelocity(t, tangent);
+		getTangent(t, tangent);
 		q.lookAt(tangent, normal);
 		store.set(q);
 
@@ -212,7 +212,7 @@ public class BSpline3 implements Curve3 {
 
 		double t = (double) index / (double) cvs.length;
 
-		getVelocity(t, tangent);
+		getTangent(t, tangent);
 		// tangent.normalizeLocal();
 
 		store.lookAt(tangent, normal);
@@ -224,7 +224,7 @@ public class BSpline3 implements Curve3 {
 	@Override
 	public double getLinearVelocity(double t) {
 		Vector3 tmp = Vector3.fetchTempInstance();
-		getVelocity(t, tmp);
+		getTangent(t, tmp);
 		double velocity = tmp.length();
 		Vector3.releaseTempInstance(tmp);
 		return velocity;
@@ -271,4 +271,15 @@ public class BSpline3 implements Curve3 {
 		this.clamped = b;
 	}
 
+	@Override
+	public void getTransform(double t, ReadOnlyVector3 normal, Transform store) {
+		Matrix3 mtx = Matrix3.fetchTempInstance();
+		Vector3 pos = Vector3.fetchTempInstance();
+		getOrientation(t, normal, mtx);
+		getPoint(t, pos);
+		store.setRotation(mtx);
+		store.setTranslation(pos);
+		Matrix3.releaseTempInstance(mtx);
+		Vector3.releaseTempInstance(pos);
+	}
 }
