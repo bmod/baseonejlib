@@ -11,7 +11,14 @@ public class GeoUtil {
 	private GeoUtil() {
 	}
 
-	public static BSpline3[] createNurbs(Geo geo) {
+	/**
+	 * @param geo
+	 * @param reversed
+	 *            When curve order is right to left instead of left to right,
+	 *            provide true.
+	 * @return
+	 */
+	public static BSpline3[] createNurbs(Geo geo, boolean reversed) {
 		final BSpline3[] curves = new BSpline3[geo.nurbCurves.length];
 		for (int i = 0; i < curves.length; i++) {
 			final Nurbs nc = geo.nurbCurves[i];
@@ -23,7 +30,8 @@ public class GeoUtil {
 			}
 			BSpline3 n = new BSpline3(vtc);
 			n.setClamped(nc.clamped);
-			curves[i] = n;
+			int index = reversed ? curves.length - 1 - i : i;
+			curves[index] = n;
 
 		}
 		return curves;
