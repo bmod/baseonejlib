@@ -33,7 +33,7 @@ public class InputManager {
 		return logicalLayer;
 	}
 
-	public void setInputMap(HashMap<String, Predicate<TwoInputStates>> inputMap) {
+	private void setInputMap(HashMap<String, Predicate<TwoInputStates>> inputMap) {
 		this.inputMap = inputMap;
 	}
 
@@ -45,5 +45,15 @@ public class InputManager {
 		InputTrigger trigger = new InputTrigger(inputMap.get(key), action);
 		logicalLayer.registerTrigger(trigger);
 		return trigger;
+	}
+
+	private HashMap<String, Predicate<TwoInputStates>> getMap() {
+		if (null == inputMap)
+			inputMap = new HashMap<String, Predicate<TwoInputStates>>();
+		return inputMap;
+	}
+
+	public void put(String id, Predicate<TwoInputStates> predicate) {
+		getMap().put(id, predicate);
 	}
 }
