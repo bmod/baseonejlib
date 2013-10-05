@@ -12,7 +12,6 @@ import com.ardor3d.scenegraph.Node;
 import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
-import com.baseoneonline.jlib.ardor3d.framework.EntityManager;
 
 public class Entity implements Savable {
 
