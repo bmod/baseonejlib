@@ -1,9 +1,10 @@
-package com.baseoneonline.jlib.ardor3d.framework;
+package com.baseoneonline.jlib.ardor3d.framework.entities;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.baseoneonline.jlib.ardor3d.framework.entities.Entity;
+import com.baseoneonline.jlib.ardor3d.framework.ResourceManager;
+import com.baseoneonline.jlib.ardor3d.framework.SceneManager;
 
 public class EntityManager {
 
@@ -17,7 +18,7 @@ public class EntityManager {
 		return instance;
 	}
 
-	public void add(Entity e) {
+	private void add(Entity e) {
 		assert isUniqueName(e.getName()) : "Entity must have a unique name: "
 				+ e.getName();
 		entities.add(e);
@@ -59,8 +60,7 @@ public class EntityManager {
 	}
 
 	public Entity create(String name) {
-		Entity e = new Entity();
-		e.setName(name);
+		Entity e = new Entity(name);
 		add(e);
 		return e;
 	}

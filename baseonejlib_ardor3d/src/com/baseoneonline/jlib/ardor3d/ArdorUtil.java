@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.ardor3d.math.MathUtils;
 import com.ardor3d.math.Quaternion;
+import com.ardor3d.math.Transform;
 import com.ardor3d.math.Vector2;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyColorRGBA;
@@ -219,4 +220,31 @@ public class ArdorUtil {
 		current.set(x[0], y[0], z[0]);
 		currentVelocity.set(x[1], y[1], z[1]);
 	}
+
+	public static void lerp(Transform xa, Transform xb, double t,
+			Transform store) {
+		// Rotation
+		Quaternion rotA = Quaternion.fetchTempInstance();
+		Quaternion rotB = Quaternion.fetchTempInstance();
+
+		rotA.fromRotationMatrix(xa.getMatrix());
+		rotB.fromRotationMatrix(xb.getMatrix());
+
+		Quaternion rot = Quaternion.fetchTempInstance();
+		Quaternion.slerp(rotA, rotB, t, rot);
+		store.setRotation(rot);
+
+		Quaternion.releaseTempInstance(rotA);
+		Quaternion.releaseTempInstance(rotB);
+
+		// Translation
+		Vector3 pos = Vector3.fetchTempInstance();
+
+		Vector3.lerp(xa.getTranslation(), xb.getTranslation(), t, pos);
+		store.setTranslation(pos);
+
+		Vector3.releaseTempInstance(pos);
+
+	}
+
 }

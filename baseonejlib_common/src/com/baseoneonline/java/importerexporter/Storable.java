@@ -1,8 +1,7 @@
 package com.baseoneonline.java.importerexporter;
 
-public interface Storable
-{
-	public void read(Capsule in);
+public interface Storable {
+	public void read(InputCapsule cap);
 
-	public void write(Capsule out);
+	public void write(OutputCapsule cap);
 }

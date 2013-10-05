@@ -32,5 +32,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="baseonejlib_ardor3d/lib/lwjgl/native/windows"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
