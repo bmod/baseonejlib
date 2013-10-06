@@ -61,7 +61,7 @@ import com.ardor3d.util.stat.StatCollector;
 import com.google.common.base.Predicates;
 
 public abstract class GameBase implements Runnable {
-	private ParallelSplitShadowMapPass shadowPass;
+	public ParallelSplitShadowMapPass shadowPass;
 	private BasicPassManager passManager;
 
 	private final Vector3 lightPosition = new Vector3(10000, 5000, 10000);

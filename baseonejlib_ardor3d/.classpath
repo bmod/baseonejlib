@@ -17,7 +17,7 @@
 	<classpathentry kind="lib" path="lib/ardor3d/ardor3d-awt-0.8.jar" sourcepath="lib/ardor3d/ardor3d-awt-source.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-collada-0.8.jar" sourcepath="lib/ardor3d/ardor3d-collada-source.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-core-0.8.jar" sourcepath="lib/ardor3d/ardor3d-core-source.jar"/>
-	<classpathentry kind="lib" path="lib/ardor3d/ardor3d-effects-0.8.jar" sourcepath="lib/ardor3d/ardor3d-effects-source.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-effects-0.8.jar" sourcepath="lib/ardor3d/ardor3d-effects-source.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-extras-0.8.jar" sourcepath="lib/ardor3d/ardor3d-extras-source.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-lwjgl-0.8.jar" sourcepath="lib/ardor3d/ardor3d-lwjgl-source.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ardor3d/ardor3d-math-0.8.jar" sourcepath="lib/ardor3d/ardor3d-math-source.jar"/>
