@@ -8,8 +8,7 @@ import java.util.List;
  * that every hexagon has a radius of 1.
  * 
  */
-public class IsoHexGrid<T>
-{
+public class IsoHexGrid<T> {
 
 	/**
 	 * Shortest distance from hexagon center to a side, assuming the radius is 1
@@ -19,28 +18,24 @@ public class IsoHexGrid<T>
 	private final int base = 1024;
 	private final List<List<T>> _grid = new ArrayList<List<T>>(base * 2);
 
-	private static final IsoCoord[] deltas = { new IsoCoord(1, 0, -1),
+	public static final IsoCoord[] DELTAS = { new IsoCoord(1, 0, -1),
 			new IsoCoord(0, 1, -1), new IsoCoord(-1, 1, 0),
 			new IsoCoord(-1, 0, 1), new IsoCoord(0, -1, 1),
 			new IsoCoord(1, -1, 0) };
 
-	public IsoHexGrid()
-	{
+	public IsoHexGrid() {
 
 	}
 
-	public T set(IsoCoord c, T element)
-	{
+	public T set(IsoCoord c, T element) {
 		return get(c.x).set(base + c.y, element);
 	}
 
-	public T get(IsoCoord c)
-	{
+	public T get(IsoCoord c) {
 		return get(c.x).get(base + c.y);
 	}
 
-	private List<T> get(int index)
-	{
+	private List<T> get(int index) {
 		List<T> lst = _grid.get(base + index);
 		if (null == lst)
 			lst = new ArrayList<T>(base * 2);
@@ -54,8 +49,7 @@ public class IsoHexGrid<T>
 	 * @param y
 	 * @return Cartesian coordinates for a specific grid position
 	 */
-	public static double[] hexToCart(IsoCoord c, double[] out)
-	{
+	public static double[] hexToCart(IsoCoord c, double[] out) {
 		if (null == out)
 			out = new double[2];
 
@@ -78,8 +72,7 @@ public class IsoHexGrid<T>
 	 */
 
 	public static IsoCoord cartToHex(final double x, final double y,
-			IsoCoord out)
-	{
+			IsoCoord out) {
 
 		if (null == out)
 			out = new IsoCoord();
@@ -99,8 +92,7 @@ public class IsoHexGrid<T>
 	 * @param c
 	 * @return
 	 */
-	public IsoCoord[] neighbors(IsoCoord c)
-	{
+	public IsoCoord[] neighbors(IsoCoord c) {
 		return ringCoordinates(1, c);
 	}
 
@@ -116,8 +108,7 @@ public class IsoHexGrid<T>
 	 *            degrees clockwise, more or less bottom left)
 	 * @return A list of grid coordinates { {x,y}, {x,y}, .. }
 	 */
-	public static IsoCoord[] ringCoordinates(int ring, IsoCoord start)
-	{
+	public static IsoCoord[] ringCoordinates(int ring, IsoCoord start) {
 		// Number of coordinates returned
 		int num = ringSize(ring);
 
@@ -129,13 +120,11 @@ public class IsoHexGrid<T>
 
 		pts[index++] = new IsoCoord(current);
 
-		for (int j = 0; j < 6; j++)
-		{
+		for (int j = 0; j < 6; j++) {
 			nh = (j == 5) ? ring - 1 : ring;
 
-			for (int i = 0; i < nh; i++)
-			{
-				current.addLocal(deltas[j]);
+			for (int i = 0; i < nh; i++) {
+				current.addLocal(DELTAS[j]);
 				IsoCoord c = new IsoCoord(current);
 				pts[index++] = c;
 			}
@@ -144,11 +133,9 @@ public class IsoHexGrid<T>
 		return pts;
 	}
 
-	public static int totalNodeCount(int numRings)
-	{
+	public static int totalNodeCount(int numRings) {
 		int count = 0;
-		for (int i = 0; i < numRings; i++)
-		{
+		for (int i = 0; i < numRings; i++) {
 			count += ringSize(i);
 
 		}
@@ -158,8 +145,7 @@ public class IsoHexGrid<T>
 	/**
 	 * @return The number of coordinates in the specified ring
 	 */
-	public static int ringSize(int ring)
-	{
+	public static int ringSize(int ring) {
 		if (ring < 0)
 			throw new IllegalArgumentException("There is no negative ring: "
 					+ ring);
