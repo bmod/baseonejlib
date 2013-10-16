@@ -1,1 +1,0 @@
-<TestStorable someString="Hello Storable!" someDouble="123.456" someFloat="123.456"><TestVector x="1.0" y="2.0"/></TestStorable>

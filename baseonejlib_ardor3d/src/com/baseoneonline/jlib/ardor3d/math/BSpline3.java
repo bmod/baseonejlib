@@ -1,12 +1,17 @@
 package com.baseoneonline.jlib.ardor3d.math;
 
+import java.io.IOException;
+
 import com.ardor3d.math.Matrix3;
 import com.ardor3d.math.Quaternion;
 import com.ardor3d.math.Transform;
 import com.ardor3d.math.Vector3;
 import com.ardor3d.math.type.ReadOnlyVector3;
+import com.ardor3d.util.export.InputCapsule;
+import com.ardor3d.util.export.OutputCapsule;
+import com.ardor3d.util.export.Savable;
 
-public class BSpline3 implements Curve3 {
+public class BSpline3 implements Curve3, Savable {
 
 	protected ReadOnlyVector3[] cvs;
 	private boolean clamped;
@@ -281,5 +286,18 @@ public class BSpline3 implements Curve3 {
 		store.setTranslation(pos);
 		Matrix3.releaseTempInstance(mtx);
 		Vector3.releaseTempInstance(pos);
+	}
+
+	@Override
+	public void write(OutputCapsule capsule) throws IOException {
+	}
+
+	@Override
+	public void read(InputCapsule capsule) throws IOException {
+	}
+
+	@Override
+	public Class<?> getClassTag() {
+		return null;
 	}
 }
