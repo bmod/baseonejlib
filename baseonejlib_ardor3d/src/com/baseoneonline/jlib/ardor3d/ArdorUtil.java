@@ -13,6 +13,7 @@ import com.ardor3d.math.type.ReadOnlyVector2;
 import com.ardor3d.math.type.ReadOnlyVector3;
 import com.ardor3d.renderer.IndexMode;
 import com.ardor3d.util.geom.BufferUtils;
+import com.baseoneonline.jlib.ardor3d.math.BSpline3;
 
 public class ArdorUtil {
 	private static Random random = new Random();
@@ -54,6 +55,16 @@ public class ArdorUtil {
 		final Line line = new Line(name, points, normals, cols, tex,
 				IndexMode.LineStrip);
 		return line;
+	}
+
+	public static Line createLine(String name, BSpline3 curve,
+			ReadOnlyColorRGBA col, int samples) {
+		Vector3[] pts = new Vector3[samples + 1];
+		for (int i = 0; i <= samples; i++) {
+			double t = i / (double) samples;
+			pts[i] = curve.getPoint(t, new Vector3());
+		}
+		return createLine(name, pts, col);
 	}
 
 	public static ReadOnlyVector3[] createArray(final ReadOnlyVector3 element,
