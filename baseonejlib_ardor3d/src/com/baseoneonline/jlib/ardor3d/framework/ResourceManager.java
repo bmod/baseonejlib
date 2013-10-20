@@ -175,10 +175,10 @@ public class ResourceManager {
 		return getObjectLoader(type).load(resource);
 	}
 
-}
+	public void addObjectLoader(ObjectLoader<?> loader) {
+		objectLoaders.put(loader.getContentType(), loader);
+	}
 
-interface ObjectLoader<T> {
-	T load(String resource);
 }
 
 interface ModelLoader {
