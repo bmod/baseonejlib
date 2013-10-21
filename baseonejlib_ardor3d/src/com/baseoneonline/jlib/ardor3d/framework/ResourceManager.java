@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.ardor3d.extension.model.collada.jdom.ColladaAnimUtils;
 import com.ardor3d.extension.model.collada.jdom.ColladaImporter;
 import com.ardor3d.extension.model.collada.jdom.data.ColladaStorage;
@@ -133,7 +135,7 @@ public class ResourceManager {
 			if (resource.toLowerCase().endsWith("." + ext)) {
 				final Node model = loaders.get(ext).load(resource);
 				if (model == null)
-					throw new RuntimeException("Model returned null: "
+					throw new RuntimeException("Model loader returned null: "
 							+ resource);
 				return model;
 			}
@@ -215,21 +217,52 @@ class ColladaLoader implements ModelLoader {
 class BlenderLoader implements ModelLoader {
 
 	private final String blenderExe = "C:/Program Files/Blender Foundation/Blender/blender.exe";
-	private final String scriptFile = new File("test.py").getAbsolutePath();
+	private final String scriptFile = "exportCollada.py";
 
 	@Override
 	public Node load(String resource) {
-		String cmd = String.format("\"%s\" -P \"%s\"", blenderExe, scriptFile);
-		System.out.println(cmd);
-		ProcessBuilder builder = new ProcessBuilder(cmd);
 
+		URL url = getClass().getClassLoader().getResource(resource);
+		if (null == url)
+			throw new RuntimeException("Resource not found: " + resource);
+		File f = new File(url.getFile());
+		String scriptFilename = FilenameUtils.separatorsToUnix(new File(
+				scriptFile).getAbsolutePath());
+
+		String cmd = String.format("\"%s\" -b \"%s\" -P \"%s\"", blenderExe,
+				f.getAbsolutePath(), scriptFilename);
+
+		Logger.getLogger(getClass().getName())
+				.info("Executing command: " + cmd);
+
+		ProcessBuilder builder = new ProcessBuilder(cmd);
 		Process proc = null;
 		try {
 			proc = builder.start();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		String out = readStream(proc.getInputStream());
+		String err = readStream(proc.getErrorStream());
+		if (!err.isEmpty())
+			throw new RuntimeException("Blender Error: " + err);
+
+		Logger.getLogger(getClass().getName()).info("Blender said:\n" + out);
+
 		return null;
+	}
+
+	private static String readStream(InputStream is) {
+		StringBuilder bld = new StringBuilder();
+		int c;
+		try {
+			while (-1 != (c = is.read()))
+				bld.append((char) c);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return bld.toString();
 	}
 }
 
