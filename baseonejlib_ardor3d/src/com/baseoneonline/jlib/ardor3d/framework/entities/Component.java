@@ -6,6 +6,11 @@ import com.ardor3d.util.export.InputCapsule;
 import com.ardor3d.util.export.OutputCapsule;
 import com.ardor3d.util.export.Savable;
 
+/**
+ * Use {@link #resume()} to initialize the component, {@link #suspend()} to
+ * clean it up.
+ * 
+ */
 public abstract class Component implements Savable {
 
 	private Entity entity;
@@ -14,6 +19,10 @@ public abstract class Component implements Savable {
 
 	}
 
+	/**
+	 * Inititalizes the component when it is awakened. Do not re-initialize
+	 * objects when not needed.
+	 */
 	public void resume() {
 
 	}
@@ -44,9 +53,11 @@ public abstract class Component implements Savable {
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {}
+	public void write(OutputCapsule capsule) throws IOException {
+	}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {}
+	public void read(InputCapsule capsule) throws IOException {
+	}
 
 }

@@ -34,6 +34,7 @@ import com.ardor3d.light.PointLight;
 import com.ardor3d.math.ColorRGBA;
 import com.ardor3d.math.Ray3;
 import com.ardor3d.math.Vector3;
+import com.ardor3d.math.type.ReadOnlyColorRGBA;
 import com.ardor3d.renderer.Camera;
 import com.ardor3d.renderer.ContextManager;
 import com.ardor3d.renderer.Renderer;
@@ -116,6 +117,10 @@ public abstract class GameBase implements Runnable {
 				/ (float) displaySettings.getHeight();
 	}
 
+	protected void setBackgroundColor(ReadOnlyColorRGBA col) {
+		canvas.getCanvasRenderer().getRenderer().setBackgroundColor(col);
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -152,6 +157,8 @@ public abstract class GameBase implements Runnable {
 	protected final void initBase() {
 		// Setup main camera.
 		canvas.setTitle(getClass().getSimpleName());
+		canvas.getCanvasRenderer().getRenderer()
+				.setBackgroundColor(new ColorRGBA(.1f, .2f, .3f, 1));
 
 		camera = canvas.getCanvasRenderer().getCamera();
 		camera.setLocation(new Vector3(250, 200, -250));
