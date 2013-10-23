@@ -117,7 +117,7 @@ public abstract class GameBase implements Runnable {
 				/ (float) displaySettings.getHeight();
 	}
 
-	protected void setBackgroundColor(ReadOnlyColorRGBA col) {
+	protected void setBackgroundColor(final ReadOnlyColorRGBA col) {
 		canvas.getCanvasRenderer().getRenderer().setBackgroundColor(col);
 	}
 

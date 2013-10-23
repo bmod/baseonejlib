@@ -14,7 +14,7 @@ public class QuadMesh extends Mesh {
 	private double texOffsetU = 0;
 	private double texOffsetV = 0;
 
-	private final boolean autoRebuild = true;
+	private final boolean autoRebuild = false;
 
 	private ReadOnlyVector3[][] vertices;
 	private ReadOnlyVector3[][] normals;
@@ -22,7 +22,7 @@ public class QuadMesh extends Mesh {
 	public QuadMesh() {
 	}
 
-	public QuadMesh(ReadOnlyVector3[][] vtx, ReadOnlyVector3[][] nml) {
+	public QuadMesh(final ReadOnlyVector3[][] vtx, final ReadOnlyVector3[][] nml) {
 		vertices = vtx;
 		normals = nml;
 		rebuild();
@@ -50,8 +50,8 @@ public class QuadMesh extends Mesh {
 	}
 
 	private void initBuffers() {
-		int uSamples = vertices.length - 1;
-		int vSamples = vertices[0].length - 1;
+		final int uSamples = vertices.length - 1;
+		final int vSamples = vertices[0].length - 1;
 		final int verts = (uSamples + 1) * (vSamples + 1);
 		final int quads = uSamples * vSamples;
 		_meshData.setVertexBuffer(BufferUtils.createVector3Buffer(
@@ -79,11 +79,11 @@ public class QuadMesh extends Mesh {
 
 	}
 
-	public void setVertices(ReadOnlyVector3[][] vertices) {
+	public void setVertices(final ReadOnlyVector3[][] vertices) {
 		this.vertices = vertices;
 	}
 
-	public void setNormals(ReadOnlyVector3[][] normals) {
+	public void setNormals(final ReadOnlyVector3[][] normals) {
 		this.normals = normals;
 	}
 
@@ -97,8 +97,8 @@ public class QuadMesh extends Mesh {
 		nmlBuf.rewind();
 		texBuf.rewind();
 
-		int uSamples = vertices.length;
-		int vSamples = vertices[0].length;
+		final int uSamples = vertices.length;
+		final int vSamples = vertices[0].length;
 		for (int iu = 0; iu < uSamples; iu++) {
 			for (int iv = 0; iv < vSamples; iv++) {
 				final double u = (double) iu / (double) (uSamples - 1);
