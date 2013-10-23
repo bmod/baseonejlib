@@ -167,17 +167,17 @@ public class ResourceManager {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	private <T> ObjectLoader<T> getObjectLoader(Class<T> type) {
+	private <T> ObjectLoader<T> getObjectLoader(final Class<T> type) {
 		if (objectLoaders.containsKey(type))
 			return (ObjectLoader<T>) objectLoaders.get(type);
 		throw new RuntimeException("No objectloader for type " + type.getName());
 	}
 
-	public <T> T getObject(Class<T> type, String resource) {
+	public <T> T getObject(final Class<T> type, final String resource) {
 		return getObjectLoader(type).load(resource);
 	}
 
-	public void addObjectLoader(ObjectLoader<?> loader) {
+	public void addObjectLoader(final ObjectLoader<?> loader) {
 		objectLoaders.put(loader.getContentType(), loader);
 	}
 
@@ -201,7 +201,8 @@ class ColladaLoader implements ModelLoader {
 
 			if (store.getAssetData().getUpAxis() == Vector3.UNIT_Z) {
 				store.getScene().setRotation(
-						new Matrix3().fromAngles(-MathUtils.HALF_PI, 0, 0));
+						new Matrix3().fromAngles(-MathUtils.HALF_PI,
+								MathUtils.PI, 0));
 			}
 
 			for (final MaterialInfo inf : store.getMaterialMap().values())
@@ -220,31 +221,31 @@ class BlenderLoader implements ModelLoader {
 	private final String scriptFile = "exportCollada.py";
 
 	@Override
-	public Node load(String resource) {
+	public Node load(final String resource) {
 
-		URL url = getClass().getClassLoader().getResource(resource);
+		final URL url = getClass().getClassLoader().getResource(resource);
 		if (null == url)
 			throw new RuntimeException("Resource not found: " + resource);
-		File f = new File(url.getFile());
-		String scriptFilename = FilenameUtils.separatorsToUnix(new File(
+		final File f = new File(url.getFile());
+		final String scriptFilename = FilenameUtils.separatorsToUnix(new File(
 				scriptFile).getAbsolutePath());
 
-		String cmd = String.format("\"%s\" -b \"%s\" -P \"%s\"", blenderExe,
-				f.getAbsolutePath(), scriptFilename);
+		final String cmd = String.format("\"%s\" -b \"%s\" -P \"%s\"",
+				blenderExe, f.getAbsolutePath(), scriptFilename);
 
 		Logger.getLogger(getClass().getName())
 				.info("Executing command: " + cmd);
 
-		ProcessBuilder builder = new ProcessBuilder(cmd);
+		final ProcessBuilder builder = new ProcessBuilder(cmd);
 		Process proc = null;
 		try {
 			proc = builder.start();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 
-		String out = readStream(proc.getInputStream());
-		String err = readStream(proc.getErrorStream());
+		final String out = readStream(proc.getInputStream());
+		final String err = readStream(proc.getErrorStream());
 		if (!err.isEmpty())
 			throw new RuntimeException("Blender Error: " + err);
 
@@ -253,13 +254,13 @@ class BlenderLoader implements ModelLoader {
 		return null;
 	}
 
-	private static String readStream(InputStream is) {
-		StringBuilder bld = new StringBuilder();
+	private static String readStream(final InputStream is) {
+		final StringBuilder bld = new StringBuilder();
 		int c;
 		try {
 			while (-1 != (c = is.read()))
 				bld.append((char) c);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 		return bld.toString();
