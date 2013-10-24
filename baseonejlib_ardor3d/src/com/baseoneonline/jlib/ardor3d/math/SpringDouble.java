@@ -1,9 +1,26 @@
 package com.baseoneonline.jlib.ardor3d.math;
 
-import java.util.logging.Logger;
+public class SpringDouble {
 
-public class SpringDouble extends SmoothDouble {
+	public double K = .1;
+	public double target = 0;
+	public double vel = 0;
+	public double current = 0;
+	public double damp = .7;
+
 	public SpringDouble() {
-		Logger.getLogger(getClass().getName()).warning("Please implement!");
+
+	}
+
+	public void update(final double t) {
+		vel += (target - current) * K;
+		vel *= damp;
+		current += vel;
+	}
+
+	public void snap(final double d) {
+		vel = 0;
+		target = d;
+		current = d;
 	}
 }
