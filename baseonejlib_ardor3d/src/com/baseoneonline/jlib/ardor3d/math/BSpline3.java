@@ -55,10 +55,9 @@ public class BSpline3 implements Curve3, Savable {
 		final ReadOnlyVector3 c = cvs[idc[2]];
 		final ReadOnlyVector3 d = cvs[idc[3]];
 
-		return store.set(BSpline3.curveFunction(a.getX(), b.getX(), c.getX(),
-				d.getX(), v), BSpline3.curveFunction(a.getY(), b.getY(),
-				c.getY(), d.getY(), v), BSpline3.curveFunction(a.getZ(),
-				b.getZ(), c.getZ(), d.getZ(), v));
+		curveFunction(a, b, c, d, v, store);
+
+		return store;
 	}
 
 	@Override
@@ -137,7 +136,28 @@ public class BSpline3 implements Curve3, Savable {
 		// return cvs.length;
 	}
 
-	private static double curveFunction(final double a, final double b,
+	public static Vector3 curveFunction(final ReadOnlyVector3 a,
+			final ReadOnlyVector3 b, final ReadOnlyVector3 c,
+			final ReadOnlyVector3 d, final double t, final Vector3 store) {
+		return store.set(BSpline3.curveFunction(a.getX(), b.getX(), c.getX(),
+				d.getX(), t), BSpline3.curveFunction(a.getY(), b.getY(),
+				c.getY(), d.getY(), t), BSpline3.curveFunction(a.getZ(),
+				b.getZ(), c.getZ(), d.getZ(), t));
+	}
+
+	public static Vector3 curveFunctionDerived(final ReadOnlyVector3 a,
+			final ReadOnlyVector3 b, final ReadOnlyVector3 c,
+			final ReadOnlyVector3 d, final double t, final Vector3 store) {
+		return store.set(
+				BSpline3.curveFunctionDerived(a.getX(), b.getX(), c.getX(),
+						d.getX(), t),
+				BSpline3.curveFunctionDerived(a.getY(), b.getY(), c.getY(),
+						d.getY(), t),
+				BSpline3.curveFunctionDerived(a.getZ(), b.getZ(), c.getZ(),
+						d.getZ(), t));
+	}
+
+	public static double curveFunction(final double a, final double b,
 			final double c, final double d, final double t) {
 		final double it = 1 - t;
 		final double t2 = t * t;
@@ -149,7 +169,7 @@ public class BSpline3 implements Curve3, Savable {
 		return b0 * a + b1 * b + b2 * c + b3 * d;
 	}
 
-	private static double curveFunctionDerived(final double a, final double b,
+	public static double curveFunctionDerived(final double a, final double b,
 			final double c, final double d, final double t) {
 		final double it = 1 - t;
 		return (-(a * (it * it)) + t * (-4 * b + 3 * b * t + d * t) + c
@@ -197,10 +217,10 @@ public class BSpline3 implements Curve3, Savable {
 	 * @return
 	 */
 	@Override
-	public Matrix3 getOrientation(double t, ReadOnlyVector3 normal,
-			Matrix3 store) {
-		Vector3 tangent = Vector3.fetchTempInstance();
-		Quaternion q = Quaternion.fetchTempInstance();
+	public Matrix3 getOrientation(final double t, final ReadOnlyVector3 normal,
+			final Matrix3 store) {
+		final Vector3 tangent = Vector3.fetchTempInstance();
+		final Quaternion q = Quaternion.fetchTempInstance();
 
 		getTangent(t, tangent);
 		q.lookAt(tangent, normal);
@@ -211,11 +231,11 @@ public class BSpline3 implements Curve3, Savable {
 		return store;
 	}
 
-	public Quaternion getCVOrientation(int index, ReadOnlyVector3 normal,
-			Quaternion store) {
-		Vector3 tangent = Vector3.fetchTempInstance();
+	public Quaternion getCVOrientation(final int index,
+			final ReadOnlyVector3 normal, final Quaternion store) {
+		final Vector3 tangent = Vector3.fetchTempInstance();
 
-		double t = (double) index / (double) cvs.length;
+		final double t = (double) index / (double) cvs.length;
 
 		getTangent(t, tangent);
 		// tangent.normalizeLocal();
@@ -227,10 +247,10 @@ public class BSpline3 implements Curve3, Savable {
 	}
 
 	@Override
-	public double getLinearVelocity(double t) {
-		Vector3 tmp = Vector3.fetchTempInstance();
+	public double getLinearVelocity(final double t) {
+		final Vector3 tmp = Vector3.fetchTempInstance();
 		getTangent(t, tmp);
-		double velocity = tmp.length();
+		final double velocity = tmp.length();
 		Vector3.releaseTempInstance(tmp);
 		return velocity;
 	}
@@ -242,7 +262,7 @@ public class BSpline3 implements Curve3, Savable {
 	 *            The new set of control vertices.
 	 */
 	@Override
-	public void setCVs(ReadOnlyVector3[] cvs) {
+	public void setCVs(final ReadOnlyVector3[] cvs) {
 		if (cvs.length < 4)
 			throw new IllegalArgumentException(
 					"Requiring at least 4 control points, " + cvs.length
@@ -256,7 +276,7 @@ public class BSpline3 implements Curve3, Savable {
 	 * @return Instance of a control vertex used by this curve.
 	 */
 	@Override
-	public ReadOnlyVector3 getCV(int i) {
+	public ReadOnlyVector3 getCV(final int i) {
 		return cvs[i];
 	}
 
@@ -272,14 +292,15 @@ public class BSpline3 implements Curve3, Savable {
 		return cvs;
 	}
 
-	public void setClamped(boolean b) {
-		this.clamped = b;
+	public void setClamped(final boolean b) {
+		clamped = b;
 	}
 
 	@Override
-	public void getTransform(double t, ReadOnlyVector3 normal, Transform store) {
-		Matrix3 mtx = Matrix3.fetchTempInstance();
-		Vector3 pos = Vector3.fetchTempInstance();
+	public void getTransform(final double t, final ReadOnlyVector3 normal,
+			final Transform store) {
+		final Matrix3 mtx = Matrix3.fetchTempInstance();
+		final Vector3 pos = Vector3.fetchTempInstance();
 		getOrientation(t, normal, mtx);
 		getPoint(t, pos);
 		store.setRotation(mtx);
@@ -289,11 +310,11 @@ public class BSpline3 implements Curve3, Savable {
 	}
 
 	@Override
-	public void write(OutputCapsule capsule) throws IOException {
+	public void write(final OutputCapsule capsule) throws IOException {
 	}
 
 	@Override
-	public void read(InputCapsule capsule) throws IOException {
+	public void read(final InputCapsule capsule) throws IOException {
 	}
 
 	@Override
