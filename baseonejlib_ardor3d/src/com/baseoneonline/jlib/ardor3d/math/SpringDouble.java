@@ -2,7 +2,7 @@ package com.baseoneonline.jlib.ardor3d.math;
 
 public class SpringDouble {
 
-	public double K = .1;
+	public double K = 400;
 	public double target = 0;
 	public double vel = 0;
 	public double current = 0;
@@ -13,7 +13,7 @@ public class SpringDouble {
 	}
 
 	public void update(final double t) {
-		vel += (target - current) * K;
+		vel += (target - current) * K * t * t;
 		vel *= damp;
 		current += vel;
 	}
