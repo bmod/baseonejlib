@@ -15,17 +15,22 @@ import com.ardor3d.util.geom.BufferUtils;
 import com.baseoneonline.jlib.ardor3d.ArdorUtil;
 
 public class Grid extends Mesh {
-	private final int subdivs = 10;
+	private final int subdivs;
 	private final ColorRGBA color = new ColorRGBA(1, 1, 1, .2f);
 
 	public Grid() {
+		this(10);
+	}
+
+	public Grid(final int samples) {
+		subdivs = samples;
 		rebuild();
 
-		WireframeState ws = new WireframeState();
+		final WireframeState ws = new WireframeState();
 		ws.setEnabled(true);
 		setRenderState(ws);
 
-		BlendState bs = new BlendState();
+		final BlendState bs = new BlendState();
 		bs.setBlendEnabled(true);
 		bs.setEnabled(true);
 		setRenderState(bs);
@@ -36,7 +41,7 @@ public class Grid extends Mesh {
 	}
 
 	private void rebuild() {
-		Vector3[] vertices = new Vector3[(subdivs * 2 + 1) * 4];
+		final Vector3[] vertices = new Vector3[(subdivs * 2 + 1) * 4];
 		int i = 0;
 		for (int y = -subdivs; y <= subdivs; y++) {
 			vertices[i++] = new Vector3(-subdivs, 0, y);
@@ -53,6 +58,7 @@ public class Grid extends Mesh {
 				FloatBufferDataUtil.makeNew(ArdorUtil.createArray(Vector3.ZERO,
 						vertices.length)));
 		_meshData.setIndexMode(IndexMode.Lines);
+
 	}
 
 	private void setupData(final FloatBuffer vertices,
