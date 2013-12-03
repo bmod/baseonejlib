@@ -27,7 +27,6 @@ public class Config {
 		addPersistenceFactory(new SplitPanePersistenceFactory());
 		addPersistenceFactory(new JTablePersistenceFactory());
 		addPersistenceFactory(new JTreePersistenceFactory());
-		addPersistenceFactory(new DockingDesktopPersistenceFactory());
 
 	}
 
