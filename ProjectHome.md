@@ -1,0 +1,2 @@
+Partly because I want to have an online version system, but very important: to quickly share some of my code. Stuff that might come in handy.
+Note that I might include some libraries that I often use, but are created by someone else.
